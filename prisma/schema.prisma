@@ -1,0 +1,176 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  SUPER_ADMIN
+  CRM_SPECIALIST
+  COMPLIANCE_OFFICER
+  STAKEHOLDER
+}
+
+enum OrgStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum LeadStage {
+  LEAD
+  QUALIFIED
+  MEETING_SCHEDULED
+  PROPOSAL_SHARED
+  NEGOTIATION
+  APPROVED
+  PROJECT_INITIATED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+  OVERDUE
+}
+
+enum ServiceStatus {
+  ONLINE
+  WARNING
+  OFFLINE
+}
+
+model User {
+  id            String     @id @default(uuid())
+  email         String     @unique
+  name          String
+  role          Role       @default(STAKEHOLDER)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  auditLogs     AuditLog[]
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Organization {
+  id                 String       @id @default(uuid())
+  orgName            String
+  orgType            String
+  email              String       @unique
+  phone              String
+  website            String?
+  industryDomain     String
+  businessCategory   String
+  description        String?
+  state              String
+  district           String
+  city               String
+  pin                String
+  addressLine        String
+  verificationStatus OrgStatus    @default(PENDING)
+  priority           String       @default("STANDARD")
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  leads              Lead[]
+  documents          Document[]
+}
+
+model Lead {
+  id             String       @id @default(uuid())
+  orgId          String
+  organization   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  stage          LeadStage    @default(LEAD)
+  healthScore    Int          @default(100)
+  estRevenue     Decimal      @default(0.0) @db.Decimal(12, 2)
+  assignedTo     String?
+  lastContacted  DateTime?
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  meetings       Meeting[]
+  tasks          Task[]
+}
+
+model Document {
+  id             String       @id @default(uuid())
+  orgId          String
+  organization   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name           String
+  type           String
+  url            String
+  verified       Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
+
+model Meeting {
+  id           String    @id @default(uuid())
+  leadId       String?
+  lead         Lead?     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  title        String
+  agenda       String?
+  participants String[]
+  startTime    DateTime
+  endTime      DateTime
+  videoLink    String?
+  outcomes     String?
+  notes        String?
+  createdAt    DateTime  @default(now())
+}
+
+model Task {
+  id          String       @id @default(uuid())
+  leadId      String?
+  lead         Lead?        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  dueDate     DateTime
+  priority    TaskPriority @default(MEDIUM)
+  status      TaskStatus   @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model SystemHealth {
+  id          String        @id @default(uuid())
+  service     String        @unique
+  status      ServiceStatus @default(ONLINE)
+  latencyMs   Int           @default(0)
+  lastChecked DateTime      @default(now())
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action      String
+  ipAddress   String?
+  details     String?
+  timestamp   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  category  String   @default("INFO") // INFO, CRITICAL, ACTION
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
