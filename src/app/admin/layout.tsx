@@ -20,8 +20,9 @@ const sidebarLinks = [
   { href: "/admin/crm",                  label: "CRM Pipeline",        icon: Users },
   { href: "/admin/verification-center",  label: "Verification Center", icon: ShieldCheck },
   { href: "/admin/industries",           label: "Industry Partners",   icon: Building2 },
-  { href: "/admin/experts",              label: "Subject Experts",     icon: UsersRound,   comingSoon: true },
-  { href: "/admin/students",             label: "Students Portal",     icon: GraduationCap, comingSoon: true },
+  { href: "/admin/experts",              label: "Subject Experts",     icon: UsersRound },
+  { href: "/admin/students",             label: "Students Portal",     icon: GraduationCap },
+
   { href: "/admin/projects",             label: "Projects Control",    icon: Briefcase,    comingSoon: true },
   { href: "/admin/meetings",             label: "Meeting Manager",     icon: Calendar,     comingSoon: true },
   { href: "/admin/marketplace",          label: "B2B Marketplace",     icon: ShoppingBag,  comingSoon: true },

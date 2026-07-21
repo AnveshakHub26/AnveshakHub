@@ -188,6 +188,8 @@ model User {
   verificationActions  VerificationAction[]
   assignedRequests     VerificationRequest[] @relation("AssignedOfficer")
   reviewNotes          ReviewNote[]
+  expertProfile        ExpertProfile?
+  studentProfile       StudentProfile?
 }
 
 model Session {
@@ -509,3 +511,218 @@ model DocumentVault {
   @@index([industryId])
   @@index([docType])
 }
+
+// ─────────────────────────────────────────────
+// ENUMS & MODELS FOR EXPERT & STUDENT MANAGEMENT
+// ─────────────────────────────────────────────
+
+enum AvailabilityStatus {
+  AVAILABLE
+  BUSY
+  ON_LEAVE
+}
+
+enum ExpertDocType {
+  NOC
+  NDA
+  MOU
+  CERTIFICATE
+  OTHER
+}
+
+enum StudentDocType {
+  RESUME
+  CERTIFICATE
+  MARKS_CARD
+  OTHER
+}
+
+model ExpertProfile {
+  id                String             @id @default(uuid())
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  designation       String
+  institution       String
+  department        String?
+  yearsOfExp        Int
+  bio               String?
+  rating            Float              @default(5.0)
+  availability      AvailabilityStatus @default(AVAILABLE)
+  linkedinUrl       String?
+  googleScholar     String?
+  orcid             String?
+  skills            String[]
+  domains           String[]
+  certifications    Json?
+  employmentHistory Json?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  
+  projects          Project[]
+  students          StudentProfile[]
+  documents         ExpertDocument[]
+  resourceRequests  ResourceRequest[]
+  timeline          ExpertTimeline[]
+}
+
+model StudentProfile {
+  id                 String               @id @default(uuid())
+  userId             String               @unique
+  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usn                String?
+  institution        String
+  degree             String
+  branch             String
+  semester           Int
+  cgpa               Float
+  bio                String?
+  skills             String[]
+  resumeUrl          String?
+  portfolioUrl       String?
+  linkedinUrl        String?
+  githubUrl          String?
+  verificationStatus OrgStatus            @default(PENDING)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  
+  expertId           String?
+  expert             ExpertProfile?       @relation(fields: [expertId], references: [id], onDelete: SetNull)
+  industryId         String?
+  industry           IndustryProfile?     @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  
+  projects           Project[]
+  documents          StudentDocument[]
+  timeline           StudentTimeline[]
+  applications       InternshipApplication[]
+  attendance         StudentAttendance[]
+  milestones         StudentMilestone[]
+}
+
+model Project {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  status      String           @default("ACTIVE")
+  budget      Decimal          @default(0.0) @db.Decimal(12, 2)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  
+  industryId  String?
+  industry    IndustryProfile? @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  expertId    String?
+  expert      ExpertProfile?   @relation(fields: [expertId], references: [id], onDelete: SetNull)
+  students    StudentProfile[]
+}
+
+model ExpertDocument {
+  id              String         @id @default(uuid())
+  expertId        String
+  expert          ExpertProfile  @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  name            String
+  docType         ExpertDocType  @default(OTHER)
+  fileUrl         String
+  status          DocumentStatus @default(PENDING)
+  reviewerComment String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([expertId])
+}
+
+model StudentDocument {
+  id              String         @id @default(uuid())
+  studentId       String
+  student         StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  name            String
+  docType         StudentDocType @default(OTHER)
+  fileUrl         String
+  status          DocumentStatus @default(PENDING)
+  reviewerComment String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([studentId])
+}
+
+model InternshipApplication {
+  id           String          @id @default(uuid())
+  studentId    String
+  student      StudentProfile  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  industryId   String
+  industry     IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  status       String          @default("PENDING") // PENDING, SHORTLISTED, OFFERED, PLACED, REJECTED
+  coverLetter  String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([studentId])
+  @@index([industryId])
+}
+
+model StudentAttendance {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  date      DateTime
+  status    String         @default("PRESENT") // PRESENT, ABSENT, LEAVE
+  notes     String?
+  createdAt DateTime       @default(now())
+
+  @@index([studentId])
+}
+
+model StudentMilestone {
+  id          String         @id @default(uuid())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      String         @default("PENDING") // PENDING, COMPLETED, MISSED
+  rating      Int?
+  dueDate     DateTime?
+  createdAt   DateTime       @default(now())
+
+  @@index([studentId])
+}
+
+model ResourceRequest {
+  id          String        @id @default(uuid())
+  expertId    String
+  expert      ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  quantity    Int           @default(1)
+  status      String        @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime      @default(now())
+
+  @@index([expertId])
+}
+
+model ExpertTimeline {
+  id          String        @id @default(uuid())
+  expertId    String
+  expert      ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  event       String
+  description String?
+  category    String        @default("GENERAL")
+  performedBy String?
+  createdAt   DateTime      @default(now())
+
+  @@index([expertId])
+}
+
+model StudentTimeline {
+  id          String         @id @default(uuid())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  event       String
+  description String?
+  category    String         @default("GENERAL")
+  performedBy String?
+  createdAt   DateTime       @default(now())
+
+  @@index([studentId])
+}
+
