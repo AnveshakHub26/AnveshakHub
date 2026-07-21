@@ -230,6 +230,10 @@ model Organization {
   documents            Document[]
   verificationRequest  VerificationRequest?
   industryProfile      IndustryProfile?
+  branches             Branch[]
+  departments          Department[]
+  representatives      Representative[]
+  orgUsers             OrganizationUser[]
 }
 
 // ─────────────────────────────────────────────
@@ -1270,6 +1274,76 @@ model AIModelConfig {
   accuracyScore Float   @default(0.94)
   status       String   @default("ONLINE") // ONLINE, TRAINING, DEPRECATED
   lastTrained  DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────
+// MODELS FOR INDUSTRY PORTAL (IND-001 & IND-002)
+// ─────────────────────────────────────────────
+
+model Branch {
+  id           String       @id @default(uuid())
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  city         String
+  state        String
+  addressLine  String
+  pinCode      String
+  headName     String?
+  headEmail    String?
+  phone        String?
+  isHeadquarters Boolean   @default(false)
+  status       String       @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([orgId])
+}
+
+model Department {
+  id           String       @id @default(uuid())
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  headName     String?
+  headEmail    String?
+  memberCount  Int          @default(0)
+  description  String?
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+
+  @@index([orgId])
+}
+
+model Representative {
+  id               String       @id @default(uuid())
+  orgId            String
+  organization     Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name             String
+  designation      String
+  email            String
+  phone            String
+  isAuthorizedSignatory Boolean @default(false)
+  isPrimary        Boolean      @default(false)
+  department       String?
+  createdAt        DateTime     @default(now())
+
+  @@index([orgId])
+}
+
+model OrganizationUser {
+  id           String       @id @default(uuid())
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  email        String
+  role         String // ORG_ADMIN, PROJECT_LEAD, FINANCE_HEAD, HR_COORDINATOR, VIEWER
+  department   String?
+  isActive     Boolean      @default(true)
+  invitedAt    DateTime     @default(now())
+  lastLoginAt  DateTime?
+
+  @@index([orgId])
 }
 
 
