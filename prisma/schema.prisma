@@ -1094,6 +1094,89 @@ model FinancialTransaction {
   @@index([costCenterId])
 }
 
+// ─────────────────────────────────────────────
+// MODELS FOR HR, OPERATIONS & REPORTS (ADM-012, ADM-013, ADM-014)
+// ─────────────────────────────────────────────
+
+model Employee {
+  id          String          @id @default(uuid())
+  name        String
+  email       String          @unique
+  role        String // ADMIN, COORDINATOR, VERIFICATION_OFFICER, FINANCE_OFFICER, OPERATIONS_LEAD
+  department  String // ADMIN, CRM, FINANCE, VERIFICATION, OPERATIONS
+  designation String
+  status      String          @default("ACTIVE") // ACTIVE, INACTIVE
+  joinedDate  DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  leaves      EmployeeLeave[]
+  assets      EmployeeAsset[]
+}
+
+model EmployeeLeave {
+  id         String   @id @default(uuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  leaveType  String // CASUAL, SICK, EARNED
+  startDate  DateTime
+  endDate    DateTime
+  reason     String
+  status     String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt  DateTime @default(now())
+
+  @@index([employeeId])
+}
+
+model EmployeeAsset {
+  id           String    @id @default(uuid())
+  employeeId   String
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  name         String // Laptop, Phone, Yubikey, Keycard
+  serialNumber String
+  assignedAt   DateTime  @default(now())
+  returnedAt   DateTime?
+
+  @@index([employeeId])
+}
+
+model OperationWorkflow {
+  id          String              @id @default(uuid())
+  name        String // e.g. "Ecosystem Partner Verification SLA Flow"
+  description String
+  status      String              @default("ACTIVE") // ACTIVE, DRAFT, PAUSED
+  steps       String[]
+  slaHours    Int                 @default(24)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  incidents   OperationIncident[]
+}
+
+model OperationIncident {
+  id         String            @id @default(uuid())
+  workflowId String
+  workflow   OperationWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  title      String
+  description String
+  severity   String            @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status     String            @default("OPEN") // OPEN, INVESTIGATING, RESOLVED, CLOSED
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@index([workflowId])
+}
+
+model SavedReport {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  module      String // PROJECT, FINANCE, CRM, HR, MARKETPLACE, GRANTS, OPERATIONS
+  parameters  Json
+  schedule    String? // DAILY, WEEKLY, MONTHLY, ADHOC
+  createdBy   String
+  createdAt   DateTime @default(now())
+}
+
+
 
 
 

@@ -31,11 +31,13 @@ const sidebarLinks = [
   { href: "/admin/finance",              label: "Financial Mgmt",      icon: Wallet },
 
 
-  { href: "/admin/operations",           label: "System Operations",   icon: HardHat,      comingSoon: true },
-  { href: "/admin/analytics",            label: "System Analytics",    icon: LineChart,    comingSoon: true },
+  { href: "/admin/hr",                  label: "HR Management",       icon: UsersRound },
+  { href: "/admin/operations",           label: "System Operations",   icon: HardHat },
+  { href: "/admin/reports",              label: "Reports & Center",    icon: LineChart },
   { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch, comingSoon: true },
   { href: "/admin/settings",             label: "System Settings",     icon: Settings,     comingSoon: true },
   { href: "/admin/docs",                 label: "Developer Docs",      icon: FileCode2 },
+
 ];
 
 
