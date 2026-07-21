@@ -1188,6 +1188,91 @@ model SystemSetting {
   updatedAt DateTime @updatedAt
 }
 
+// ─────────────────────────────────────────────
+// MODELS FOR LEGAL, NOTIFICATIONS & AI INSIGHTS (ADM-018, ADM-019, ADM-020)
+// ─────────────────────────────────────────────
+
+model LegalAgreement {
+  id               String    @id @default(uuid())
+  title            String
+  agreementType    String // NDA, MOU, CONTRACT, IP_AGREEMENT, SERVICE_LEVEL
+  targetEntity     String // ORGANIZATION, EXPERT, INDUSTRY, STUDENT
+  entityId         String?
+  entityName       String
+  fileUrl          String?
+  version          String    @default("1.0")
+  status           String    @default("DRAFT") // DRAFT, UNDER_REVIEW, APPROVED, REJECTED, ACTIVE, EXPIRED, ARCHIVED
+  effectiveDate    DateTime?
+  expiryDate       DateTime?
+  eSignatureStatus String    @default("PENDING") // PENDING, SIGNED, DECLINED
+  signedAt         DateTime?
+  createdBy        String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([agreementType, targetEntity])
+}
+
+model LegalTemplate {
+  id        String   @id @default(uuid())
+  name      String
+  type      String // NDA, MOU, CONTRACT, IP_AGREEMENT
+  content   String
+  version   String   @default("1.0")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model NotificationTemplate {
+  id        String   @id @default(uuid())
+  name      String
+  channel   String // IN_APP, EMAIL, PUSH, BROADCAST
+  subject   String?
+  body      String
+  variables String[]
+  createdAt DateTime @default(now())
+}
+
+model NotificationBroadcast {
+  id              String    @id @default(uuid())
+  title           String
+  message         String
+  targetAudience  String // ALL_USERS, INDUSTRIES, EXPERTS, STUDENTS, ADMINS
+  channel         String // IN_APP, EMAIL, PUSH, ALL
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  status          String    @default("DRAFT") // DRAFT, SCHEDULED, SENDING, SENT, CANCELLED
+  recipientsCount Int       @default(0)
+  readCount       Int       @default(0)
+  createdBy       String
+  createdAt       DateTime  @default(now())
+}
+
+model AIInsight {
+  id              String   @id @default(uuid())
+  title           String
+  module          String // CRM, VERIFICATION, EXPERT, STUDENT, PROJECT, GRANT, FINANCE, OPERATIONAL
+  insightType     String // RISK_ANALYSIS, MATCH_RECOMMENDATION, TREND_FORECAST, HEALTH_PREDICTION, ANOMALY_DETECTION
+  confidenceScore Float    @default(0.95)
+  summary         String
+  details         Json
+  status          String   @default("ACTIVE") // ACTIVE, DISMISSED, ACTIONED
+  createdAt       DateTime @default(now())
+
+  @@index([module, insightType])
+}
+
+model AIModelConfig {
+  id           String   @id @default(uuid())
+  modelName    String
+  version      String
+  moduleTarget String
+  accuracyScore Float   @default(0.94)
+  status       String   @default("ONLINE") // ONLINE, TRAINING, DEPRECATED
+  lastTrained  DateTime @default(now())
+}
+
+
 
 
 

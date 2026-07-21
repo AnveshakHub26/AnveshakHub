@@ -10,7 +10,7 @@ import {
   Calendar, ShoppingBag, Landmark, Wallet, HardHat,
   LineChart, FolderSearch, ShieldAlert, FileSignature, Settings, LogOut,
   ChevronLeft, ChevronRight, Bell, Search, HelpCircle, FileCode2,
-  CheckCircle2, AlertTriangle, AlertCircle, RefreshCw, X, ShieldCheck
+  CheckCircle2, AlertTriangle, AlertCircle, RefreshCw, X, ShieldCheck, Zap
 } from "lucide-react";
 
 
@@ -35,6 +35,9 @@ const sidebarLinks: { href: string; label: string; icon: any; comingSoon?: boole
   { href: "/admin/operations",           label: "System Operations",   icon: HardHat },
   { href: "/admin/reports",              label: "Reports & Center",    icon: FileCode2 },
   { href: "/admin/analytics",            label: "System Analytics",    icon: LineChart },
+  { href: "/admin/legal",                label: "Legal & Vault",       icon: FileSignature },
+  { href: "/admin/notifications",        label: "Notifications",       icon: Bell },
+  { href: "/admin/ai-insights",          label: "AI Insights",         icon: Zap },
   { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch },
   { href: "/admin/settings",             label: "System Settings",     icon: Settings },
   { href: "/admin/docs",                 label: "Developer Docs",      icon: FileCode2 },
