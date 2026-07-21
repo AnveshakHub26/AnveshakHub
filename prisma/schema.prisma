@@ -269,6 +269,8 @@ model Meeting {
   lead         Lead?           @relation(fields: [leadId], references: [id], onDelete: Cascade)
   verReqId     String?
   verificationRequest VerificationRequest? @relation(fields: [verReqId], references: [id])
+  projectId    String?
+  project      Project?        @relation(fields: [projectId], references: [id], onDelete: Cascade)
   title        String
   agenda       String?
   participants String[]
@@ -278,10 +280,12 @@ model Meeting {
   videoLink    String?
   recordingUrl String?
   outcomes     String?
-  actionItems  String[]
   notes        String?
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
+  
+  actionItemsList MeetingActionItem[]
+  feedbacks       MeetingFeedback[]
 }
 
 model Task {
@@ -457,6 +461,7 @@ model IndustryProfile {
   students        StudentProfile[]
   projects        Project[]
   applications    InternshipApplication[]
+  opportunities   MarketplaceOpportunity[]
 
   @@index([lifecycle])
   @@index([engagementScore])
@@ -567,7 +572,11 @@ model ExpertProfile {
   documents         ExpertDocument[]
   resourceRequests  ResourceRequest[]
   timeline          ExpertTimeline[]
+  marketplaceApplications MarketplaceApplication[]
+  marketplaceInvitations  MarketplaceInvitation[]
+  marketplaceReviews      MarketplaceReview[]
 }
+
 
 model StudentProfile {
   id                 String               @id @default(uuid())
@@ -629,6 +638,7 @@ model Project {
   changeRequests   ProjectChangeRequest[]
   comments         ProjectComment[]
   activities       ProjectActivity[]
+  meetings         Meeting[]
 }
 
 model ExpertDocument {
@@ -905,5 +915,96 @@ model ProjectActivity {
 
   @@index([projectId])
 }
+
+// ─────────────────────────────────────────────
+// ENUMS & MODELS FOR MEETINGS & MARKETPLACE (ADM-008 & ADM-009)
+// ─────────────────────────────────────────────
+
+model MeetingActionItem {
+  id          String    @id @default(uuid())
+  meetingId   String
+  meeting     Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  title       String
+  assigneeId  String?
+  dueDate     DateTime?
+  status      String    @default("PENDING") // PENDING, COMPLETED, OVERDUE
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([meetingId])
+}
+
+model MeetingFeedback {
+  id          String   @id @default(uuid())
+  meetingId   String
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  userId      String
+  rating      Int      @default(5)
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  @@index([meetingId])
+}
+
+model MarketplaceOpportunity {
+  id               String                   @id @default(uuid())
+  industryId       String
+  industry         IndustryProfile          @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  title            String
+  description      String
+  domain           String
+  budget           Decimal                  @default(0.0) @db.Decimal(12, 2)
+  requirements     String[]
+  status           String                   @default("OPEN") // OPEN, IN_REVIEW, FILLED, CLOSED
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  
+  applications     MarketplaceApplication[]
+  invitations      MarketplaceInvitation[]
+
+  @@index([industryId])
+}
+
+model MarketplaceApplication {
+  id            String                 @id @default(uuid())
+  opportunityId String
+  opportunity   MarketplaceOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  expertId      String
+  expert        ExpertProfile          @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  status        String                 @default("APPLIED") // APPLIED, SHORTLISTED, APPROVED, REJECTED
+  proposal      String?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([opportunityId])
+  @@index([expertId])
+}
+
+model MarketplaceInvitation {
+  id            String                 @id @default(uuid())
+  opportunityId String
+  opportunity   MarketplaceOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  expertId      String
+  expert        ExpertProfile          @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  status        String                 @default("PENDING") // PENDING, ACCEPTED, DECLINED
+  message       String?
+  createdAt     DateTime               @default(now())
+
+  @@index([opportunityId])
+  @@index([expertId])
+}
+
+model MarketplaceReview {
+  id         String        @id @default(uuid())
+  expertId   String
+  expert     ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  reviewerId String
+  rating     Int           @default(5)
+  comment    String
+  createdAt  DateTime      @default(now())
+
+  @@index([expertId])
+}
+
 
 
