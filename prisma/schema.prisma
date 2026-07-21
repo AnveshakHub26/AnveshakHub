@@ -1176,6 +1176,20 @@ model SavedReport {
   createdAt   DateTime @default(now())
 }
 
+// ─────────────────────────────────────────────
+// MODELS FOR SETTINGS & AUDIT LOGS (ADM-016 & ADM-017)
+// ─────────────────────────────────────────────
+
+model SystemSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  category  String // SECURITY, AUTH, STORAGE, INTEGRATIONS
+  updatedAt DateTime @updatedAt
+}
+
+
+
 
 
 

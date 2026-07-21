@@ -15,7 +15,7 @@ import {
 
 
 // Sidebar Links
-const sidebarLinks = [
+const sidebarLinks: { href: string; label: string; icon: any; comingSoon?: boolean }[] = [
   { href: "/admin/dashboard",            label: "Dashboard",           icon: LayoutDashboard },
   { href: "/admin/crm",                  label: "CRM Pipeline",        icon: Users },
   { href: "/admin/verification-center",  label: "Verification Center", icon: ShieldCheck },
@@ -33,11 +33,11 @@ const sidebarLinks = [
 
   { href: "/admin/hr",                  label: "HR Management",       icon: UsersRound },
   { href: "/admin/operations",           label: "System Operations",   icon: HardHat },
-  { href: "/admin/reports",              label: "Reports & Center",    icon: LineChart },
-  { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch, comingSoon: true },
-  { href: "/admin/settings",             label: "System Settings",     icon: Settings,     comingSoon: true },
+  { href: "/admin/reports",              label: "Reports & Center",    icon: FileCode2 },
+  { href: "/admin/analytics",            label: "System Analytics",    icon: LineChart },
+  { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch },
+  { href: "/admin/settings",             label: "System Settings",     icon: Settings },
   { href: "/admin/docs",                 label: "Developer Docs",      icon: FileCode2 },
-
 ];
 
 
