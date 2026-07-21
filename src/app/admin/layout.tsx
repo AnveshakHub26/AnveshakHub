@@ -16,23 +16,24 @@ import {
 
 // Sidebar Links
 const sidebarLinks = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/crm", label: "CRM Pipeline", icon: Users },
-  { href: "/admin/verification", label: "Verification Queue", icon: FileSignature },
-  { href: "/admin/industries", label: "Industry Partners", icon: Building2, comingSoon: true },
-  { href: "/admin/experts", label: "Subject Experts", icon: UsersRound, comingSoon: true },
-  { href: "/admin/students", label: "Students Portal", icon: GraduationCap, comingSoon: true },
-  { href: "/admin/projects", label: "Projects Control", icon: Briefcase, comingSoon: true },
-  { href: "/admin/meetings", label: "Meeting Manager", icon: Calendar, comingSoon: true },
-  { href: "/admin/marketplace", label: "B2B Marketplace", icon: ShoppingBag, comingSoon: true },
-  { href: "/admin/grants", label: "Govt Grants Hub", icon: Landmark, comingSoon: true },
-  { href: "/admin/finance", label: "Finance & Ledger", icon: Wallet, comingSoon: true },
-  { href: "/admin/operations", label: "System Operations", icon: HardHat, comingSoon: true },
-  { href: "/admin/analytics", label: "System Analytics", icon: LineChart, comingSoon: true },
-  { href: "/admin/audit", label: "Audit & Security Logs", icon: FolderSearch, comingSoon: true },
-  { href: "/admin/settings", label: "System Settings", icon: Settings, comingSoon: true },
-  { href: "/admin/docs", label: "Developer Docs", icon: FileCode2 }
+  { href: "/admin/dashboard",            label: "Dashboard",           icon: LayoutDashboard },
+  { href: "/admin/crm",                  label: "CRM Pipeline",        icon: Users },
+  { href: "/admin/verification-center",  label: "Verification Center", icon: ShieldCheck },
+  { href: "/admin/industries",           label: "Industry Partners",   icon: Building2 },
+  { href: "/admin/experts",              label: "Subject Experts",     icon: UsersRound,   comingSoon: true },
+  { href: "/admin/students",             label: "Students Portal",     icon: GraduationCap, comingSoon: true },
+  { href: "/admin/projects",             label: "Projects Control",    icon: Briefcase,    comingSoon: true },
+  { href: "/admin/meetings",             label: "Meeting Manager",     icon: Calendar,     comingSoon: true },
+  { href: "/admin/marketplace",          label: "B2B Marketplace",     icon: ShoppingBag,  comingSoon: true },
+  { href: "/admin/grants",               label: "Govt Grants Hub",     icon: Landmark,     comingSoon: true },
+  { href: "/admin/finance",              label: "Finance & Ledger",    icon: Wallet,       comingSoon: true },
+  { href: "/admin/operations",           label: "System Operations",   icon: HardHat,      comingSoon: true },
+  { href: "/admin/analytics",            label: "System Analytics",    icon: LineChart,    comingSoon: true },
+  { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch, comingSoon: true },
+  { href: "/admin/settings",             label: "System Settings",     icon: Settings,     comingSoon: true },
+  { href: "/admin/docs",                 label: "Developer Docs",      icon: FileCode2 },
 ];
+
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

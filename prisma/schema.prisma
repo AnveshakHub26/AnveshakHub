@@ -7,10 +7,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ─────────────────────────────────────────────
+// ENUMS — AUTH / CORE
+// ─────────────────────────────────────────────
+
 enum Role {
   SUPER_ADMIN
   CRM_SPECIALIST
   COMPLIANCE_OFFICER
+  VERIFICATION_OFFICER
+  INDUSTRY_MANAGER
   STAKEHOLDER
 }
 
@@ -20,6 +26,7 @@ enum OrgStatus {
   APPROVED
   REJECTED
   SUSPENDED
+  ON_HOLD
 }
 
 enum LeadStage {
@@ -36,12 +43,15 @@ enum TaskPriority {
   LOW
   MEDIUM
   HIGH
+  CRITICAL
 }
 
 enum TaskStatus {
   PENDING
+  IN_PROGRESS
   COMPLETED
   OVERDUE
+  CANCELLED
 }
 
 enum ServiceStatus {
@@ -50,15 +60,134 @@ enum ServiceStatus {
   OFFLINE
 }
 
+// ─────────────────────────────────────────────
+// ENUMS — ADM-003 VERIFICATION
+// ─────────────────────────────────────────────
+
+enum VerificationType {
+  INDUSTRY
+  EXPERT
+  STUDENT
+  PARTNER
+  VENDOR
+  GOVERNMENT
+  CONTRIBUTOR
+}
+
+enum VerificationStage {
+  SUBMITTED
+  INITIAL_REVIEW
+  DOCUMENT_VERIFICATION
+  BUSINESS_VALIDATION
+  MEETING_SCHEDULED
+  COMPLIANCE_REVIEW
+  APPROVAL_COMMITTEE
+  APPROVED
+  REJECTED
+  ON_HOLD
+}
+
+enum VerificationPriority {
+  STANDARD
+  HIGH
+  URGENT
+  CRITICAL
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REUPLOAD_REQUESTED
+}
+
+enum DocumentCategory {
+  GST
+  PAN
+  CIN
+  LLP
+  MSME
+  STARTUP_INDIA
+  GOVERNMENT_CERT
+  UNIVERSITY_PROOF
+  EMPLOYMENT_PROOF
+  NOC
+  NDA
+  MOU
+  IDENTITY_PROOF
+  ADDRESS_PROOF
+  OTHER
+}
+
+enum MeetingPlatform {
+  GOOGLE_MEET
+  MICROSOFT_TEAMS
+  ZOOM
+  PHYSICAL
+}
+
+enum ReviewRecommendation {
+  APPROVE
+  REJECT
+  HOLD
+  ESCALATE
+  REQUEST_MORE_INFO
+}
+
+// ─────────────────────────────────────────────
+// ENUMS — ADM-004 INDUSTRY
+// ─────────────────────────────────────────────
+
+enum IndustryLifecycle {
+  REGISTERED
+  VERIFIED
+  MEETING_COMPLETED
+  OPPORTUNITY_CREATED
+  EXPERTS_ASSIGNED
+  PROJECT_STARTED
+  PROJECT_COMPLETED
+  LONG_TERM_PARTNER
+}
+
+enum ContactRole {
+  PRIMARY
+  SECONDARY
+  FINANCE
+  HR
+  TECHNICAL
+  LEGAL
+}
+
+enum VaultDocType {
+  NDA
+  MOU
+  CONTRACT
+  INVOICE
+  REPORT
+  IP_AGREEMENT
+  PROJECT_DOC
+  OTHER
+}
+
+// ─────────────────────────────────────────────
+// CORE MODELS
+// ─────────────────────────────────────────────
+
 model User {
-  id            String     @id @default(uuid())
-  email         String     @unique
-  name          String
-  role          Role       @default(STAKEHOLDER)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  auditLogs     AuditLog[]
-  sessions      Session[]
+  id                   String                @id @default(uuid())
+  email                String                @unique
+  name                 String
+  role                 Role                  @default(STAKEHOLDER)
+  department           String?
+  avatarUrl            String?
+  isActive             Boolean               @default(true)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  auditLogs            AuditLog[]
+  sessions             Session[]
+  verificationActions  VerificationAction[]
+  assignedRequests     VerificationRequest[] @relation("AssignedOfficer")
+  reviewNotes          ReviewNote[]
 }
 
 model Session {
@@ -67,78 +196,96 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String   @unique
   expiresAt DateTime
+  ipAddress String?
+  userAgent String?
   createdAt DateTime @default(now())
 }
 
+// ─────────────────────────────────────────────
+// ORGANIZATION (existing, extended)
+// ─────────────────────────────────────────────
+
 model Organization {
-  id                 String       @id @default(uuid())
-  orgName            String
-  orgType            String
-  email              String       @unique
-  phone              String
-  website            String?
-  industryDomain     String
-  businessCategory   String
-  description        String?
-  state              String
-  district           String
-  city               String
-  pin                String
-  addressLine        String
-  verificationStatus OrgStatus    @default(PENDING)
-  priority           String       @default("STANDARD")
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-  leads              Lead[]
-  documents          Document[]
+  id                   String               @id @default(uuid())
+  orgName              String
+  orgType              String
+  email                String               @unique
+  phone                String
+  website              String?
+  industryDomain       String
+  businessCategory     String
+  description          String?
+  state                String
+  district             String
+  city                 String
+  pin                  String
+  addressLine          String
+  verificationStatus   OrgStatus            @default(PENDING)
+  priority             String               @default("STANDARD")
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  leads                Lead[]
+  documents            Document[]
+  verificationRequest  VerificationRequest?
+  industryProfile      IndustryProfile?
 }
 
+// ─────────────────────────────────────────────
+// CRM MODELS (existing)
+// ─────────────────────────────────────────────
+
 model Lead {
-  id             String       @id @default(uuid())
-  orgId          String
-  organization   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  stage          LeadStage    @default(LEAD)
-  healthScore    Int          @default(100)
-  estRevenue     Decimal      @default(0.0) @db.Decimal(12, 2)
-  assignedTo     String?
-  lastContacted  DateTime?
-  notes          String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  meetings       Meeting[]
-  tasks          Task[]
+  id            String       @id @default(uuid())
+  orgId         String
+  organization  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  stage         LeadStage    @default(LEAD)
+  healthScore   Int          @default(100)
+  estRevenue    Decimal      @default(0.0) @db.Decimal(12, 2)
+  assignedTo    String?
+  lastContacted DateTime?
+  notes         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  meetings      Meeting[]
+  tasks         Task[]
 }
 
 model Document {
-  id             String       @id @default(uuid())
-  orgId          String
-  organization   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  name           String
-  type           String
-  url            String
-  verified       Boolean      @default(false)
-  createdAt      DateTime     @default(now())
+  id           String       @id @default(uuid())
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  type         String
+  url          String
+  verified     Boolean      @default(false)
+  createdAt    DateTime     @default(now())
 }
 
 model Meeting {
-  id           String    @id @default(uuid())
+  id           String          @id @default(uuid())
   leadId       String?
-  lead         Lead?     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  lead         Lead?           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  verReqId     String?
+  verificationRequest VerificationRequest? @relation(fields: [verReqId], references: [id])
   title        String
   agenda       String?
   participants String[]
   startTime    DateTime
   endTime      DateTime
+  platform     MeetingPlatform @default(GOOGLE_MEET)
   videoLink    String?
+  recordingUrl String?
   outcomes     String?
+  actionItems  String[]
   notes        String?
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 }
 
 model Task {
   id          String       @id @default(uuid())
   leadId      String?
-  lead         Lead?        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  lead        Lead?        @relation(fields: [leadId], references: [id], onDelete: Cascade)
   title       String
   description String?
   dueDate     DateTime
@@ -157,20 +304,208 @@ model SystemHealth {
 }
 
 model AuditLog {
-  id          String   @id @default(uuid())
-  userId      String?
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  action      String
-  ipAddress   String?
-  details     String?
-  timestamp   DateTime @default(now())
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String?
+  entityId   String?
+  oldValue   Json?
+  newValue   Json?
+  ipAddress  String?
+  userAgent  String?
+  browser    String?
+  details    String?
+  timestamp  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([timestamp])
 }
 
 model Notification {
   id        String   @id @default(uuid())
+  userId    String?
   title     String
   message   String
-  category  String   @default("INFO") // INFO, CRITICAL, ACTION
+  category  String   @default("INFO")
   read      Boolean  @default(false)
+  link      String?
   createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
+
+// ─────────────────────────────────────────────
+// ADM-003 — VERIFICATION & APPROVAL CENTER
+// ─────────────────────────────────────────────
+
+model VerificationRequest {
+  id                 String               @id @default(uuid())
+  orgId              String               @unique
+  organization       Organization         @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  type               VerificationType     @default(INDUSTRY)
+  stage              VerificationStage    @default(SUBMITTED)
+  priority           VerificationPriority @default(STANDARD)
+  assignedOfficerId  String?
+  assignedOfficer    User?                @relation("AssignedOfficer", fields: [assignedOfficerId], references: [id])
+  riskScore          Int                  @default(50)
+  complianceStatus   Boolean              @default(false)
+  fraudFlag          Boolean              @default(false)
+  duplicateFlag      Boolean              @default(false)
+  rejectionReason    String?
+  rejectionComments  String?
+  requiredCorrections String?
+  resubmissionDeadline DateTime?
+  submittedAt        DateTime             @default(now())
+  reviewedAt         DateTime?
+  approvedAt         DateTime?
+  rejectedAt         DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  documents          VerificationDocument[]
+  actions            VerificationAction[]
+  reviewNotes        ReviewNote[]
+  meetings           Meeting[]
+
+  @@index([stage])
+  @@index([type])
+  @@index([priority])
+  @@index([assignedOfficerId])
+}
+
+model VerificationDocument {
+  id              String               @id @default(uuid())
+  verReqId        String
+  verificationRequest VerificationRequest @relation(fields: [verReqId], references: [id], onDelete: Cascade)
+  name            String
+  category        DocumentCategory     @default(OTHER)
+  fileUrl         String
+  fileSize        Int?
+  mimeType        String?
+  status          DocumentStatus       @default(PENDING)
+  reviewerComment String?
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  version         Int                  @default(1)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([verReqId])
+  @@index([status])
+}
+
+model VerificationAction {
+  id          String            @id @default(uuid())
+  verReqId    String
+  verificationRequest VerificationRequest @relation(fields: [verReqId], references: [id], onDelete: Cascade)
+  adminId     String?
+  admin       User?             @relation(fields: [adminId], references: [id])
+  action      String
+  fromStage   VerificationStage?
+  toStage     VerificationStage?
+  notes       String?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime          @default(now())
+
+  @@index([verReqId])
+  @@index([adminId])
+}
+
+model ReviewNote {
+  id             String                @id @default(uuid())
+  verReqId       String
+  verificationRequest VerificationRequest @relation(fields: [verReqId], references: [id], onDelete: Cascade)
+  authorId       String?
+  author         User?                 @relation(fields: [authorId], references: [id])
+  content        String
+  recommendation ReviewRecommendation?
+  isInternal     Boolean               @default(true)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@index([verReqId])
+}
+
+// ─────────────────────────────────────────────
+// ADM-004 — INDUSTRY MANAGEMENT
+// ─────────────────────────────────────────────
+
+model IndustryProfile {
+  id              String           @id @default(uuid())
+  orgId           String           @unique
+  organization    Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  lifecycle       IndustryLifecycle @default(REGISTERED)
+  engagementScore Int              @default(0)
+  collaborationScore Int           @default(0)
+  avgResponseTime Int              @default(0)
+  totalProjects   Int              @default(0)
+  activeProjects  Int              @default(0)
+  totalRevenue    Decimal          @default(0.0) @db.Decimal(14, 2)
+  expertsAssigned Int              @default(0)
+  studentsAssigned Int             @default(0)
+  notes           String?
+  tags            String[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  contacts        IndustryContact[]
+  timeline        IndustryTimeline[]
+  vaultDocuments  DocumentVault[]
+
+  @@index([lifecycle])
+  @@index([engagementScore])
+}
+
+model IndustryContact {
+  id              String          @id @default(uuid())
+  industryId      String
+  industry        IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  role            ContactRole     @default(PRIMARY)
+  name            String
+  email           String
+  phone           String?
+  designation     String?
+  department      String?
+  linkedIn        String?
+  isPrimary       Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([industryId])
+  @@index([role])
+}
+
+model IndustryTimeline {
+  id          String          @id @default(uuid())
+  industryId  String
+  industry    IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  event       String
+  description String?
+  category    String          @default("GENERAL")
+  performedBy String?
+  createdAt   DateTime        @default(now())
+
+  @@index([industryId])
+}
+
+model DocumentVault {
+  id             String          @id @default(uuid())
+  industryId     String
+  industry       IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  name           String
+  docType        VaultDocType    @default(OTHER)
+  fileUrl        String
+  fileSize       Int?
+  mimeType       String?
+  version        Int             @default(1)
+  previousVersionId String?
+  uploadedBy     String?
+  description    String?
+  expiresAt      DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([industryId])
+  @@index([docType])
 }
