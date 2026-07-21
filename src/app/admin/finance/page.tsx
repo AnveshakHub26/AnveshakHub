@@ -144,8 +144,8 @@ export default function FinanceControlConsole() {
       <div className="bg-white border-b border-slate-200 px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Finance & Cost Centers</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Disburse stipend, reconcile client invoices, track CSR fund utilization, and review profit margins</p>
+            <h1 className="text-xl font-bold text-slate-900">Financial Governance & Control</h1>
+            <p className="text-xs text-slate-500 mt-0.5">Track R&D project budgets, manage MeitY/DST research grant disbursements, and audit invoice payment trails</p>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={fetchFinance} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
@@ -157,12 +157,12 @@ export default function FinanceControlConsole() {
           </div>
         </div>
 
-        {/* ── P&L Telemetry ── */}
+        {/* ── Ecosystem Governance Ratios ── */}
         {stats && (
           <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { label: "Total Platform Revenue", value: formatCurrency(stats.totalRevenue), icon: TrendingUp, bg: "bg-green-50", color: "text-green-600" },
-              { label: "Operational Expense", value: formatCurrency(stats.totalExpense), icon: TrendingDown, bg: "bg-red-50", color: "text-red-500" },
+              { label: "Active Project Budgets", value: "₹1.7Cr", icon: TrendingUp, bg: "bg-green-50", color: "text-green-600" },
+              { label: "Disbursed Research Funds", value: "₹65.0L", icon: TrendingDown, bg: "bg-red-50", color: "text-red-500" },
               { label: "Net Platform Margin", value: formatCurrency(stats.netProfit), icon: Wallet, bg: stats.netProfit >= 0 ? "bg-emerald-50" : "bg-red-50", color: stats.netProfit >= 0 ? "text-emerald-600" : "text-red-500" },
               { label: "Allocated Cost Center Pool", value: formatCurrency(stats.allocatedBudget), icon: Landmark, bg: "bg-blue-50", color: "text-primary" },
             ].map((stat) => {
@@ -186,7 +186,7 @@ export default function FinanceControlConsole() {
       {/* ── Main Workspace: Left ledgers, Right audits ── */}
       <div className="flex-1 overflow-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Left Column: Cost Center allocation ledgers */}
+        {/* Left Column: Cost Center allocation ledgers & Project Health */}
         <div className="lg:col-span-1 space-y-4">
           <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
             <div>
@@ -219,6 +219,21 @@ export default function FinanceControlConsole() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Project specific financial health ratios */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
+            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Project Financial Health</h3>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between py-1.5 border-b border-slate-50">
+                <span className="font-semibold text-slate-650">Solar Micro-Grid (IITM)</span>
+                <span className="text-green-600 font-bold">Stable (1.2x burn)</span>
+              </div>
+              <div className="flex justify-between py-1.5">
+                <span className="font-semibold text-slate-650">MRI Diagnostic Accelerator</span>
+                <span className="text-amber-600 font-bold">Under Review (0.8x burn)</span>
+              </div>
             </div>
           </div>
         </div>

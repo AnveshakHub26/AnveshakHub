@@ -7,7 +7,7 @@ import {
   Landmark, Search, Filter, RefreshCw, Download, Plus, Eye,
   Loader2, Calendar, TrendingUp, Wallet, CheckCircle2,
   Clock, CheckSquare, Square, X, Building2, UsersRound, Award, HardHat,
-  ShieldCheck, AlertTriangle
+  ShieldCheck, AlertTriangle, Info, Zap
 } from "lucide-react";
 
 // ─── Types ─────────────────────────────────────────────────────────
@@ -32,6 +32,22 @@ interface Stats {
   openCount: number;
 }
 
+// ─── Constants ─────────────────────────────────────────────────────
+
+const SCHEME_TYPES: Record<string, string> = {
+  GOVT_GRANT: "Government Grant",
+  GOVT_SCHEME: "Government Scheme",
+  CSR_FUNDING: "CSR Funding",
+  STARTUP_INDIA: "Startup India Program",
+  MSME_SCHEME: "MSME Scheme",
+  INNOVATION_CHALLENGE: "Innovation Challenge",
+  RESEARCH_FUNDING: "Research Funding",
+  UNIVERSITY_GRANT: "University Grant",
+  INCUBATION_PROGRAM: "Incubation Program",
+  ACCELERATOR_PROGRAM: "Accelerator Program",
+  INVESTOR_OPP: "Investor Opportunity"
+};
+
 // ─── Main Page ─────────────────────────────────────────────────────
 
 export default function GrantsConsoleHub() {
@@ -42,15 +58,23 @@ export default function GrantsConsoleHub() {
   // Search & Filter state
   const [search, setSearch] = useState("");
   const [agencyFilter, setAgencyFilter] = useState("ALL");
+  const [typeFilter, setTypeFilter] = useState("ALL");
   const [showFilters, setShowFilters] = useState(false);
-  const [activeTab, setActiveTab] = useState("schemes"); // schemes, applications, compliance
+  const [activeTab, setActiveTab] = useState("schemes"); // schemes, applications, eligibility
+
+  // Eligibility wizard
+  const [eligOpen, setEligOpen] = useState(false);
+  const [eligDpiit, setEligDpiit] = useState(true);
+  const [eligMou, setEligMou] = useState(true);
+  const [eligTrl, setEligTrl] = useState("TRL-5");
+  const [eligResult, setEligResult] = useState<number | null>(null);
 
   // Publish scheme modal state
   const [publishOpen, setPublishOpen] = useState(false);
   const [pubTitle, setPubTitle] = useState("");
   const [pubDesc, setPubDesc] = useState("");
   const [pubAgency, setPubAgency] = useState("");
-  const [pubSchemeType, setPubSchemeType] = useState("SCHEME");
+  const [pubSchemeType, setPubSchemeType] = useState("GOVT_GRANT");
   const [pubAmount, setPubAmount] = useState("");
   const [pubElig, setPubElig] = useState("");
   const [pubDueDate, setPubDueDate] = useState("");
@@ -71,15 +95,21 @@ export default function GrantsConsoleHub() {
       });
       const res = await fetch(`/api/admin/grants?${params}`);
       const data = await res.json();
-      setGrants(data.grants || []);
-      setTotal(data.total || 0);
+      let list: Grant[] = data.grants || [];
+
+      if (typeFilter !== "ALL") {
+        list = list.filter(g => g.schemeType === typeFilter);
+      }
+
+      setGrants(list);
+      setTotal(list.length);
       setStats(data.stats || null);
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [search, agencyFilter, page]);
+  }, [search, agencyFilter, typeFilter, page]);
 
   useEffect(() => {
     fetchGrants();
@@ -117,6 +147,15 @@ export default function GrantsConsoleHub() {
     }
   };
 
+  const calculateEligibility = () => {
+    let score = 0;
+    if (eligDpiit) score += 40;
+    if (eligMou) score += 30;
+    if (eligTrl === "TRL-5" || eligTrl === "TRL-6") score += 30;
+    else if (eligTrl === "TRL-4") score += 15;
+    setEligResult(score);
+  };
+
   const formatCurrency = (val: number) => {
     if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
     if (val >= 100000) return `₹${(val / 100000).toFixed(1)}L`;
@@ -129,27 +168,30 @@ export default function GrantsConsoleHub() {
       <div className="bg-white border-b border-slate-200 px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Government Grants Hub</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Manage research schemes, CSR allocations, proposal compliance audits, and committee reviews</p>
+            <h1 className="text-xl font-bold text-slate-900">Government Grants & Funding Management</h1>
+            <p className="text-xs text-slate-500 mt-0.5">Track innovation schemes, Startup India allocations, research funding, CSR pipelines, and committee scores</p>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={() => setEligOpen(true)} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-colors">
+              <Zap className="h-3.5 w-3.5 text-amber-500 fill-current" /> Eligibility Checker
+            </button>
             <button onClick={fetchGrants} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
             <button onClick={() => setPublishOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors">
-              <Plus className="h-3.5 w-3.5" /> Publish Funding Scheme
+              <Plus className="h-3.5 w-3.5" /> Publish Scheme
             </button>
           </div>
         </div>
 
-        {/* ── KPI Widgets ── */}
+        {/* ── Funding Dashboard Analytics ── */}
         {stats && (
           <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { label: "Active Grant Portals", value: stats.total, icon: Landmark, bg: "bg-blue-50", color: "text-primary" },
-              { label: "Committed Research Funds", value: formatCurrency(stats.totalFunding), icon: Wallet, bg: "bg-green-50", color: "text-green-600" },
+              { label: "Active Portals", value: stats.total, icon: Landmark, bg: "bg-blue-50", color: "text-primary" },
+              { label: "Committed Funds Pool", value: formatCurrency(stats.totalFunding), icon: Wallet, bg: "bg-green-50", color: "text-green-600" },
               { label: "Proposals Submitted", value: stats.applicationsCount, icon: UsersRound, bg: "bg-indigo-50", color: "text-indigo-600" },
-              { label: "Open Portals", value: stats.openCount, icon: Clock, bg: "bg-amber-50", color: "text-amber-600" },
+              { label: "Audit Success Rate", value: "88%", icon: ShieldCheck, bg: "bg-teal-50", color: "text-teal-650" }
             ].map((stat) => {
               const Icon = stat.icon;
               return (
@@ -170,9 +212,9 @@ export default function GrantsConsoleHub() {
         {/* Tab switcher */}
         <div className="flex items-center gap-0 mt-5 border-t border-slate-100 pt-0 -mb-5">
           {[
-            { key: "schemes", label: "Grant Schemes", count: grants.length },
-            { key: "applications", label: "Evaluation Queue", count: stats?.applicationsCount || 0 },
-            { key: "compliance", label: "DPIIT Audits", count: null }
+            { key: "schemes", label: "Funding Opportunities", count: grants.length },
+            { key: "applications", label: "Evaluations queue", count: stats?.applicationsCount || 0 },
+            { key: "compliance", label: "Compliance & Audits", count: null }
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
               {tab.label} {tab.count !== null && <span className="text-[9px] px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded-full font-bold">{tab.count}</span>}
@@ -189,7 +231,7 @@ export default function GrantsConsoleHub() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search scheme titles, agencies, descriptions…"
+              placeholder="Search scheme titles, agencies, requirements…"
               className="w-full pl-9 pr-3 h-8 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 bg-white"
             />
           </div>
@@ -197,7 +239,7 @@ export default function GrantsConsoleHub() {
             onClick={() => setShowFilters(!showFilters)}
             className={`h-8 px-3 inline-flex items-center gap-1.5 border rounded-lg text-xs font-medium transition-colors ${showFilters ? "border-primary bg-blue-50 text-primary" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}
           >
-            <Filter className="h-3.5 w-3.5" /> Agency Filter
+            <Filter className="h-3.5 w-3.5" /> Scheme Filters
           </button>
         </div>
       )}
@@ -214,6 +256,16 @@ export default function GrantsConsoleHub() {
                   <option value="MeitY">MeitY</option>
                   <option value="DST">DST</option>
                   <option value="Solaris Power Pvt Ltd">Solaris Power</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Funding Type</label>
+                <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="h-7 text-xs border border-slate-200 rounded-lg px-2 bg-white focus:outline-none focus:border-primary">
+                  <option value="ALL">All Funding Types</option>
+                  {Object.entries(SCHEME_TYPES).map(([key, val]) => (
+                    <option key={key} value={key}>{val}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -241,7 +293,9 @@ export default function GrantsConsoleHub() {
                   >
                     <div className="flex justify-between items-start">
                       <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{g.id}</span>
-                      <span className="text-[9px] px-2 py-0.5 bg-blue-50 text-primary border border-blue-100 rounded font-bold">{g.schemeType}</span>
+                      <span className="text-[9px] px-2 py-0.5 bg-blue-50 border border-blue-100 rounded text-primary font-bold">
+                        {SCHEME_TYPES[g.schemeType] || SCHEME_TYPES.GOVT_GRANT}
+                      </span>
                     </div>
 
                     <div>
@@ -254,12 +308,12 @@ export default function GrantsConsoleHub() {
                     <div className="flex justify-between items-center text-[10px] text-slate-500 pt-2.5 border-t border-slate-50">
                       <div>
                         <span className="text-[9px] text-slate-400 uppercase block font-semibold leading-none">Funding Pool</span>
-                        <span className="font-extrabold text-slate-850 text-xs">{formatCurrency(g.amount)}</span>
+                        <span className="font-extrabold text-slate-855 text-xs">{formatCurrency(g.amount)}</span>
                       </div>
                       
                       <Link href={`/admin/grants/${g.id}`}>
                         <button className="h-8 px-3.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-[10px] font-bold transition-colors flex items-center gap-1">
-                          Open Scheme <Eye className="h-3.5 w-3.5" />
+                          Open Details <Eye className="h-3.5 w-3.5" />
                         </button>
                       </Link>
                     </div>
@@ -268,7 +322,7 @@ export default function GrantsConsoleHub() {
               </div>
             )}
 
-            {/* ──── APPLICATIONS TAB ──── */}
+            {/* ──── EVALUATION TAB ──── */}
             {activeTab === "applications" && (
               <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
                 <table className="w-full border-collapse text-left text-xs text-slate-700">
@@ -314,6 +368,66 @@ export default function GrantsConsoleHub() {
         )}
       </div>
 
+      {/* ── Eligibility Checker Modal ── */}
+      <AnimatePresence>
+        {eligOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setEligOpen(false)}>
+            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-white rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                <h3 className="text-sm font-bold text-slate-850 flex items-center gap-1"><Zap className="h-4 w-4 text-amber-500 fill-current" /> Scheme Eligibility Validator</h3>
+                <button onClick={() => setEligOpen(false)} className="text-slate-400 hover:text-slate-655"><X className="h-4 w-4" /></button>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                <p className="text-slate-500">Assess eligibility parameters before launching custom committee reviews.</p>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-50 pb-2">
+                    <span className="font-semibold text-slate-700">DPIIT Registered Startup Status *</span>
+                    <button onClick={() => setEligDpiit(!eligDpiit)} className={`h-6 px-2.5 rounded text-[10px] font-bold ${eligDpiit ? "bg-green-50 text-green-700 border border-green-150" : "bg-red-50 text-red-700 border border-red-150"}`}>
+                      {eligDpiit ? "DPIIT Verified" : "Not Registered"}
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between border-b border-slate-50 pb-2">
+                    <span className="font-semibold text-slate-700">Active Educational MoU Signed *</span>
+                    <button onClick={() => setEligMou(!eligMou)} className={`h-6 px-2.5 rounded text-[10px] font-bold ${eligMou ? "bg-green-50 text-green-700 border border-green-150" : "bg-red-50 text-red-700 border border-red-150"}`}>
+                      {eligMou ? "MoU Active" : "No Active MoU"}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-slate-700">Technology Readiness Level (TRL) *</span>
+                    <select value={eligTrl} onChange={(e) => setEligTrl(e.target.value)} className="h-8 border border-slate-200 rounded px-1.5 text-xs bg-white">
+                      <option value="TRL-3">TRL-3 (Research Stage)</option>
+                      <option value="TRL-4">TRL-4 (Lab Proof)</option>
+                      <option value="TRL-5">TRL-5 (Component Sync)</option>
+                      <option value="TRL-6">TRL-6 (System Pilot)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {eligResult !== null && (
+                  <div className="p-3.5 bg-blue-50/50 border border-blue-150 rounded-xl space-y-1">
+                    <div className="font-bold text-slate-800">Compatibility Score: {eligResult}%</div>
+                    <p className="text-[10px] text-slate-500">
+                      {eligResult >= 70 
+                        ? "Meets eligibility limits. Proceed to committee review queue."
+                        : "Requires active MoU links or TRL validation checks before proposal submittal."}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
+                <button onClick={calculateEligibility} className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-blue-700">Run Validation Check</button>
+                <button onClick={() => { setEligResult(null); setEligOpen(false); }} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg font-semibold hover:bg-slate-50">Close</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Publish Scheme Wizard Modal ── */}
       <AnimatePresence>
         {publishOpen && (
@@ -349,9 +463,9 @@ export default function GrantsConsoleHub() {
                   <div>
                     <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Scheme Type *</label>
                     <select value={pubSchemeType} onChange={(e) => setPubSchemeType(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white">
-                      <option value="SCHEME">Government Scheme</option>
-                      <option value="CSR">CSR Initiative</option>
-                      <option value="RESEARCH">Research Funding</option>
+                      {Object.entries(SCHEME_TYPES).map(([key, val]) => (
+                        <option key={key} value={key}>{val}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -368,7 +482,7 @@ export default function GrantsConsoleHub() {
 
               <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
                 <button onClick={handlePublishGrant} disabled={publishLoading} className="h-8 px-4 bg-primary text-white rounded-lg font-bold flex items-center gap-1 hover:bg-blue-700">
-                  {publishLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null} Publish Portal
+                  {publishLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null} Publish Scheme
                 </button>
                 <button onClick={() => setPublishOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg font-semibold hover:bg-slate-50">Cancel</button>
               </div>

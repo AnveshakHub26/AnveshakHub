@@ -9,7 +9,7 @@ import {
   XCircle, Clock, AlertTriangle, MessageSquare, User, Building2,
   Mail, Phone, Globe, MapPin, Hash, Plus, Download, Eye, ArrowUpRight,
   Send, Loader2, Play, HardHat, ShieldCheck, Check, X, Video,
-  Layers, CheckSquare, Square, FileText, Star
+  Layers, CheckSquare, Square, FileText, Star, RefreshCw
 } from "lucide-react";
 
 // ─── Types ─────────────────────────────────────────────────────────
@@ -47,12 +47,38 @@ interface GrantProfile {
   applications: Application[];
 }
 
+// ─── Constants ─────────────────────────────────────────────────────
+
+const LIFECYCLE_ORDER = [
+  "DRAFT", "PUBLISHED", "SUBMISSIONS", "REVIEW_COMMITTEE",
+  "DISBURSEMENT", "COMPLIANCE_AUDITING", "ARCHIVED"
+];
+
+const LIFECYCLE_LABELS: Record<string, string> = {
+  DRAFT: "Draft",
+  PUBLISHED: "Published",
+  SUBMISSIONS: "Accepting Proposals",
+  REVIEW_COMMITTEE: "Committee Review",
+  DISBURSEMENT: "Fund Disbursement",
+  COMPLIANCE_AUDITING: "Auditing Compliance",
+  ARCHIVED: "Archived"
+};
+
+const DOC_VERSIONS = [
+  { version: 3, name: "System_Architecture_SRS_v3.pdf", size: "2.4 MB", date: "2026-07-20", author: "Dr. Arunima K.", status: "VERIFIED" },
+  { version: 2, name: "Proposal_Cost_Estimate_v2.xlsx", size: "1.1 MB", date: "2026-07-15", author: "Solaris Lead", status: "VERIFIED" },
+  { version: 1, name: "MoU_Educational_Linkage_v1.pdf", size: "850 KB", date: "2026-07-02", author: "System Admin", status: "VERIFIED" }
+];
+
 // ─── Main Page ─────────────────────────────────────────────────────
 
 export default function GrantDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const [profile, setProfile] = useState<GrantProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Lifecycle stage state
+  const [lifecycleStage, setLifecycleStage] = useState("SUBMISSIONS");
 
   // Review modal inputs
   const [actionLoading, setActionLoading] = useState(false);
@@ -120,9 +146,18 @@ export default function GrantDetailsPage() {
     }
   };
 
+  const advanceLifecycle = () => {
+    const idx = LIFECYCLE_ORDER.indexOf(lifecycleStage);
+    if (idx !== -1 && idx < LIFECYCLE_ORDER.length - 1) {
+      setLifecycleStage(LIFECYCLE_ORDER[idx + 1]);
+    }
+  };
+
   if (loading || !profile) {
     return <div className="flex items-center justify-center h-full"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
+
+  const activeStageIdx = LIFECYCLE_ORDER.indexOf(lifecycleStage);
 
   return (
     <div className="flex flex-col min-h-full bg-slate-50">
@@ -146,6 +181,37 @@ export default function GrantDetailsPage() {
             </div>
             <p className="text-[10px] text-slate-500 mt-0.5 font-medium">Funding Agency: {profile.agency}</p>
           </div>
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {activeStageIdx < LIFECYCLE_ORDER.length - 1 && (
+              <button onClick={advanceLifecycle} className="h-8 px-4 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1">
+                Advance Funding Stage
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Funding Lifecycle Stepper ── */}
+        <div className="mt-4 flex items-center overflow-x-auto gap-0 pb-1 border-t border-slate-50 pt-3">
+          {LIFECYCLE_ORDER.map((stage, i) => {
+            const isCompleted = i < activeStageIdx;
+            const isActive = i === activeStageIdx;
+            return (
+              <React.Fragment key={stage}>
+                <div className={`flex flex-col items-center min-w-[80px] ${isActive ? "opacity-100 animate-pulse" : isCompleted ? "opacity-80" : "opacity-35"}`}>
+                  <div className={`h-5 w-5 rounded-full flex items-center justify-center border-2 text-[8px] font-extrabold transition-all ${isCompleted ? "bg-green-500 border-green-500 text-white" : isActive ? "bg-primary border-primary text-white" : "bg-white border-slate-300 text-slate-400"}`}>
+                    {isCompleted ? <Check className="h-3.5 w-3.5" /> : i + 1}
+                  </div>
+                  <span className={`text-[8px] mt-0.5 font-bold text-center leading-tight max-w-[70px] ${isActive ? "text-primary" : isCompleted ? "text-green-600" : "text-slate-400"}`}>
+                    {LIFECYCLE_LABELS[stage]}
+                  </span>
+                </div>
+                {i < LIFECYCLE_ORDER.length - 1 && (
+                  <div className={`flex-1 h-0.5 min-w-[10px] mx-0.5 ${i < activeStageIdx ? "bg-green-400" : "bg-slate-200"}`} />
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
 
@@ -170,7 +236,7 @@ export default function GrantDetailsPage() {
                       <h4 className="text-xs font-bold text-slate-850 leading-snug">{app.title}</h4>
                       <p className="text-[9px] text-slate-400 font-semibold mt-0.5">Submitted by: {app.applicantName} · score {app.reviewScore || "N/A"}</p>
                     </div>
-                    <span className={`text-[8px] px-2 py-0.5 rounded font-bold ${app.status === "APPROVED" ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>{app.status}</span>
+                    <span className={`text-[8px] px-2 py-0.5 rounded font-bold ${app.status === "APPROVED" ? "bg-green-50 text-green-700 font-bold border border-green-100" : "bg-amber-50 text-amber-700 font-bold border border-amber-100"}`}>{app.status}</span>
                   </div>
 
                   {app.reviews.length > 0 && (
@@ -189,10 +255,32 @@ export default function GrantDetailsPage() {
                     {app.status !== "APPROVED" && (
                       <>
                         <button onClick={() => handleUpdateStatus(app.id, "APPROVED")} disabled={actionLoading} className="h-7 px-3 bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold rounded-lg flex items-center gap-1">Approve Scheme</button>
-                        <button onClick={() => handleUpdateStatus(app.id, "REJECTED")} disabled={actionLoading} className="h-7 px-3 border border-red-200 text-red-650 text-[10px] font-bold rounded-lg hover:bg-red-50 flex items-center gap-1">Reject</button>
+                        <button onClick={() => handleUpdateStatus(app.id, "REJECTED")} disabled={actionLoading} className="h-7 px-3 border border-red-200 text-red-655 text-[10px] font-bold rounded-lg hover:bg-red-50 flex items-center gap-1">Reject</button>
                       </>
                     )}
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Compliance & Document Versioning Checklist */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5">
+            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-3">Required Documents & Version Logs</h3>
+            <div className="space-y-3">
+              {DOC_VERSIONS.map((doc) => (
+                <div key={doc.version} className="border border-slate-100 rounded-xl p-3 flex items-center justify-between text-xs">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-800">{doc.name}</span>
+                      <span className="text-[9px] bg-slate-100 text-slate-500 rounded font-bold px-1.5">v{doc.version}</span>
+                      <span className="text-[9px] bg-green-50 text-green-700 rounded font-bold px-1.5">{doc.status}</span>
+                    </div>
+                    <p className="text-[9px] text-slate-400 mt-1">Uploaded by {doc.author} on {doc.date} · {doc.size}</p>
+                  </div>
+                  <button className="h-7 px-2.5 border border-slate-200 rounded text-[10px] font-bold hover:bg-slate-50 flex items-center gap-1 text-slate-600">
+                    <Download className="h-3 w-3" /> Download
+                  </button>
                 </div>
               ))}
             </div>
@@ -201,12 +289,26 @@ export default function GrantDetailsPage() {
 
         {/* Right Side: Eligibility Checklist and Budget Pool */}
         <div className="space-y-4">
+          {/* Fund Utilization Progress */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-3">Eligibility & Capital limits</h3>
-            <div className="text-xl font-extrabold text-slate-850">₹{profile.amount.toLocaleString("en-IN")}</div>
+            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-3">Fund Utilization</h3>
+            <div className="text-xl font-extrabold text-slate-855">₹{profile.amount.toLocaleString("en-IN")}</div>
             <p className="text-[10px] text-slate-450 mt-0.5">Total funding pool</p>
             
-            <div className="mt-4 space-y-2 text-xs">
+            <div className="mt-4 flex flex-col gap-2">
+              <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                <span>Funds Disbursed</span>
+                <span>₹65,00,000 (43%)</span>
+              </div>
+              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-green-500" style={{ width: "43%" }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-5">
+            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-3">Eligibility & Capital limits</h3>
+            <div className="space-y-2 text-xs">
               {profile.eligibility.map((el, i) => (
                 <div key={i} className="flex gap-2 items-start py-1 text-slate-650">
                   <ShieldCheck className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
