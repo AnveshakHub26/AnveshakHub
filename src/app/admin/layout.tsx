@@ -22,10 +22,10 @@ const sidebarLinks = [
   { href: "/admin/industries",           label: "Industry Partners",   icon: Building2 },
   { href: "/admin/experts",              label: "Subject Experts",     icon: UsersRound },
   { href: "/admin/students",             label: "Students Portal",     icon: GraduationCap },
-
-  { href: "/admin/projects",             label: "Projects Control",    icon: Briefcase,    comingSoon: true },
+  { href: "/admin/projects",             label: "Projects Control",    icon: Briefcase },
   { href: "/admin/meetings",             label: "Meeting Manager",     icon: Calendar,     comingSoon: true },
   { href: "/admin/marketplace",          label: "B2B Marketplace",     icon: ShoppingBag,  comingSoon: true },
+
   { href: "/admin/grants",               label: "Govt Grants Hub",     icon: Landmark,     comingSoon: true },
   { href: "/admin/finance",              label: "Finance & Ledger",    icon: Wallet,       comingSoon: true },
   { href: "/admin/operations",           label: "System Operations",   icon: HardHat,      comingSoon: true },

@@ -454,10 +454,14 @@ model IndustryProfile {
   contacts        IndustryContact[]
   timeline        IndustryTimeline[]
   vaultDocuments  DocumentVault[]
+  students        StudentProfile[]
+  projects        Project[]
+  applications    InternshipApplication[]
 
   @@index([lifecycle])
   @@index([engagementScore])
 }
+
 
 model IndustryContact {
   id              String          @id @default(uuid())
@@ -599,21 +603,32 @@ model StudentProfile {
 }
 
 model Project {
-  id          String           @id @default(uuid())
-  name        String
-  description String?
-  status      String           @default("ACTIVE")
-  budget      Decimal          @default(0.0) @db.Decimal(12, 2)
-  startDate   DateTime?
-  endDate     DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id               String                 @id @default(uuid())
+  name             String
+  description      String?
+  lifecycle        String                 @default("DRAFT") // DRAFT, SUBMITTED, UNDER_REVIEW, APPROVED, PLANNING, IN_PROGRESS, TESTING, CLIENT_REVIEW, COMPLETED, ARCHIVED
+  budget           Decimal                @default(0.0) @db.Decimal(12, 2)
+  startDate        DateTime?
+  endDate          DateTime?
+  problemStatement String?
+  scopeDefinition  String?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
   
-  industryId  String?
-  industry    IndustryProfile? @relation(fields: [industryId], references: [id], onDelete: SetNull)
-  expertId    String?
-  expert      ExpertProfile?   @relation(fields: [expertId], references: [id], onDelete: SetNull)
-  students    StudentProfile[]
+  industryId       String?
+  industry         IndustryProfile?       @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  experts          ExpertProfile[]
+  students         StudentProfile[]
+  
+  milestones       ProjectMilestone[]
+  sprints          ProjectSprint[]
+  tasks            ProjectTask[]
+  documents        ProjectDocument[]
+  risks            ProjectRisk[]
+  issues           ProjectIssue[]
+  changeRequests   ProjectChangeRequest[]
+  comments         ProjectComment[]
+  activities       ProjectActivity[]
 }
 
 model ExpertDocument {
@@ -725,4 +740,170 @@ model StudentTimeline {
 
   @@index([studentId])
 }
+
+// ─────────────────────────────────────────────
+// ENUMS & MODELS FOR ENTERPRISE PROJECT MANAGEMENT (ADM-007)
+// ─────────────────────────────────────────────
+
+enum ProjectDocumentType {
+  PROPOSAL
+  SRS
+  DESIGN
+  CONTRACT
+  NDA
+  MOU
+  REPORT
+  DELIVERABLE
+  SOURCE_CODE
+  OTHER
+}
+
+model ProjectMilestone {
+  id            String    @id @default(uuid())
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title         String
+  description   String?
+  status        String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, OVERDUE
+  dueDate       DateTime?
+  completionPct Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectSprint {
+  id          String        @id @default(uuid())
+  projectId   String
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  status      String        @default("PLANNING") // PLANNING, ACTIVE, COMPLETED
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  tasks       ProjectTask[]
+
+  @@index([projectId])
+}
+
+model ProjectTask {
+  id             String         @id @default(uuid())
+  projectId      String
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sprintId       String?
+  sprint         ProjectSprint? @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  title          String
+  description    String?
+  status         String         @default("TODO") // TODO, IN_PROGRESS, IN_REVIEW, DONE, BLOCKED
+  priority       String         @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  dueDate        DateTime?
+  startDate      DateTime?
+  estimatedHours Float          @default(0.0)
+  loggedHours    Float          @default(0.0)
+  assigneeId     String? // User ID of assignee
+  labels         String[]
+  dependencies   String[] // Task IDs that this task depends on
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([projectId])
+  @@index([sprintId])
+}
+
+model ProjectDocument {
+  id          String              @id @default(uuid())
+  projectId   String
+  project     Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  docType     ProjectDocumentType @default(OTHER)
+  fileUrl     String
+  fileSize    Int?
+  version     Int                 @default(1)
+  status      String              @default("PENDING") // PENDING, APPROVED, REJECTED
+  uploadedBy  String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectRisk {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  impact      String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  probability String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  mitigation  String?
+  status      String   @default("ACTIVE") // ACTIVE, MITIGATED, RETIRED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectIssue {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  severity    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  priority    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status      String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  assigneeId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectChangeRequest {
+  id            String    @id @default(uuid())
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title         String
+  description   String
+  justification String?
+  impact        String?
+  status        String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  requestedBy   String?
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectComment {
+  id         String   @id @default(uuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  taskId     String?
+  authorId   String?
+  authorName String
+  content    String
+  isInternal Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectActivity {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  event       String
+  description String?
+  performedBy String?
+  createdAt   DateTime @default(now())
+
+  @@index([projectId])
+}
+
 
