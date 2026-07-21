@@ -639,6 +639,7 @@ model Project {
   comments         ProjectComment[]
   activities       ProjectActivity[]
   meetings         Meeting[]
+  invoices         Invoice[]
 }
 
 model ExpertDocument {
@@ -1005,6 +1006,94 @@ model MarketplaceReview {
 
   @@index([expertId])
 }
+
+// ─────────────────────────────────────────────
+// ENUMS & MODELS FOR GRANTS & FINANCE (ADM-010 & ADM-011)
+// ─────────────────────────────────────────────
+
+model Grant {
+  id           String             @id @default(uuid())
+  title        String
+  description  String
+  agency       String // DST, MeitY, DPIIT, CSR
+  schemeType   String // SCHEME, CSR, RESEARCH
+  amount       Decimal            @default(0.0) @db.Decimal(14, 2)
+  eligibility  String[]
+  dueDate      DateTime?
+  status       String             @default("OPEN") // OPEN, UNDER_REVIEW, CLOSED, ARCHIVED
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  applications GrantApplication[]
+}
+
+model GrantApplication {
+  id            String        @id @default(uuid())
+  grantId       String
+  grant         Grant         @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  applicantName String
+  title         String
+  proposalUrl   String?
+  status        String        @default("SUBMITTED") // SUBMITTED, UNDER_REVIEW, CHANGES_REQUESTED, APPROVED, REJECTED
+  reviewScore   Int?
+  budgetPlan    Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  reviews       GrantReview[]
+}
+
+model GrantReview {
+  id            String           @id @default(uuid())
+  applicationId String
+  application   GrantApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  reviewerId    String
+  score         Int              @default(5)
+  comments      String
+  decision      String           @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt     DateTime         @default(now())
+
+  @@index([applicationId])
+}
+
+model CostCenter {
+  id           String                 @id @default(uuid())
+  name         String // Project R&D, Platform Ops, CSR Grants
+  code         String                 @unique
+  budget       Decimal                @default(0.0) @db.Decimal(14, 2)
+  allocated    Decimal                @default(0.0) @db.Decimal(14, 2)
+  createdAt    DateTime               @default(now())
+  transactions FinancialTransaction[]
+}
+
+model Invoice {
+  id            String    @id @default(uuid())
+  invoiceNumber String    @unique
+  projectId     String?
+  project       Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  amount        Decimal   @default(0.0) @db.Decimal(14, 2)
+  status        String    @default("DRAFT") // DRAFT, SENT, PAID, OVERDUE, VOID
+  dueDate       DateTime?
+  clientName    String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([projectId])
+}
+
+model FinancialTransaction {
+  id           String     @id @default(uuid())
+  costCenterId String
+  costCenter   CostCenter @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
+  type         String // REVENUE, EXPENSE
+  amount       Decimal    @default(0.0) @db.Decimal(14, 2)
+  status       String     @default("PENDING") // PENDING, APPROVED, REJECTED, RECONCILED
+  description  String
+  referenceId  String?
+  category     String // Equipment, Stipend, Platform Fee, Taxation
+  createdAt    DateTime   @default(now())
+
+  @@index([costCenterId])
+}
+
 
 
 

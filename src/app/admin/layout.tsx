@@ -27,8 +27,9 @@ const sidebarLinks = [
   { href: "/admin/marketplace",          label: "B2B Marketplace",     icon: ShoppingBag },
 
 
-  { href: "/admin/grants",               label: "Govt Grants Hub",     icon: Landmark,     comingSoon: true },
-  { href: "/admin/finance",              label: "Finance & Ledger",    icon: Wallet,       comingSoon: true },
+  { href: "/admin/grants",               label: "Govt Grants Hub",     icon: Landmark },
+  { href: "/admin/finance",              label: "Finance & Ledger",    icon: Wallet },
+
   { href: "/admin/operations",           label: "System Operations",   icon: HardHat,      comingSoon: true },
   { href: "/admin/analytics",            label: "System Analytics",    icon: LineChart,    comingSoon: true },
   { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch, comingSoon: true },
