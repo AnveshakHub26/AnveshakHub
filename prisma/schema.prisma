@@ -626,6 +626,10 @@ model StudentProfile {
   portfolioUrl       String?
   linkedinUrl        String?
   githubUrl          String?
+  certifications     Json?
+  achievements       Json?
+  careerInterests    String[]
+  projectsList       Json?
   verificationStatus OrgStatus            @default(PENDING)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
