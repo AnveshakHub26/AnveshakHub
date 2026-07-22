@@ -345,16 +345,19 @@ model AuditLog {
 }
 
 model Notification {
-  id        String   @id @default(uuid())
-  userId    String?
-  title     String
-  message   String
-  category  String   @default("INFO")
-  read      Boolean  @default(false)
-  link      String?
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  userId     String?
+  industryId String?
+  title      String
+  message    String
+  category   String   @default("INFO")
+  read       Boolean  @default(false)
+  link       String?
+  channel    String   @default("IN_APP") // IN_APP, EMAIL, ANNOUNCEMENT
+  createdAt  DateTime @default(now())
 
   @@index([userId, read])
+  @@index([industryId])
 }
 
 // ─────────────────────────────────────────────
@@ -1484,6 +1487,55 @@ model ExpertCollaborationDiscussion {
 
   @@index([industryId])
   @@index([expertId])
+}
+
+// ─────────────────────────────────────────────────────────────────
+// IND-009 - IND-012 — ENTERPRISE ANALYTICS, NOTIFICATIONS, SETTINGS & SUPPORT
+// ─────────────────────────────────────────────────────────────────
+
+model SupportTicket {
+  id           String   @id @default(uuid())
+  industryId   String
+  ticketNumber String   @unique
+  subject      String
+  category     String   @default("TECHNICAL") // TECHNICAL, BILLING, VERIFICATION, FEATURE_REQUEST
+  priority     String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status       String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  assignedTo   String?
+  messages     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([industryId])
+  @@index([status])
+}
+
+model KnowledgeArticle {
+  id           String   @id @default(uuid())
+  title        String
+  category     String   @default("GENERAL") // GENERAL, VERIFICATION, FUNDING, PROJECT_MGMT
+  content      String
+  viewsCount   Int      @default(0)
+  helpfulCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+}
+
+model OrganizationSetting {
+  id              String   @id @default(uuid())
+  industryId      String   @unique
+  ssoEnabled      Boolean  @default(false)
+  mfaRequired     Boolean  @default(false)
+  allowedDomains  String[]
+  ipWhitelist     String[]
+  defaultCurrency String   @default("INR")
+  timezone        String   @default("Asia/Kolkata")
+  autoRenewAlerts Boolean  @default(true)
+  updatedAt       DateTime @updatedAt
+
+  @@index([industryId])
 }
 
 
