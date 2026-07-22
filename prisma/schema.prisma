@@ -1766,6 +1766,37 @@ model StudentMeeting {
   @@index([studentId])
 }
 
+// ─────────────────────────────────────────────────────────────────
+// STU-007 & STU-008 — DOCUMENTS, CERTIFICATES, PROGRESS & ACHIEVEMENTS
+// ─────────────────────────────────────────────────────────────────
+
+model StudentCertificate {
+  id                 String   @id @default(uuid())
+  studentId          String
+  title              String
+  issuer             String
+  credentialId       String?
+  issueDate          DateTime?
+  verificationStatus String   @default("VERIFIED") // VERIFIED, PENDING, EXPIRED
+  certificateUrl     String?
+  createdAt          DateTime @default(now())
+
+  @@index([studentId])
+}
+
+model StudentAchievement {
+  id          String    @id @default(uuid())
+  studentId   String
+  title       String
+  issuer      String
+  category    String    @default("HACKATHON") // HACKATHON, FELLOWSHIP, HONORS, ACADEMIC
+  awardDate   DateTime?
+  description String?
+  createdAt   DateTime  @default(now())
+
+  @@index([studentId])
+}
+
 
 
 
