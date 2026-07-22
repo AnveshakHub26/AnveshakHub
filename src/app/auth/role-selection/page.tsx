@@ -38,72 +38,32 @@ const roles: RoleItem[] = [
   {
     id: "industry",
     title: "Industry / Organization",
-    description: "For companies, startups, LLPs, MSMEs, research organizations and government institutions seeking technical solutions, research collaboration or innovation support.",
+    description: "For companies, startups, LLPs, MSMEs, academic institutions, research organizations, NGOs, government agencies and vendors seeking technical solutions & research collaboration.",
     icon: Building2,
-    badge: "Verification Required",
-    responsibilities: ["Submit Problem Statements", "Fund Research Projects", "Access Vetted Experts"],
-    buttonText: "Continue as Industry",
+    badge: "Dynamic Metadata Registration",
+    responsibilities: ["Submit R&D Problem Statements", "Sponsor Applied Research", "Access Vetted Experts & Talents"],
+    buttonText: "Continue as Industry / Organization",
     destination: "/auth/register/industry"
   },
   {
     id: "expert",
-    title: "Expert",
-    description: "For professors, researchers, architects, technical experts, cyber security specialists, consultants and domain professionals who wish to contribute to projects.",
+    title: "Expert Advisor",
+    description: "For professors, PhD holders, researchers, industry professionals, freelancers, consultants, cyber security, AI/ML, legal & financial specialists.",
     icon: GraduationCap,
-    badge: "Professional Verification",
-    responsibilities: ["Structure Milestones & Deliverables", "Supervise Student Research", "Deliver High-Impact Solutions"],
-    buttonText: "Continue as Expert",
+    badge: "Professional Credential Audit",
+    responsibilities: ["Structure R&D Milestones", "Supervise Student Research", "Deliver Specialized Solutions"],
+    buttonText: "Continue as Expert Advisor",
     destination: "/auth/register/expert"
   },
   {
     id: "student",
-    title: "Student",
-    description: "For students seeking internships, research opportunities and industry projects under approved experts.",
+    title: "Student Researcher",
+    description: "For students, postgraduates & young researchers seeking internships, skill development, mentorship and industry-sponsored project execution.",
     icon: UserCheck,
-    badge: "Resume Required",
-    responsibilities: ["Apply to Vacancies", "Develop Core Project Elements", "Work under Vetted Experts"],
+    badge: "Student Verification",
+    responsibilities: ["Apply to Vacancies & Internships", "Execute Project Milestones", "Mentorship & Skill Certification"],
     buttonText: "Continue as Student",
     destination: "/auth/register/student"
-  },
-  {
-    id: "contributor",
-    title: "External Contributor",
-    description: "For freelancers, vendors, consultants and external specialists who wish to contribute specific services or resources.",
-    icon: Handshake,
-    badge: "Verification Required",
-    responsibilities: ["Deliver Niche Services", "Supply Special Research Tools", "Consult on Execution Nodes"],
-    buttonText: "Continue as Contributor",
-    destination: "/auth/register/contributor"
-  },
-  {
-    id: "partner",
-    title: "Partner Organization",
-    description: "Organizations collaborating with AnveshakHub for research, innovation, incubation or strategic partnerships.",
-    icon: Network,
-    badge: "MOU Governed",
-    responsibilities: ["Drive Strategic Research Labs", "Co-incubate High-tech Ventures", "Facilitate Knowledge Transfers"],
-    buttonText: "Continue",
-    destination: "/auth/register/partner"
-  },
-  {
-    id: "government",
-    title: "Government Organization",
-    description: "Government agencies collaborating for grants, innovation programs, research initiatives and public sector projects.",
-    icon: Landmark,
-    badge: "Agency Approval Required",
-    responsibilities: ["Distribute Government Grants", "Inspect Compliance Frameworks", "Monitor National Research Schemes"],
-    buttonText: "Continue",
-    destination: "/auth/register/government"
-  },
-  {
-    id: "vendor",
-    title: "Vendor / Supplier",
-    description: "Organizations supplying equipment, software, infrastructure or services for project execution.",
-    icon: Briefcase,
-    badge: "Vetted Supplier",
-    responsibilities: ["Furnish Equipment & Hardware", "Deploy Specialized Software licenses", "Support Laboratory Logistics"],
-    buttonText: "Continue",
-    destination: "/auth/register/vendor"
   }
 ];
 
