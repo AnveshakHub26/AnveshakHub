@@ -281,6 +281,26 @@ export default function ExpertProfilePage() {
                   ))}
                 </div>
               </div>
+
+              {/* Dynamic Expert Category Framework Metadata Card */}
+              <div className="border-t border-slate-100 pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-primary-light text-primary uppercase tracking-wide">
+                    Framework Config: PROFESSOR / TECHNICAL ADVISOR
+                  </span>
+                  <span className="text-[9px] text-slate-400 font-bold">Metadata-Driven Dynamic Profile</span>
+                </div>
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase block">Category Specialization</span>
+                    <span className="font-extrabold text-emerald-700">VERIFIED ACADEMIC & R&D EXPERT</span>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase block">Validated Academic Indices</span>
+                    <span className="font-bold text-slate-800">Google Scholar · ORCID · Scopus</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

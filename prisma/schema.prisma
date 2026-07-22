@@ -1923,6 +1923,98 @@ model IndustryCustomFields {
   createdAt   DateTime @default(now())
 }
 
+// ─────────────────────────────────────────────────────────────────
+// DYNAMIC EXPERT CATEGORY FRAMEWORK MODELS
+// ─────────────────────────────────────────────────────────────────
+
+model ExpertCategory {
+  id          String   @id @default(uuid())
+  code        String   @unique // e.g. PROFESSOR, AI_ML_EXPERT, CYBER_SECURITY, FREELANCER, CA, LEGAL_ADVISOR
+  name        String
+  group       String   @default("TECHNICAL") // ACADEMIC, RESEARCH, TECHNICAL, ADVISORY, PROFESSIONAL
+  description String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  templates             ExpertRegistrationTemplate[]
+  verificationTemplates ExpertVerificationTemplate[]
+}
+
+model ExpertRegistrationTemplate {
+  id               String   @id @default(uuid())
+  expertCategoryId String
+  version          Int      @default(1)
+  sections         Json     // Array of section configurations
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  expertCategory ExpertCategory       @relation(fields: [expertCategoryId], references: [id], onDelete: Cascade)
+  dynamicFields  ExpertDynamicField[]
+
+  @@index([expertCategoryId])
+}
+
+model ExpertDynamicField {
+  id             String  @id @default(uuid())
+  templateId     String
+  fieldKey       String
+  label          String
+  fieldType      String  @default("TEXT") // TEXT, NUMBER, SELECT, TEXTAREA, FILE, DATE, CHECKBOX
+  required       Boolean @default(false)
+  placeholder    String?
+  helpText       String?
+  options        Json?   // Select options array
+  validationJson Json?   // Regex patterns, min/max rules
+
+  template ExpertRegistrationTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+}
+
+model ExpertProfileMetadata {
+  id                 String   @id @default(uuid())
+  expertProfileId    String   @unique
+  expertCategoryCode String
+  attributesJson     Json     // Key-value store of category-specific attributes
+  updatedAt          DateTime @updatedAt
+
+  @@index([expertProfileId])
+  @@index([expertCategoryCode])
+}
+
+model ExpertVerificationTemplate {
+  id               String   @id @default(uuid())
+  expertCategoryId String
+  checklistsJson   Json     // Array of checklist items required for admin approval
+  updatedAt        DateTime @updatedAt
+
+  expertCategory ExpertCategory @relation(fields: [expertCategoryId], references: [id], onDelete: Cascade)
+
+  @@index([expertCategoryId])
+}
+
+model ExpertAttributes {
+  id              String   @id @default(uuid())
+  expertProfileId String
+  key             String
+  value           String
+  createdAt       DateTime @default(now())
+
+  @@index([expertProfileId])
+  @@index([key])
+}
+
+model ExpertCustomFields {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  dataType    String   @default("STRING")
+  description String?
+  createdAt   DateTime @default(now())
+}
+
 
 
 
