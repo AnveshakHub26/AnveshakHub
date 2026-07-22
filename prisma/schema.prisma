@@ -275,8 +275,11 @@ model Meeting {
   verificationRequest VerificationRequest? @relation(fields: [verReqId], references: [id])
   projectId    String?
   project      Project?        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  industryId   String?
+  industry     IndustryProfile? @relation(fields: [industryId], references: [id], onDelete: SetNull)
   title        String
   agenda       String?
+  momNotes     String?
   participants String[]
   startTime    DateTime
   endTime      DateTime
@@ -285,11 +288,19 @@ model Meeting {
   recordingUrl String?
   outcomes     String?
   notes        String?
+  isRecurring  Boolean         @default(false)
+  recurrenceRule String?
+  status       String          @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   
   actionItemsList MeetingActionItem[]
   feedbacks       MeetingFeedback[]
+  documents       MeetingDocument[]
+
+  @@index([industryId])
+  @@index([status])
+  @@index([startTime])
 }
 
 model Task {
@@ -467,6 +478,8 @@ model IndustryProfile {
   applications    InternshipApplication[]
   opportunities   MarketplaceOpportunity[]
   problemStatements ProblemStatement[]
+  meetings          Meeting[]
+  expertDiscussions ExpertCollaborationDiscussion[]
 
   @@index([lifecycle])
   @@index([engagementScore])
@@ -580,6 +593,7 @@ model ExpertProfile {
   marketplaceApplications MarketplaceApplication[]
   marketplaceInvitations  MarketplaceInvitation[]
   marketplaceReviews      MarketplaceReview[]
+  expertDiscussions ExpertCollaborationDiscussion[]
 }
 
 
@@ -1412,6 +1426,39 @@ model ProblemStatementTimeline {
   createdAt          DateTime         @default(now())
 
   @@index([problemStatementId])
+}
+
+// ─────────────────────────────────────────────────────────────────
+// IND-005 — EXPERT COLLABORATION & IND-006 — MEETINGS & CALENDAR
+// ─────────────────────────────────────────────────────────────────
+
+model MeetingDocument {
+  id          String   @id @default(uuid())
+  meetingId   String
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  name        String
+  fileUrl     String
+  fileSize    Int?
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+
+  @@index([meetingId])
+}
+
+model ExpertCollaborationDiscussion {
+  id          String          @id @default(uuid())
+  industryId  String
+  industry    IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  expertId    String?
+  expert      ExpertProfile?  @relation(fields: [expertId], references: [id], onDelete: SetNull)
+  authorName  String
+  content     String
+  isInternal  Boolean         @default(false)
+  messageType String          @default("GENERAL") // GENERAL, QUESTION, FEEDBACK, PROPOSAL
+  createdAt   DateTime        @default(now())
+
+  @@index([industryId])
+  @@index([expertId])
 }
 
 
