@@ -519,24 +519,29 @@ model IndustryTimeline {
 }
 
 model DocumentVault {
-  id             String          @id @default(uuid())
-  industryId     String
-  industry       IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
-  name           String
-  docType        VaultDocType    @default(OTHER)
-  fileUrl        String
-  fileSize       Int?
-  mimeType       String?
-  version        Int             @default(1)
+  id                String          @id @default(uuid())
+  industryId        String
+  industry          IndustryProfile @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  name              String
+  docType           VaultDocType    @default(OTHER)
+  fileUrl           String
+  fileSize          Int?
+  mimeType          String?
+  version           Int             @default(1)
   previousVersionId String?
-  uploadedBy     String?
-  description    String?
-  expiresAt      DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  uploadedBy        String?
+  description       String?
+  expiresAt         DateTime?
+  accessLevel       String          @default("RESTRICTED") // PUBLIC, INTERNAL, RESTRICTED, CONFIDENTIAL
+  approvalStatus    String          @default("APPROVED") // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED
+  tags              String[]
+  downloadCount     Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   @@index([industryId])
   @@index([docType])
+  @@index([accessLevel])
 }
 
 // ─────────────────────────────────────────────
@@ -1034,18 +1039,23 @@ model MarketplaceReview {
 // ─────────────────────────────────────────────
 
 model Grant {
-  id           String             @id @default(uuid())
-  title        String
-  description  String
-  agency       String // DST, MeitY, DPIIT, CSR
-  schemeType   String // SCHEME, CSR, RESEARCH
-  amount       Decimal            @default(0.0) @db.Decimal(14, 2)
-  eligibility  String[]
-  dueDate      DateTime?
-  status       String             @default("OPEN") // OPEN, UNDER_REVIEW, CLOSED, ARCHIVED
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-  applications GrantApplication[]
+  id                String             @id @default(uuid())
+  industryId        String?
+  title             String
+  description       String
+  agency            String // DST, MeitY, DPIIT, CSR
+  schemeType        String // SCHEME, CSR, RESEARCH
+  amount            Decimal            @default(0.0) @db.Decimal(14, 2)
+  disbursedAmount   Decimal            @default(0.0) @db.Decimal(14, 2)
+  remainingAmount   Decimal            @default(0.0) @db.Decimal(14, 2)
+  eligibility       String[]
+  dueDate           DateTime?
+  status            String             @default("OPEN") // OPEN, UNDER_REVIEW, CLOSED, ARCHIVED
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  applications      GrantApplication[]
+
+  @@index([industryId])
 }
 
 model GrantApplication {
@@ -1089,31 +1099,41 @@ model CostCenter {
 model Invoice {
   id            String    @id @default(uuid())
   invoiceNumber String    @unique
+  industryId    String?
   projectId     String?
   project       Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
   amount        Decimal   @default(0.0) @db.Decimal(14, 2)
+  taxAmount     Decimal   @default(0.0) @db.Decimal(14, 2)
+  netAmount     Decimal   @default(0.0) @db.Decimal(14, 2)
   status        String    @default("DRAFT") // DRAFT, SENT, PAID, OVERDUE, VOID
+  paymentMethod String?
+  paymentReference String?
   dueDate       DateTime?
+  paidAt        DateTime?
   clientName    String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([projectId])
+  @@index([industryId])
 }
 
 model FinancialTransaction {
   id           String     @id @default(uuid())
+  industryId   String?
   costCenterId String
   costCenter   CostCenter @relation(fields: [costCenterId], references: [id], onDelete: Cascade)
   type         String // REVENUE, EXPENSE
   amount       Decimal    @default(0.0) @db.Decimal(14, 2)
-  status       String     @default("PENDING") // PENDING, APPROVED, REJECTED, RECONCILED
+  status       String     @default("APPROVED") // PENDING, APPROVED, REJECTED, RECONCILED
   description  String
   referenceId  String?
+  receiptUrl   String?
   category     String // Equipment, Stipend, Platform Fee, Taxation
   createdAt    DateTime   @default(now())
 
   @@index([costCenterId])
+  @@index([industryId])
 }
 
 // ─────────────────────────────────────────────
@@ -1216,6 +1236,8 @@ model SystemSetting {
 
 model LegalAgreement {
   id               String    @id @default(uuid())
+  industryId       String?
+  projectId        String?
   title            String
   agreementType    String // NDA, MOU, CONTRACT, IP_AGREEMENT, SERVICE_LEVEL
   targetEntity     String // ORGANIZATION, EXPERT, INDUSTRY, STUDENT
@@ -1228,11 +1250,14 @@ model LegalAgreement {
   expiryDate       DateTime?
   eSignatureStatus String    @default("PENDING") // PENDING, SIGNED, DECLINED
   signedAt         DateTime?
+  renewalReminderDays Int?   @default(30)
+  notes            String?
   createdBy        String
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
   @@index([agreementType, targetEntity])
+  @@index([industryId])
 }
 
 model LegalTemplate {
