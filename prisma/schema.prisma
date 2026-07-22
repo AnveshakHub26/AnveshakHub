@@ -643,6 +643,7 @@ model StudentProfile {
   documents          StudentDocument[]
   timeline           StudentTimeline[]
   applications       InternshipApplication[]
+  studentApplications StudentApplication[]
   attendance         StudentAttendance[]
   milestones         StudentMilestone[]
 }
@@ -1001,6 +1002,7 @@ model MarketplaceOpportunity {
   
   applications     MarketplaceApplication[]
   invitations      MarketplaceInvitation[]
+  studentApplications StudentApplication[]
 
   @@index([industryId])
 }
@@ -1702,6 +1704,35 @@ model ExpertSupportTicket {
 
   @@index([expertId])
   @@index([status])
+}
+
+// ─────────────────────────────────────────────────────────────────
+// STU-003 & STU-004 — STUDENT OPPORTUNITIES & PROJECT MANAGEMENT
+// ─────────────────────────────────────────────────────────────────
+
+model StudentApplication {
+  id            String                 @id @default(uuid())
+  studentId     String
+  student       StudentProfile         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  opportunityId String
+  opportunity   MarketplaceOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  coverLetter   String?
+  resumeUrl     String?
+  status        String                 @default("APPLIED") // APPLIED, SHORTLISTED, SELECTED, REJECTED
+  createdAt     DateTime               @default(now())
+
+  @@index([studentId])
+  @@index([opportunityId])
+}
+
+model StudentSavedOpportunity {
+  id            String   @id @default(uuid())
+  studentId     String
+  opportunityId String
+  createdAt     DateTime @default(now())
+
+  @@index([studentId])
+  @@index([opportunityId])
 }
 
 
