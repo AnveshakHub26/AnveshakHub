@@ -1735,6 +1735,37 @@ model StudentSavedOpportunity {
   @@index([opportunityId])
 }
 
+// ─────────────────────────────────────────────────────────────────
+// STU-005 & STU-006 — LEARNING, MENTORSHIP & MEETINGS
+// ─────────────────────────────────────────────────────────────────
+
+model LearningResource {
+  id          String   @id @default(uuid())
+  title       String
+  category    String   @default("EMBEDDED_SYSTEMS") // EMBEDDED_SYSTEMS, SIMULINK, ROS2, GENERAL
+  url         String
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model StudentMeeting {
+  id          String    @id @default(uuid())
+  studentId   String
+  title       String
+  orgName     String
+  startTime   DateTime
+  endTime     DateTime
+  platform    String    @default("GOOGLE_MEET") // GOOGLE_MEET, MS_TEAMS, ZOOM
+  videoLink   String
+  status      String    @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  agenda      String?
+  momNotes    String?
+  actionItems Json?
+  createdAt   DateTime  @default(now())
+
+  @@index([studentId])
+}
+
 
 
 
