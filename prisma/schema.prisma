@@ -1576,6 +1576,50 @@ model ProjectDeliverable {
   @@index([projectId])
 }
 
+// ─────────────────────────────────────────────────────────────────
+// EXP-005 & EXP-006 — STUDENT MENTORSHIP & EXPERT MEETINGS
+// ─────────────────────────────────────────────────────────────────
+
+model StudentEvaluation {
+  id             String   @id @default(uuid())
+  studentId      String
+  expertId       String
+  technicalScore Float    @default(4.5)
+  softSkillScore Float    @default(4.5)
+  overallScore   Float    @default(4.5)
+  feedback       String?
+  createdAt      DateTime @default(now())
+
+  @@index([studentId])
+  @@index([expertId])
+}
+
+model StudentRecommendation {
+  id        String   @id @default(uuid())
+  studentId String
+  expertId  String
+  title     String
+  content   String
+  issuedAt  DateTime @default(now())
+
+  @@index([studentId])
+  @@index([expertId])
+}
+
+model StudentLearningPlan {
+  id          String    @id @default(uuid())
+  studentId   String
+  expertId    String
+  title       String
+  goals       Json?
+  status      String    @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED
+  targetDate  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([studentId])
+  @@index([expertId])
+}
+
 
 
 
