@@ -588,10 +588,15 @@ model ExpertProfile {
   orcid             String?
   skills            String[]
   domains           String[]
-  certifications    Json?
-  employmentHistory Json?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  certifications        Json?
+  employmentHistory     Json?
+  hourlyRate            Decimal?           @default(0.0) @db.Decimal(10, 2)
+  preferredHoursPerWeek Int?               @default(10)
+  patents               Json?
+  publications_list     Json?
+  verificationStatus    String             @default("VERIFIED") // PENDING, UNDER_REVIEW, VERIFIED, REJECTED
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
   
   projects          Project[]
   students          StudentProfile[]
