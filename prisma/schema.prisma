@@ -1620,6 +1620,52 @@ model StudentLearningPlan {
   @@index([expertId])
 }
 
+// ─────────────────────────────────────────────────────────────────
+// EXP-007 & EXP-008 — EXPERT DOCUMENTS & FINANCIAL MANAGEMENT
+// ─────────────────────────────────────────────────────────────────
+
+model ExpertEarning {
+  id          String   @id @default(uuid())
+  expertId    String
+  projectId   String?
+  amount      Decimal  @default(0.0) @db.Decimal(12, 2)
+  earningType String   @default("HONORARIUM") // HONORARIUM, CONSULTANCY, GRANT_PAYOUT
+  status      String   @default("PAID") // PAID, PENDING, PROCESSING
+  payoutDate  DateTime @default(now())
+
+  @@index([expertId])
+}
+
+model ExpertGrant {
+  id                String    @id @default(uuid())
+  expertId          String
+  title             String
+  agency            String
+  totalGrantAmount  Decimal   @default(0.0) @db.Decimal(12, 2)
+  disbursedAmount   Decimal   @default(0.0) @db.Decimal(12, 2)
+  remainingAmount   Decimal   @default(0.0) @db.Decimal(12, 2)
+  status            String    @default("ACTIVE") // ACTIVE, COMPLETED, PROPOSED
+  startDate         DateTime?
+  endDate           DateTime?
+  createdAt         DateTime  @default(now())
+
+  @@index([expertId])
+}
+
+model ExpertReimbursement {
+  id          String   @id @default(uuid())
+  expertId    String
+  projectId   String?
+  title       String
+  amount      Decimal  @default(0.0) @db.Decimal(10, 2)
+  category    String   @default("TRAVEL") // TRAVEL, LAB_EQUIPMENT, PUBLICATION_FEE, OTHER
+  status      String   @default("SUBMITTED") // SUBMITTED, APPROVED, DISBURSED, REJECTED
+  receiptUrl  String?
+  createdAt   DateTime @default(now())
+
+  @@index([expertId])
+}
+
 
 
 
