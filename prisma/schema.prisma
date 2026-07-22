@@ -1002,15 +1002,19 @@ model MarketplaceOpportunity {
 }
 
 model MarketplaceApplication {
-  id            String                 @id @default(uuid())
-  opportunityId String
-  opportunity   MarketplaceOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
-  expertId      String
-  expert        ExpertProfile          @relation(fields: [expertId], references: [id], onDelete: Cascade)
-  status        String                 @default("APPLIED") // APPLIED, SHORTLISTED, APPROVED, REJECTED
-  proposal      String?
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
+  id                  String                 @id @default(uuid())
+  opportunityId       String
+  opportunity         MarketplaceOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  expertId            String
+  expert              ExpertProfile          @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  status              String                 @default("APPLIED") // APPLIED, SHORTLISTED, APPROVED, REJECTED
+  proposal            String?
+  proposedBudget      Decimal?               @default(0.0) @db.Decimal(12, 2)
+  durationWeeks       Int?                   @default(12)
+  proposalDocUrl      String?
+  milestonesBreakdown Json?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
 
   @@index([opportunityId])
   @@index([expertId])
@@ -1541,6 +1545,35 @@ model OrganizationSetting {
   updatedAt       DateTime @updatedAt
 
   @@index([industryId])
+}
+
+// ─────────────────────────────────────────────────────────────────
+// EXP-003 & EXP-004 — EXPERT OPPORTUNITIES & PROJECT MANAGEMENT
+// ─────────────────────────────────────────────────────────────────
+
+model SavedOpportunity {
+  id            String   @id @default(uuid())
+  expertId      String
+  opportunityId String
+  createdAt     DateTime @default(now())
+
+  @@index([expertId])
+  @@index([opportunityId])
+}
+
+model ProjectDeliverable {
+  id            String   @id @default(uuid())
+  projectId     String
+  milestoneId   String?
+  title         String
+  description   String?
+  fileUrl       String
+  submittedBy   String
+  status        String   @default("SUBMITTED") // SUBMITTED, APPROVED, CHANGES_REQUESTED
+  reviewComment String?
+  submittedAt   DateTime @default(now())
+
+  @@index([projectId])
 }
 
 
