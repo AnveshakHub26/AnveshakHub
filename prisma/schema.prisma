@@ -466,6 +466,7 @@ model IndustryProfile {
   projects        Project[]
   applications    InternshipApplication[]
   opportunities   MarketplaceOpportunity[]
+  problemStatements ProblemStatement[]
 
   @@index([lifecycle])
   @@index([engagementScore])
@@ -644,6 +645,9 @@ model Project {
   activities       ProjectActivity[]
   meetings         Meeting[]
   invoices         Invoice[]
+  
+  problemStatementRefId String?
+  problemStatementRef   ProblemStatement?    @relation(fields: [problemStatementRefId], references: [id])
 }
 
 model ExpertDocument {
@@ -1344,6 +1348,70 @@ model OrganizationUser {
   lastLoginAt  DateTime?
 
   @@index([orgId])
+}
+
+// ─────────────────────────────────────────────
+// MODELS FOR IND-003 PROBLEM STATEMENT Lifecyle
+// ─────────────────────────────────────────────
+
+model ProblemStatement {
+  id              String                     @id @default(uuid())
+  industryId      String
+  industry        IndustryProfile            @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  title           String
+  description     String
+  category        String // e.g. "AI/ML", "Renewable Energy", "Hardware Design"
+  priority        String                     @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status          String                     @default("DRAFT") // DRAFT, SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED
+  version         Int                        @default(1)
+  aiAnalysis      Json?                      // Feasibility score, matching, key terms
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  
+  projects        Project[]
+  comments        ProblemStatementComment[]
+  documents       ProblemStatementDocument[]
+  timeline        ProblemStatementTimeline[]
+
+  @@index([industryId])
+  @@index([status])
+}
+
+model ProblemStatementComment {
+  id                 String           @id @default(uuid())
+  problemStatementId String
+  problemStatement   ProblemStatement @relation(fields: [problemStatementId], references: [id], onDelete: Cascade)
+  authorName         String
+  content            String
+  isInternal         Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+
+  @@index([problemStatementId])
+}
+
+model ProblemStatementDocument {
+  id                 String           @id @default(uuid())
+  problemStatementId String
+  problemStatement   ProblemStatement @relation(fields: [problemStatementId], references: [id], onDelete: Cascade)
+  name               String
+  fileUrl            String
+  fileSize           Int?
+  uploadedBy         String?
+  createdAt          DateTime         @default(now())
+
+  @@index([problemStatementId])
+}
+
+model ProblemStatementTimeline {
+  id                 String           @id @default(uuid())
+  problemStatementId String
+  problemStatement   ProblemStatement @relation(fields: [problemStatementId], references: [id], onDelete: Cascade)
+  event              String
+  description        String?
+  performedBy        String?
+  createdAt          DateTime         @default(now())
+
+  @@index([problemStatementId])
 }
 
 
