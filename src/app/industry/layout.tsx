@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import BrandLogo from "@/components/brand-logo";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Building2, Briefcase, Calendar, ShoppingBag,
@@ -37,16 +38,8 @@ export default function IndustryLayout({ children }: { children: React.ReactNode
         className="relative flex flex-col bg-secondary border-r border-slate-700/30 shrink-0 overflow-hidden z-30 text-slate-300"
       >
         {/* Logo Block */}
-        <div className="flex items-center gap-3 px-4 py-0 h-16 border-b border-slate-700/30">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-            <Building2 className="h-4 w-4 text-white" />
-          </div>
-          {!collapsed && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="overflow-hidden">
-              <span className="font-extrabold text-sm text-white tracking-tight leading-none block">AnveshakHub</span>
-              <span className="text-[9px] text-slate-400 font-bold block uppercase tracking-wider mt-0.5">Industry Portal</span>
-            </motion.div>
-          )}
+        <div className="flex items-center px-4 py-0 h-16 border-b border-slate-700/30 overflow-hidden">
+          <BrandLogo lightText size="sm" showText={!collapsed} />
         </div>
 
         {/* Org Context */}

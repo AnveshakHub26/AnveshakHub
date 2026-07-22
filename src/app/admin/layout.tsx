@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import BrandLogo from "@/components/brand-logo";
 import { motion, AnimatePresence } from "framer-motion";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -114,16 +115,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         collapsed ? "w-16" : "w-64"
       ].join(" ")}>
         {/* Brand Header */}
-        <div className="h-16 flex items-center px-4 border-b border-slate-700/30 gap-2 overflow-hidden shrink-0">
-          <div className="bg-primary text-white p-1.5 rounded-lg shrink-0">
-            <Building2 className="h-4.5 w-4.5" />
-          </div>
-          {!collapsed && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0">
-              <span className="font-extrabold text-sm text-white tracking-tight leading-none block">AnveshakHub</span>
-              <span className="text-[9px] text-slate-400 font-bold block uppercase tracking-wider mt-0.5">Control Center</span>
-            </motion.div>
-          )}
+        <div className="h-16 flex items-center px-4 border-b border-slate-700/30 overflow-hidden shrink-0">
+          <BrandLogo lightText size="sm" showText={!collapsed} />
         </div>
 
         {/* Sidebar Nav links */}

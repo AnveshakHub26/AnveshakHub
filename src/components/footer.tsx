@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Activity, Mail, MapPin } from "lucide-react";
+import BrandLogo from "@/components/brand-logo";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -25,14 +26,8 @@ export default function Footer() {
                 e.preventDefault();
                 handleScrollToTop();
               }}
-              className="flex items-center gap-2.5 group"
             >
-              <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-white shadow-sm">
-                <Activity className="h-5 w-5" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Anveshak<span className="text-primary">Hub</span>
-              </span>
+              <BrandLogo lightText size="md" />
             </Link>
             <p className="text-xs leading-relaxed text-slate-400 max-w-sm mt-2">
               The secure, enterprise-grade collaboration platform bridging corporate funding and academic research pipelines under NDA protection.
