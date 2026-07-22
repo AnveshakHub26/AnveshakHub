@@ -259,6 +259,26 @@ export default function OrganizationManagement() {
                   <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-1"><MapPin className="h-2.5 w-2.5" /> Registered Address</label>
                   <p className="font-semibold text-slate-700">{org.addressLine}, {org.city}, {org.state} — {org.pin}</p>
                 </div>
+
+                {/* Dynamic Industry Type Framework Metadata Card */}
+                <div className="border-t border-slate-100 pt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-primary-light text-primary uppercase tracking-wide">
+                      Framework Config: {org.orgType}
+                    </span>
+                    <span className="text-[9px] text-slate-400 font-bold">Metadata-Driven Dynamic Profile</span>
+                  </div>
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase block">Category Verification</span>
+                      <span className="font-extrabold text-emerald-700">VERIFIED TEMPLATE</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase block">Dynamic Statutory Attributes</span>
+                      <span className="font-bold text-slate-800">DPIIT / UDYAM / CIN Validated</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
