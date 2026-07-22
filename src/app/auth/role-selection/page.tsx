@@ -47,12 +47,12 @@ const roles: RoleItem[] = [
   },
   {
     id: "expert",
-    title: "Expert Advisor",
+    title: "Experts",
     description: "For professors, PhD holders, researchers, industry professionals, freelancers, consultants, cyber security, AI/ML, legal & financial specialists.",
     icon: GraduationCap,
     badge: "Professional Credential Audit",
     responsibilities: ["Structure R&D Milestones", "Supervise Student Research", "Deliver Specialized Solutions"],
-    buttonText: "Continue as Expert Advisor",
+    buttonText: "Continue as Expert",
     destination: "/auth/register/expert"
   },
   {
