@@ -123,7 +123,7 @@ export default function OrganizationManagement() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-full">
-      <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
     </div>
   );
 
@@ -144,21 +144,21 @@ export default function OrganizationManagement() {
             <button onClick={fetchAll} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
-            <button onClick={() => setInviteOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700">
+            <button onClick={() => setInviteOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
               <Plus className="h-3.5 w-3.5" /> Invite Member
             </button>
           </div>
         </div>
 
         {org && (
-          <div className="mt-4 flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 w-fit">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+          <div className="mt-4 flex items-center gap-3 bg-primary-light border border-primary-border rounded-xl px-4 py-2.5 w-fit">
+            <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
             <div className="text-xs">
-              <span className="font-bold text-emerald-800">{org.orgName}</span>
-              <span className="text-emerald-600 mx-1.5">·</span>
-              <span className="font-semibold text-emerald-700">{org.verificationStatus}</span>
-              <span className="text-emerald-500 mx-1.5">·</span>
-              <span className="text-emerald-600 text-[10px]">DPIIT: {org.dpiitNumber} · GSTIN: {org.gstin}</span>
+              <span className="font-bold text-primary-text">{org.orgName}</span>
+              <span className="text-primary mx-1.5">·</span>
+              <span className="font-semibold text-primary-text">{org.verificationStatus}</span>
+              <span className="text-primary mx-1.5">·</span>
+              <span className="text-primary text-[10px]">DPIIT: {org.dpiitNumber} · GSTIN: {org.gstin}</span>
             </div>
           </div>
         )}
@@ -172,7 +172,7 @@ export default function OrganizationManagement() {
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all -mb-0 ${
-                activeTab === tab.key ? "border-emerald-500 text-emerald-700" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
               }`}
             >
               {tab.label}
@@ -198,7 +198,7 @@ export default function OrganizationManagement() {
                     </button>
                   ) : (
                     <div className="flex gap-2">
-                      <button onClick={handleSaveProfile} disabled={saving} className="h-7 px-3 bg-emerald-600 text-white rounded-lg text-[10px] font-bold hover:bg-emerald-700 flex items-center gap-1">
+                      <button onClick={handleSaveProfile} disabled={saving} className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1">
                         {saving && <Loader2 className="h-3 w-3 animate-spin" />} Save Changes
                       </button>
                       <button onClick={() => setEditMode(false)} className="h-7 px-3 border border-slate-200 text-slate-500 rounded-lg text-[10px] font-semibold hover:bg-slate-50">Cancel</button>
@@ -269,14 +269,14 @@ export default function OrganizationManagement() {
               <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><MapPin className="h-4 w-4 text-blue-500" /> Branch Offices ({branches.length})</h3>
-                  <button className="h-7 px-3 bg-emerald-600 text-white rounded-lg text-[10px] font-bold hover:bg-emerald-700 flex items-center gap-1"><Plus className="h-3 w-3" /> Add Branch</button>
+                  <button className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1"><Plus className="h-3 w-3" /> Add Branch</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {branches.map(b => (
                     <div key={b.id} className="border border-slate-100 rounded-xl p-4 space-y-2 text-xs hover:border-slate-200 transition-colors">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-slate-800">{b.name}</span>
-                        {b.isHeadquarters && <span className="text-[8px] bg-emerald-50 text-emerald-700 border border-emerald-200 rounded px-1.5 font-bold">HQ</span>}
+                        {b.isHeadquarters && <span className="text-[8px] bg-primary-light text-primary-text border border-primary-border rounded px-1.5 font-bold">HQ</span>}
                       </div>
                       <p className="text-[10px] text-slate-500">{b.addressLine}</p>
                       <p className="text-[10px] font-semibold text-slate-600">{b.city}, {b.state} — {b.pinCode}</p>
@@ -289,7 +289,7 @@ export default function OrganizationManagement() {
               <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><Building2 className="h-4 w-4 text-indigo-500" /> Departments ({departments.length})</h3>
-                  <button className="h-7 px-3 bg-emerald-600 text-white rounded-lg text-[10px] font-bold hover:bg-emerald-700 flex items-center gap-1"><Plus className="h-3 w-3" /> Add Department</button>
+                  <button className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1"><Plus className="h-3 w-3" /> Add Department</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {departments.map(d => (
@@ -312,7 +312,7 @@ export default function OrganizationManagement() {
             <motion.div key="reps" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><UserCheck className="h-4 w-4 text-purple-500" /> Authorized Representatives & Signatories</h3>
-                <button className="h-7 px-3 bg-emerald-600 text-white rounded-lg text-[10px] font-bold hover:bg-emerald-700 flex items-center gap-1"><Plus className="h-3 w-3" /> Add Representative</button>
+                <button className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1"><Plus className="h-3 w-3" /> Add Representative</button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {representatives.map(rep => (
@@ -324,7 +324,7 @@ export default function OrganizationManagement() {
                       </div>
                       <div className="flex flex-col gap-1 items-end">
                         {rep.isPrimary && <span className="text-[8px] bg-purple-50 text-purple-700 border border-purple-200 rounded px-1.5 font-bold">PRIMARY</span>}
-                        {rep.isAuthorizedSignatory && <span className="text-[8px] bg-emerald-50 text-emerald-700 border border-emerald-200 rounded px-1.5 font-bold">SIGNATORY</span>}
+                        {rep.isAuthorizedSignatory && <span className="text-[8px] bg-primary-light text-primary-text border border-primary-border rounded px-1.5 font-bold">SIGNATORY</span>}
                       </div>
                     </div>
                     <div className="space-y-1 text-[9px] text-slate-500">
@@ -345,7 +345,7 @@ export default function OrganizationManagement() {
                 <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><Users className="h-4 w-4 text-blue-500" /> Team Members ({orgUsers.length})</h3>
                 <div className="relative">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members…" className="pl-8 pr-3 h-7 text-[10px] border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-400 bg-white w-44" />
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members…" className="pl-8 pr-3 h-7 text-[10px] border border-slate-200 rounded-lg focus:outline-none focus:border-primary bg-white w-44" />
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -408,15 +408,15 @@ export default function OrganizationManagement() {
               <div className="space-y-3 text-xs">
                 <div>
                   <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Full Name *</label>
-                  <input value={inviteName} onChange={e => setInviteName(e.target.value)} placeholder="e.g. Ravi Kumar" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-emerald-400" />
+                  <input value={inviteName} onChange={e => setInviteName(e.target.value)} placeholder="e.g. Ravi Kumar" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary" />
                 </div>
                 <div>
                   <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Work Email *</label>
-                  <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="e.g. ravi@solarispower.in" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-emerald-400" />
+                  <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="e.g. ravi@solarispower.in" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary" />
                 </div>
                 <div>
                   <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Platform Role *</label>
-                  <select value={inviteRole} onChange={e => setInviteRole(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-emerald-400">
+                  <select value={inviteRole} onChange={e => setInviteRole(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary">
                     <option value="ORG_ADMIN">Org Admin</option>
                     <option value="PROJECT_LEAD">Project Lead</option>
                     <option value="FINANCE_HEAD">Finance Head</option>
@@ -426,7 +426,7 @@ export default function OrganizationManagement() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
-                <button onClick={handleInviteUser} className="h-8 px-4 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 text-xs">Send Invitation</button>
+                <button onClick={handleInviteUser} className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover text-xs">Send Invitation</button>
                 <button onClick={() => setInviteOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
               </div>
             </motion.div>

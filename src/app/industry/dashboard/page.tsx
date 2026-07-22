@@ -73,7 +73,7 @@ export default function IndustryDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -101,7 +101,7 @@ export default function IndustryDashboard() {
           { label: "Active Projects", value: kpis.activeProjects, icon: Briefcase, color: "text-blue-600", bg: "bg-blue-50" },
           { label: "Pending Meetings", value: kpis.pendingMeetings, icon: Calendar, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Problem Statements", value: kpis.openProblemStatements, icon: FileText, color: "text-indigo-600", bg: "bg-indigo-50" },
-          { label: "Grant Applications", value: kpis.grantApplications, icon: Landmark, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Grant Applications", value: kpis.grantApplications, icon: Landmark, color: "text-primary", bg: "bg-primary-light" },
           { label: "Platform Credits", value: formatINR(kpis.platformCreditBalance), icon: Wallet, color: "text-purple-600", bg: "bg-purple-50" },
         ].map((stat, i) => {
           const Icon = stat.icon;
@@ -162,7 +162,7 @@ export default function IndustryDashboard() {
                       initial={{ width: 0 }}
                       animate={{ width: `${proj.progress}%` }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full"
+                      className="h-full bg-gradient-to-r from-primary to-primary-hover rounded-full"
                     />
                   </div>
                 </div>
@@ -173,7 +173,7 @@ export default function IndustryDashboard() {
           {/* Financial Summary */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
             <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5">
-              <Wallet className="h-4 w-4 text-emerald-500" /> Financial & Grant Summary
+              <Wallet className="h-4 w-4 text-primary" /> Financial & Grant Summary
             </h3>
             <div className="grid grid-cols-3 gap-4">
               {[
@@ -195,7 +195,7 @@ export default function IndustryDashboard() {
               </div>
               <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-primary to-primary-hover rounded-full"
                   style={{ width: `${Math.round((financial.disbursedAmount / financial.allocatedBudget) * 100)}%` }}
                 />
               </div>
@@ -214,12 +214,12 @@ export default function IndustryDashboard() {
                   <Link
                     key={action.label}
                     href={action.href}
-                    className="flex items-center gap-3 p-3 border border-slate-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50 transition-all group"
+                    className="flex items-center gap-3 p-3 border border-slate-200 rounded-xl hover:border-primary-border hover:bg-primary-light transition-all group"
                   >
-                    <div className="h-8 w-8 bg-slate-100 group-hover:bg-emerald-100 rounded-lg flex items-center justify-center transition-colors shrink-0">
-                      <Icon className="h-4 w-4 text-slate-600 group-hover:text-emerald-600 transition-colors" />
+                    <div className="h-8 w-8 bg-slate-100 group-hover:bg-primary-light rounded-lg flex items-center justify-center transition-colors shrink-0">
+                      <Icon className="h-4 w-4 text-slate-600 group-hover:text-primary transition-colors" />
                     </div>
-                    <span className="text-xs font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">{action.label}</span>
+                    <span className="text-xs font-semibold text-slate-700 group-hover:text-primary transition-colors">{action.label}</span>
                   </Link>
                 );
               })}
@@ -254,7 +254,7 @@ export default function IndustryDashboard() {
                     <span className="text-[9px] text-slate-400 font-semibold flex items-center gap-1">
                       <Clock className="h-2.5 w-2.5" /> {mtg.time}
                     </span>
-                    <a href={mtg.link} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold text-emerald-600 hover:underline">
+                    <a href={mtg.link} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold text-primary hover:underline">
                       Join Call →
                     </a>
                   </div>
@@ -272,7 +272,7 @@ export default function IndustryDashboard() {
             <div className="relative border-l border-slate-100 pl-4 ml-2 space-y-4">
               {activities.map((act) => (
                 <div key={act.id} className="relative">
-                  <div className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-white border-2 border-emerald-400 shadow-sm" />
+                  <div className="absolute -left-[21px] top-0.5 h-3 w-3 rounded-full bg-white border-2 border-primary shadow-sm" />
                   <p className="text-[10px] text-slate-700 font-semibold leading-relaxed">{act.description}</p>
                   <span className="text-[8px] text-slate-400 font-semibold mt-0.5 block">
                     {new Date(act.timestamp).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
