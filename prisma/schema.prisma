@@ -1797,6 +1797,40 @@ model StudentAchievement {
   @@index([studentId])
 }
 
+// ─────────────────────────────────────────────────────────────────
+// STU-009 - STU-012 — ANALYTICS, NOTIFICATIONS, SETTINGS & SUPPORT
+// ─────────────────────────────────────────────────────────────────
+
+model StudentSetting {
+  id              String   @id @default(uuid())
+  studentId       String   @unique
+  emailAlerts     Boolean  @default(true)
+  smsAlerts       Boolean  @default(false)
+  mfaEnabled      Boolean  @default(false)
+  privacyMode     Boolean  @default(false)
+  theme           String   @default("LIGHT")
+  defaultCurrency String   @default("INR")
+  updatedAt       DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model StudentSupportTicket {
+  id           String   @id @default(uuid())
+  studentId    String
+  ticketNumber String   @unique
+  subject      String
+  category     String   @default("TECHNICAL") // TECHNICAL, REIMBURSEMENT, VERIFICATION, FEATURE_REQUEST
+  priority     String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status       String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  messages     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([status])
+}
+
 
 
 
