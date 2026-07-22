@@ -29,12 +29,19 @@ export default function VerificationQueuePage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [auditComment, setAuditComment] = useState("");
 
+  const [typeStats, setTypeStats] = useState<any[]>([]);
+
   const loadQueue = async () => {
     try {
       const res = await fetch("/api/admin/verify");
       const data = await res.json();
       if (res.ok) {
         setQueue(data.queue);
+      }
+      const statsRes = await fetch("/api/admin/industry-verification/stats");
+      const statsData = await statsRes.json();
+      if (statsRes.ok) {
+        setTypeStats(statsData.byType || []);
       }
     } catch (e) {
       console.error(e);

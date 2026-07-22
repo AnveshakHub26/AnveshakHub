@@ -1831,6 +1831,98 @@ model StudentSupportTicket {
   @@index([status])
 }
 
+// ─────────────────────────────────────────────────────────────────
+// DYNAMIC INDUSTRY TYPE FRAMEWORK MODELS
+// ─────────────────────────────────────────────────────────────────
+
+model IndustryType {
+  id          String   @id @default(uuid())
+  code        String   @unique // e.g. STARTUP, MSME, ENTERPRISE, LLP, INSTITUTION, NGO
+  name        String
+  category    String   @default("COMMERCIAL") // COMMERCIAL, EDUCATIONAL, RESEARCH, NON_PROFIT
+  description String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  templates             IndustryRegistrationTemplate[]
+  verificationTemplates IndustryVerificationTemplate[]
+}
+
+model IndustryRegistrationTemplate {
+  id             String   @id @default(uuid())
+  industryTypeId String
+  version        Int      @default(1)
+  sections       Json     // Array of section configurations
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  industryType   IndustryType           @relation(fields: [industryTypeId], references: [id], onDelete: Cascade)
+  dynamicFields  IndustryDynamicField[]
+
+  @@index([industryTypeId])
+}
+
+model IndustryDynamicField {
+  id             String  @id @default(uuid())
+  templateId     String
+  fieldKey       String
+  label          String
+  fieldType      String  @default("TEXT") // TEXT, NUMBER, SELECT, TEXTAREA, FILE, DATE, CHECKBOX
+  required       Boolean @default(false)
+  placeholder    String?
+  helpText       String?
+  options        Json?   // Select options array
+  validationJson Json?   // Regex patterns, min/max rules
+
+  template IndustryRegistrationTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+}
+
+model IndustryProfileMetadata {
+  id                String   @id @default(uuid())
+  industryProfileId String   @unique
+  industryTypeCode  String
+  attributesJson    Json     // Key-value store of type-specific attributes
+  updatedAt         DateTime @updatedAt
+
+  @@index([industryProfileId])
+  @@index([industryTypeCode])
+}
+
+model IndustryVerificationTemplate {
+  id             String   @id @default(uuid())
+  industryTypeId String
+  checklistsJson Json     // Array of checklist items required for admin approval
+  updatedAt      DateTime @updatedAt
+
+  industryType IndustryType @relation(fields: [industryTypeId], references: [id], onDelete: Cascade)
+
+  @@index([industryTypeId])
+}
+
+model IndustryAttributes {
+  id                String   @id @default(uuid())
+  industryProfileId String
+  key               String
+  value             String
+  createdAt         DateTime @default(now())
+
+  @@index([industryProfileId])
+  @@index([key])
+}
+
+model IndustryCustomFields {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  dataType    String   @default("STRING")
+  description String?
+  createdAt   DateTime @default(now())
+}
+
 
 
 
