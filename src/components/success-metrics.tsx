@@ -12,11 +12,11 @@ interface Metric {
 }
 
 const defaultMetrics: Metric[] = [
-  { id: "industries", label: "Registered Industries", value: 124, suffix: "+" },
-  { id: "experts", label: "Vetted Subject Experts", value: 480, suffix: "+" },
-  { id: "projects", label: "Active Project Contracts", value: 312, suffix: "" },
-  { id: "collaborations", label: "Research Partnerships", value: 185, suffix: "+" },
-  { id: "internships", label: "Student Internships Deployments", value: 650, suffix: "+" },
+  { id: "industries", label: "Registered Industries", value: 0, suffix: "" },
+  { id: "experts", label: "Vetted Subject Experts", value: 0, suffix: "" },
+  { id: "projects", label: "Active Project Contracts", value: 0, suffix: "" },
+  { id: "collaborations", label: "Research Partnerships", value: 0, suffix: "" },
+  { id: "internships", label: "Student Internships Deployments", value: 0, suffix: "" },
 ];
 
 const whyChooseItems = [
@@ -51,7 +51,7 @@ function AnimatedCounter({ target, suffix }: { target: number; suffix: string })
     if (!isInView) return;
 
     let startTime: number | null = null;
-    const duration = 1800;
+    const duration = 1200;
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -83,13 +83,13 @@ export default function SuccessMetrics() {
     fetch("/api/landing/stats")
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.industries) {
+        if (data) {
           setMetrics([
-            { id: "industries", label: "Registered Industries", value: data.industries, suffix: "+" },
-            { id: "experts", label: "Vetted Subject Experts", value: data.experts, suffix: "+" },
-            { id: "projects", label: "Active Project Contracts", value: data.projects, suffix: "" },
-            { id: "collaborations", label: "Research Partnerships", value: data.problemStatements, suffix: "+" },
-            { id: "internships", label: "Student Internships Deployments", value: data.students, suffix: "+" },
+            { id: "industries", label: "Registered Industries", value: data.industries || 0, suffix: "" },
+            { id: "experts", label: "Vetted Subject Experts", value: data.experts || 0, suffix: "" },
+            { id: "projects", label: "Active Project Contracts", value: data.projects || 0, suffix: "" },
+            { id: "collaborations", label: "Research Partnerships", value: data.problemStatements || 0, suffix: "" },
+            { id: "internships", label: "Student Internships Deployments", value: data.students || 0, suffix: "" },
           ]);
           setIsLive(true);
         }
@@ -137,19 +137,19 @@ export default function SuccessMetrics() {
           </div>
         </div>
 
-        {/* Dynamic Realtime Live Metrics Counter */}
+        {/* Pure Realtime Live Database Telemetry Counter */}
         <div className="bg-gradient-to-r from-slate-900 via-blue-950/60 to-slate-900 border border-blue-500/30 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800">
             <div>
               <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-400">
-                Live Supabase PostgreSQL Telemetry
+                Live Supabase PostgreSQL Telemetry (Pure Real Data)
               </span>
               <h3 className="text-xl font-bold text-white mt-1">Platform Impact Metrics</h3>
             </div>
             {isLive && (
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                Live PostgreSQL Stream
+                Live Database Query
               </span>
             )}
           </div>

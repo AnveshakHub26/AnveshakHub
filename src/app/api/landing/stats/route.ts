@@ -13,13 +13,13 @@ export async function GET() {
       prisma.studentProfile.count(),
     ]);
 
-    // Ensure baseline non-zero real metrics for demonstration
+    // Exact count directly from Supabase PostgreSQL tables without artificial minimum offsets
     const stats = {
-      industries: Math.max(industriesCount, 124),
-      experts: Math.max(expertsCount, 480),
-      projects: Math.max(projectsCount, 312),
-      problemStatements: Math.max(problemStatementsCount, 185),
-      students: Math.max(studentsCount, 650),
+      industries: industriesCount,
+      experts: expertsCount,
+      projects: projectsCount,
+      problemStatements: problemStatementsCount,
+      students: studentsCount,
       updatedAt: new Date().toISOString(),
     };
 
@@ -27,14 +27,14 @@ export async function GET() {
   } catch (error) {
     return NextResponse.json(
       {
-        industries: 124,
-        experts: 480,
-        projects: 312,
-        problemStatements: 185,
-        students: 650,
+        industries: 0,
+        experts: 0,
+        projects: 0,
+        problemStatements: 0,
+        students: 0,
         updatedAt: new Date().toISOString(),
       },
-      { status: 200 }
+      { status: 500 }
     );
   }
 }
