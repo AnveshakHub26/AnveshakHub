@@ -1,92 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ─────────────────────────────────────────────────────────────────
-// STU-003 STUDENT OPPORTUNITIES & APPLICATIONS API
-// ─────────────────────────────────────────────────────────────────
-
-const MOCK_STUDENT_OPPORTUNITIES = [
-  {
-    id: "opp-std-001",
-    title: "Hardware Inverter Testbed Internship",
-    industryName: "Solaris Power Pvt Ltd",
-    domain: "Embedded Systems & Clean Energy",
-    stipend: 25000.00,
-    durationWeeks: 16,
-    deadline: "2026-08-15T00:00:00Z",
-    status: "OPEN",
-    isRecommended: true,
-    isSaved: true,
-    hasApplied: true,
-    applicationStatus: "SELECTED",
-    description: "Hands-on internship for CS/EE undergrads to calibrate ADC sensors and debug ring topology firmware under expert guidance.",
-    requirements: ["C++", "MATLAB", "SIMULINK", "Embedded Systems"],
-    eligibilityScore: 96,
-    createdAt: "2026-07-01T10:00:00Z"
-  },
-  {
-    id: "opp-std-002",
-    title: "ROS2 SLAM Perception Intern",
-    industryName: "Robotics Corp",
-    domain: "Robotics & AI",
-    stipend: 30000.00,
-    durationWeeks: 12,
-    deadline: "2026-09-01T00:00:00Z",
-    status: "OPEN",
-    isRecommended: true,
-    isSaved: false,
-    hasApplied: false,
-    description: "Assist AI team in integrating ROS2 C++ Nav2 point cloud processing pipelines for rough-terrain rovers.",
-    requirements: ["C++", "ROS2", "OpenCV"],
-    eligibilityScore: 89,
-    createdAt: "2026-07-10T10:00:00Z"
-  },
-  {
-    id: "opp-std-003",
-    title: "Bioreactor Sensor Data Analytics Trainee",
-    industryName: "BioSynth Technologies",
-    domain: "Biotech & AI",
-    stipend: 20000.00,
-    durationWeeks: 10,
-    deadline: "2026-09-30T00:00:00Z",
-    status: "OPEN",
-    isRecommended: false,
-    isSaved: false,
-    hasApplied: false,
-    description: "Develop Python computer vision scripts to monitor fermentation cell growth rates.",
-    requirements: ["Python", "OpenCV"],
-    eligibilityScore: 75,
-    createdAt: "2026-07-15T10:00:00Z"
-  }
-];
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get("search") || "";
-  const tab = searchParams.get("tab") || "ALL";
+  try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search") || "";
+    const domain = searchParams.get("domain") || "ALL";
 
-  let filtered = MOCK_STUDENT_OPPORTUNITIES;
+    const whereClause: any = {};
+    if (domain !== "ALL") whereClause.domain = domain;
+    if (search) {
+      whereClause.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } }
+      ];
+    }
 
-  if (search) {
-    const q = search.toLowerCase();
-    filtered = filtered.filter(o =>
-      o.title.toLowerCase().includes(q) ||
-      o.industryName.toLowerCase().includes(q) ||
-      o.domain.toLowerCase().includes(q)
-    );
+    const opportunities = await prisma.marketplaceOpportunity.findMany({
+      where: whereClause,
+      include: {
+        industry: { include: { organization: { select: { orgName: true } } } },
+        studentApplications: true,
+      },
+      orderBy: { createdAt: "desc" }
+    });
+
+    const formatted = opportunities.map((o) => ({
+      id: o.id,
+      title: o.title,
+      industryName: o.industry?.organization?.orgName || "Enterprise Partner",
+      domain: o.domain || "Technology",
+      stipend: 25000.00,
+      durationWeeks: 12,
+      deadline: o.updatedAt,
+      status: o.status,
+      isRecommended: true,
+      isSaved: false,
+      hasApplied: o.studentApplications.length > 0,
+      applicationStatus: o.studentApplications[0]?.status || "OPEN",
+      description: o.description,
+      requirements: o.requirements,
+      eligibilityScore: 92,
+      createdAt: o.createdAt,
+    }));
+
+    return NextResponse.json({
+      success: true,
+      data: formatted,
+    });
+  } catch (error: any) {
+    console.error("GET Student Opportunities Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to fetch student opportunities" }, { status: 500 });
   }
-
-  if (tab === "RECOMMENDED") {
-    filtered = filtered.filter(o => o.isRecommended);
-  } else if (tab === "SAVED") {
-    filtered = filtered.filter(o => o.isSaved);
-  } else if (tab === "APPLIED") {
-    filtered = filtered.filter(o => o.hasApplied);
-  }
-
-  return NextResponse.json({
-    opportunities: filtered,
-    total: filtered.length
-  });
 }
 
 export async function POST(req: NextRequest) {
@@ -94,14 +59,49 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { opportunityId, coverLetter, resumeUrl } = body;
 
+    if (!opportunityId) {
+      return NextResponse.json({ error: "opportunityId is required" }, { status: 400 });
+    }
+
+    let student = await prisma.studentProfile.findFirst();
+    if (!student) {
+      const user = await prisma.user.findFirst() || await prisma.user.create({
+        data: {
+          email: `student.${Date.now()}@anveshakhub.com`,
+          fullName: "Rishika Roy",
+          name: "Rishika Roy",
+          role: "STAKEHOLDER",
+        }
+      });
+      student = await prisma.studentProfile.create({
+        data: {
+          userId: user.id,
+          institution: "IIT Bombay",
+          degree: "B.Tech",
+          branch: "Computer Science",
+          semester: 6,
+          cgpa: 8.8,
+        }
+      });
+    }
+
+    const application = await prisma.studentApplication.create({
+      data: {
+        opportunityId: opportunityId,
+        studentId: student.id,
+        coverLetter: coverLetter || "Excited to apply for this research internship opportunity.",
+        resumeUrl: resumeUrl || null,
+        status: "APPLIED",
+      }
+    });
+
     return NextResponse.json({
       success: true,
-      applicationId: `app-std-${Date.now()}`,
-      opportunityId,
-      status: "APPLIED",
-      message: "Internship application submitted successfully."
+      message: "Application submitted successfully",
+      data: application,
     }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });
+  } catch (error: any) {
+    console.error("POST Student Application Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to submit application" }, { status: 500 });
   }
 }
