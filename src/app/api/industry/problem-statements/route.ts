@@ -1,101 +1,128 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ─────────────────────────────────────────────────────────────────
-// API Integration Point: Replace mock data with Prisma queries
-// import { prisma } from "@/lib/prisma";
-// const orgId = req.headers.get("x-org-id") ?? "org-001";
-// ─────────────────────────────────────────────────────────────────
-
-const DEMO_ORG_ID = "org-001";
-
-const MOCK_PROBLEMS = [
-  {
-    id: "prob-001",
-    orgId: DEMO_ORG_ID,
-    title: "AI-Powered Decentralized Solar Micro-Grid Synchronization",
-    description: "Design real-time local algorithms to balance supply/demand fluctuations in local off-grid solar generators, minimizing network line losses and storage degradation.",
-    category: "Clean Energy & Grid Technology",
-    priority: "HIGH",
-    status: "APPROVED",
-    version: 1,
-    linkedProjectsCount: 1,
-    createdAt: "2026-06-10T10:00:00Z",
-    updatedAt: "2026-06-15T14:30:00Z"
-  },
-  {
-    id: "prob-002",
-    orgId: DEMO_ORG_ID,
-    title: "Multi-Agent Smart Inverter Mesh Protocol",
-    description: "Develop a secure RF serialization mesh topology protocol allowing hardware solar inverters to exchange power sharing bounds dynamically without a centralized cloud router.",
-    category: "Hardware & IoT",
-    priority: "CRITICAL",
-    status: "UNDER_REVIEW",
-    version: 2,
-    linkedProjectsCount: 0,
-    createdAt: "2026-07-02T09:00:00Z",
-    updatedAt: "2026-07-12T11:00:00Z"
-  },
-  {
-    id: "prob-003",
-    orgId: DEMO_ORG_ID,
-    title: "Bidirectional Power Flow Solid State Controller",
-    description: "Design PCB schematic and thermal mitigation bounds for sub-10ms bidirectional switching solid state power relays targeting commercial buildings.",
-    category: "Power Electronics",
-    priority: "MEDIUM",
-    status: "DRAFT",
-    version: 1,
-    linkedProjectsCount: 0,
-    createdAt: "2026-07-20T14:00:00Z",
-    updatedAt: "2026-07-20T14:00:00Z"
-  }
-];
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get("search") || "";
-  const status = searchParams.get("status") || "ALL";
+  try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search") || "";
+    const status = searchParams.get("status") || "ALL";
 
-  let filtered = MOCK_PROBLEMS;
+    const supabase = await createClient();
+    const { data: { user: authUser } } = await supabase.auth.getUser();
 
-  if (search) {
-    const q = search.toLowerCase();
-    filtered = filtered.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+    let organizationId: string | undefined = undefined;
+    if (authUser) {
+      const dbUser = await prisma.user.findFirst({
+        where: { OR: [{ supabaseId: authUser.id }, { email: authUser.email }] },
+        select: { organizationId: true }
+      });
+      organizationId = dbUser?.organizationId || undefined;
+    }
+
+    const whereClause: any = {};
+    if (status !== "ALL") {
+      whereClause.status = status;
+    }
+    if (search) {
+      whereClause.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+        { category: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const problemStatements = await prisma.problemStatement.findMany({
+      where: whereClause,
+      include: {
+        industry: { include: { organization: { select: { orgName: true } } } }
+      },
+      orderBy: { createdAt: "desc" }
+    });
+
+    const formatted = problemStatements.map(p => ({
+      id: p.id,
+      orgId: p.industryId,
+      orgName: p.industry?.organization?.orgName || "Enterprise Partner",
+      title: p.title,
+      description: p.description,
+      category: p.category || "General Technology",
+      priority: p.priority || "MEDIUM",
+      status: p.status,
+      version: p.version || 1,
+      linkedProjectsCount: 0,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+    }));
+
+    return NextResponse.json({
+      success: true,
+      data: formatted,
+    });
+  } catch (error: any) {
+    console.error("GET Problem Statements Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to fetch problem statements" }, { status: 500 });
   }
-
-  if (status && status !== "ALL") {
-    filtered = filtered.filter(p => p.status === status);
-  }
-
-  return NextResponse.json({
-    problems: filtered,
-    total: filtered.length
-  });
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const newProblem = {
-      id: `prob-${Date.now()}`,
-      orgId: DEMO_ORG_ID,
-      title: body.title,
-      description: body.description,
-      category: body.category || "General Research",
-      priority: body.priority || "MEDIUM",
-      status: body.submitImmediately ? "SUBMITTED" : "DRAFT",
-      version: 1,
-      linkedProjectsCount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    const supabase = await createClient();
+    const { data: { user: authUser } } = await supabase.auth.getUser();
 
-    // Database fallback simulation
+    const body = await req.json();
+    const { title, description, category, priority } = body;
+
+    if (!title || !description) {
+      return NextResponse.json({ error: "Title and description are required" }, { status: 400 });
+    }
+
+    let industry = await prisma.industryProfile.findFirst();
+    if (!industry) {
+      let org = await prisma.organization.findFirst();
+      if (!org) {
+        org = await prisma.organization.create({
+          data: {
+            orgName: "Anveshak Enterprise Partner",
+            orgType: "PRIVATE_LIMITED",
+            email: "industry@anveshakhub.com",
+            phone: "+91 9876543210",
+            industryDomain: "Technology",
+            businessCategory: "COMMERCIAL",
+            state: "Maharashtra",
+            district: "Mumbai",
+            city: "Mumbai",
+            pin: "400001",
+            addressLine: "Tech Park",
+          }
+        });
+      }
+      industry = await prisma.industryProfile.create({
+        data: {
+          orgId: org.id,
+          lifecycle: "VERIFIED",
+        }
+      });
+    }
+
+    const newProblem = await prisma.problemStatement.create({
+      data: {
+        industryId: industry.id,
+        title: title,
+        description: description,
+        category: category || "Technology & Software",
+        priority: priority || "HIGH",
+        status: "SUBMITTED",
+      }
+    });
+
     return NextResponse.json({
       success: true,
-      problem: newProblem,
-      message: body.submitImmediately ? "Problem Statement submitted for review." : "Problem Statement draft saved."
+      message: "Problem statement submitted to verification queue",
+      data: newProblem
     }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Failed to create problem statement" }, { status: 500 });
+  } catch (error: any) {
+    console.error("POST Problem Statement Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to create problem statement" }, { status: 500 });
   }
 }

@@ -1,82 +1,118 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ─────────────────────────────────────────────────────────────────
-// API Integration Point: Replace mock data with Prisma queries
-// import { prisma } from "@/lib/prisma";
-// ─────────────────────────────────────────────────────────────────
-
-const MOCK_INDUSTRY_PROJECTS = [
-  {
-    id: "prj-001",
-    name: "Solar Micro-Grid for IIT Madras",
-    description: "Design and implement a local solar microgrid within the campus to test decentralized power sharing algorithms.",
-    lifecycle: "IN_PROGRESS",
-    budget: 4500000,
-    startDate: "2026-01-15T00:00:00Z",
-    endDate: "2026-12-15T00:00:00Z",
-    progress: 62,
-    tasksCount: 12,
-    tasksCompleted: 8,
-    risksCount: 2,
-    issuesCount: 1,
-    changeRequestsCount: 1,
-    budgetUsed: 3100000,
-    experts: [{ name: "Dr. Arunima Krishnan" }],
-    students: [{ name: "Arpit Goel" }, { name: "Rishika Roy" }]
-  },
-  {
-    id: "prj-004",
-    name: "Autonomous Rover Control Module",
-    description: "Develop a backup navigation controller module for exploratory search and rescue autonomous rovers.",
-    lifecycle: "UNDER_REVIEW",
-    budget: 3500000,
-    startDate: "2026-08-01T00:00:00Z",
-    endDate: "2027-02-28T00:00:00Z",
-    progress: 10,
-    tasksCount: 2,
-    tasksCompleted: 0,
-    risksCount: 1,
-    issuesCount: 0,
-    changeRequestsCount: 0,
-    budgetUsed: 150000,
-    experts: [{ name: "Rohan Das" }],
-    students: [{ name: "Kabir Verma" }]
-  }
-];
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get("search") || "";
-  const lifecycle = searchParams.get("lifecycle") || "";
+  try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search") || "";
+    const lifecycle = searchParams.get("lifecycle") || "";
 
-  let filtered = MOCK_INDUSTRY_PROJECTS;
-
-  if (search) {
-    const q = search.toLowerCase();
-    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
-  }
-
-  if (lifecycle && lifecycle !== "ALL") {
-    filtered = filtered.filter(p => p.lifecycle === lifecycle);
-  }
-
-  // Aggregate stats
-  const totalBudget = MOCK_INDUSTRY_PROJECTS.reduce((acc, curr) => acc + curr.budget, 0);
-  const avgProgress = Math.round(
-    MOCK_INDUSTRY_PROJECTS.reduce((acc, curr) => acc + curr.progress, 0) / MOCK_INDUSTRY_PROJECTS.length
-  );
-  const activeRisks = MOCK_INDUSTRY_PROJECTS.reduce((acc, curr) => acc + curr.risksCount, 0);
-  const completedTasks = MOCK_INDUSTRY_PROJECTS.reduce((acc, curr) => acc + curr.tasksCompleted, 0);
-
-  return NextResponse.json({
-    projects: filtered,
-    total: filtered.length,
-    stats: {
-      total: MOCK_INDUSTRY_PROJECTS.length,
-      totalBudget,
-      avgProgress,
-      activeRisks,
-      completedTasks
+    const whereClause: any = {};
+    if (lifecycle && lifecycle !== "ALL") {
+      whereClause.lifecycle = lifecycle;
     }
-  });
+    if (search) {
+      whereClause.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } }
+      ];
+    }
+
+    const projects = await prisma.project.findMany({
+      where: whereClause,
+      include: {
+        milestones: true,
+        meetings: { select: { id: true } },
+      },
+      orderBy: { createdAt: "desc" }
+    });
+
+    const formatted = projects.map(p => ({
+      id: p.id,
+      name: p.name,
+      description: p.description || "",
+      lifecycle: p.lifecycle,
+      budget: Number(p.budget),
+      budgetUsed: Number(p.budget) * 0.4,
+      startDate: p.startDate,
+      endDate: p.endDate,
+      progress: 50,
+      tasksCount: p.milestones.length,
+      tasksCompleted: p.milestones.filter(m => m.status === "COMPLETED").length,
+      risksCount: 0,
+      issuesCount: 0,
+      changeRequestsCount: 0,
+      experts: [],
+      students: []
+    }));
+
+    return NextResponse.json({
+      success: true,
+      data: formatted
+    });
+  } catch (error: any) {
+    console.error("GET Projects API Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to fetch projects" }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { name, description, budget, startDate, endDate, problemStatementId } = body;
+
+    if (!name || !budget) {
+      return NextResponse.json({ error: "Project name and budget are required" }, { status: 400 });
+    }
+
+    let industry = await prisma.industryProfile.findFirst();
+    if (!industry) {
+      let org = await prisma.organization.findFirst();
+      if (!org) {
+        org = await prisma.organization.create({
+          data: {
+            orgName: "Anveshak Enterprise Partner",
+            orgType: "PRIVATE_LIMITED",
+            email: "industry@anveshakhub.com",
+            phone: "+91 9876543210",
+            industryDomain: "Technology",
+            businessCategory: "COMMERCIAL",
+            state: "Maharashtra",
+            district: "Mumbai",
+            city: "Mumbai",
+            pin: "400001",
+            addressLine: "Tech Park",
+          }
+        });
+      }
+      industry = await prisma.industryProfile.create({
+        data: {
+          orgId: org.id,
+          lifecycle: "VERIFIED",
+        }
+      });
+    }
+
+    const project = await prisma.project.create({
+      data: {
+        industryId: industry.id,
+        name: name,
+        description: description || "",
+        budget: budget,
+        lifecycle: "INITIATED",
+        startDate: startDate ? new Date(startDate) : new Date(),
+        endDate: endDate ? new Date(endDate) : new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
+      }
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Project created successfully in database",
+      data: project
+    }, { status: 201 });
+  } catch (error: any) {
+    console.error("POST Project API Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to create project" }, { status: 500 });
+  }
 }
