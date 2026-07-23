@@ -176,12 +176,18 @@ enum VaultDocType {
 
 model User {
   id                   String                @id @default(uuid())
+  supabaseId           String?               @unique
   email                String                @unique
-  name                 String
+  name                 String?
+  fullName             String?
+  phone                String?
   role                 Role                  @default(STAKEHOLDER)
   department           String?
   avatarUrl            String?
   isActive             Boolean               @default(true)
+  emailVerified        Boolean               @default(false)
+  organizationId       String?
+  organization         Organization?         @relation(fields: [organizationId], references: [id])
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   auditLogs            AuditLog[]
@@ -235,6 +241,7 @@ model Organization {
   departments          Department[]
   representatives      Representative[]
   orgUsers             OrganizationUser[]
+  users                User[]
 }
 
 // ─────────────────────────────────────────────

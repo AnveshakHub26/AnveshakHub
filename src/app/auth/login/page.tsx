@@ -203,22 +203,38 @@ export default function LoginPage() {
     return Object.keys(errs).length === 0;
   }, [email, password]);
 
-  // API Integration Point: POST /api/auth/login → returns { token, role, redirectUrl }
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) { setShakeKey(k => k + 1); return; }
     setLoginState("loading");
     setLoginError(null);
-    setTimeout(() => {
-      if (password === "wrong") {
-        setLoginState("error"); setLoginError("invalid_credentials"); setShakeKey(k => k + 1);
-      } else if (password === "locked") {
-        setLoginState("error"); setLoginError("account_locked");
-      } else {
-        setLoginState("success");
-        // On real backend: decode JWT role → router.push(roleBasedDashboardUrl)
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setLoginState("error");
+        setLoginError("invalid_credentials");
+        setShakeKey(k => k + 1);
+        return;
       }
-    }, 1500);
+
+      setLoginState("success");
+      setTimeout(() => {
+        router.push(data.redirectUrl || "/");
+        router.refresh();
+      }, 500);
+    } catch (err) {
+      setLoginState("error");
+      setLoginError("server");
+      setShakeKey(k => k + 1);
+    }
   };
 
   const isLoading = loginState === "loading";
