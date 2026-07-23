@@ -49,7 +49,7 @@ const features = [
     icon: CalendarCheck,
   },
   {
-    title: "Analytics",
+    title: "Analytics Console",
     description: "Comprehensive reporting suites rendering real-time metrics on matching speeds, research output, and grant spend.",
     icon: BarChart3,
   },
@@ -57,46 +57,40 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-20 bg-white scroll-mt-20">
+    <section id="features" className="py-24 bg-slate-950 text-white border-b border-slate-800 relative scroll-mt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
-          <div className="max-w-2xl">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-primary">
-              Core Capabilities
-            </h2>
-            <p className="mt-3 text-3xl font-extrabold text-secondary sm:text-4xl tracking-tight">
-              Enterprise Collaboration Platform Features
-            </p>
-          </div>
-          <p className="mt-4 md:mt-0 text-sm font-semibold text-slate-500 max-w-sm">
-            Everything your organization needs to bridge corporate funding and academic brilliance on a single secure dashboard.
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-400">
+            Enterprise Module Suite
+          </span>
+          <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl tracking-tight">
+            Engineered for Modern R&D Teams
+          </h2>
+          <p className="mt-4 text-base text-slate-400 leading-relaxed">
+            Everything your organization needs to manage high-stakes collaboration with academic experts.
           </p>
         </div>
 
-        {/* Grid Layout: 2 Rows, 4 Cards on Desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="bg-white border border-slate-200 rounded-lg p-6 hover:border-slate-300 hover:shadow-sm hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-lg hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="h-10 w-10 rounded-lg bg-blue-50/80 border border-blue-100 flex items-center justify-center text-primary mb-5">
-                  <Icon className="h-5 w-5" />
+                <div className="h-12 w-12 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-5 group-hover:scale-105 transition-transform">
+                  <Icon className="h-6 w-6" />
                 </div>
-                
-                <h3 className="text-base font-bold text-secondary">
+                <h3 className="text-base font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                   {feature.title}
                 </h3>
-                
-                <p className="mt-3 text-xs leading-relaxed text-slate-500 flex-grow">
+                <p className="text-xs text-slate-400 leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>

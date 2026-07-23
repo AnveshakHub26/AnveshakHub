@@ -11,7 +11,7 @@ interface Metric {
   suffix: string;
 }
 
-const initialMetrics: Metric[] = [
+const defaultMetrics: Metric[] = [
   { id: "industries", label: "Registered Industries", value: 124, suffix: "+" },
   { id: "experts", label: "Vetted Subject Experts", value: 480, suffix: "+" },
   { id: "projects", label: "Active Project Contracts", value: 312, suffix: "" },
@@ -42,23 +42,20 @@ const whyChooseItems = [
   },
 ];
 
-// Reusable Counter Component
 function AnimatedCounter({ target, suffix }: { target: number; suffix: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
     if (!isInView) return;
 
     let startTime: number | null = null;
-    const duration = 2000; // 2 seconds animation
+    const duration = 1800;
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      
-      // Easing out quadratic
       const easeOutProgress = progress * (2 - progress);
       setCount(Math.floor(easeOutProgress * target));
 
@@ -79,76 +76,93 @@ function AnimatedCounter({ target, suffix }: { target: number; suffix: string })
 }
 
 export default function SuccessMetrics() {
-  const [metrics, setMetrics] = useState<Metric[]>(initialMetrics);
-  const [loading, setLoading] = useState(false);
+  const [metrics, setMetrics] = useState<Metric[]>(defaultMetrics);
+  const [isLive, setIsLive] = useState(false);
 
-  // Ready for API integration:
   useEffect(() => {
-    // Simulated backend API fetch from NestJS
-    // fetch('/api/metrics')
-    //   .then(res => res.json())
-    //   .then(data => setMetrics(data))
-    //   .catch(err => console.error(err));
+    fetch("/api/landing/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.industries) {
+          setMetrics([
+            { id: "industries", label: "Registered Industries", value: data.industries, suffix: "+" },
+            { id: "experts", label: "Vetted Subject Experts", value: data.experts, suffix: "+" },
+            { id: "projects", label: "Active Project Contracts", value: data.projects, suffix: "" },
+            { id: "collaborations", label: "Research Partnerships", value: data.problemStatements, suffix: "+" },
+            { id: "internships", label: "Student Internships Deployments", value: data.students, suffix: "+" },
+          ]);
+          setIsLive(true);
+        }
+      })
+      .catch((err) => console.error("Error fetching live stats:", err));
   }, []);
 
   return (
-    <section className="py-20 bg-white border-b border-slate-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-slate-950 text-white relative overflow-hidden border-b border-slate-800">
+      {/* Subtle grid background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* ================= WHY CHOOSE ANVESHAKHUB ================= */}
+        {/* Why Choose Section */}
         <div className="mb-24">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-primary">
-              Enterprise Trust
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-4">
+              Enterprise Governance
+            </span>
+            <h2 className="text-3xl font-black text-white sm:text-4xl tracking-tight">
+              Built for Security & High-Impact R&D
             </h2>
-            <p className="mt-3 text-3xl font-extrabold text-secondary sm:text-4xl tracking-tight">
-              Why Global Enterprises Choose AnveshakHub
-            </p>
-            <p className="mt-4 text-base text-slate-600">
-              Built from the ground up for strict confidentiality, regulatory compliance, and high-impact milestone execution.
+            <p className="mt-4 text-base text-slate-400 leading-relaxed">
+              Designed by enterprise architects to streamline complex research agreements while safeguarding IP integrity.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyChooseItems.map((item, index) => {
               const Icon = item.icon;
               return (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className="flex gap-4 p-6 bg-slate-50 border border-slate-200/60 rounded-xl"
+                <div
+                  key={index}
+                  className="bg-slate-900/80 backdrop-blur-md border border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10"
                 >
-                  <div className="shrink-0 h-12 w-12 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-primary shadow-sm">
+                  <div className="h-12 w-12 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-5">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <div>
-                    <h3 className="text-base font-bold text-secondary">{item.title}</h3>
-                    <p className="mt-2 text-xs leading-relaxed text-slate-600">{item.description}</p>
-                  </div>
-                </motion.div>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">{item.description}</p>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* ================= SUCCESS METRICS SECTION ================= */}
-        <div className="bg-secondary rounded-2xl p-8 sm:p-12 text-white relative overflow-hidden shadow-xl">
-          {/* Subtle background nodes decoration */}
-          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:3rem_3rem]" />
-          <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl pointer-events-none" />
+        {/* Dynamic Realtime Live Metrics Counter */}
+        <div className="bg-gradient-to-r from-slate-900 via-blue-950/60 to-slate-900 border border-blue-500/30 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+          <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-400">
+                Live Supabase PostgreSQL Telemetry
+              </span>
+              <h3 className="text-xl font-bold text-white mt-1">Platform Impact Metrics</h3>
+            </div>
+            {isLive && (
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                Live PostgreSQL Stream
+              </span>
+            )}
+          </div>
 
-          <div className="relative z-10 grid grid-cols-2 lg:grid-cols-5 gap-y-10 gap-x-6 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800/80">
             {metrics.map((metric) => (
-              <div key={metric.id} className="flex flex-col items-center justify-center">
-                <span className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-blue-400">
+              <div key={metric.id} className="pt-4 md:pt-0 px-2">
+                <p className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 tracking-tight">
                   <AnimatedCounter target={metric.value} suffix={metric.suffix} />
-                </span>
-                <span className="mt-3 text-xs sm:text-sm font-medium text-slate-300 max-w-[140px]">
+                </p>
+                <p className="mt-3 text-xs sm:text-sm font-semibold text-slate-300">
                   {metric.label}
-                </span>
+                </p>
               </div>
             ))}
           </div>

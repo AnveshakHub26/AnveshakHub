@@ -20,7 +20,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-slate-950 text-white font-sans antialiased">
       {/* Top sticky navigation */}
       <Navigation />
 
@@ -43,7 +43,7 @@ export default function Home() {
         {/* Why Choose & Success Metrics animated counters */}
         <SuccessMetrics />
 
-        {/* FAQ accordion & Testimonials placeholder */}
+        {/* FAQ accordion & Ecosystem Leadership */}
         <FAQ />
       </main>
 
