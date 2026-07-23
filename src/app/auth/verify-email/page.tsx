@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import * as Dialog from "@radix-ui/react-dialog";
+import BrandLogo from "@/components/brand-logo";
 import {
   Building2,
   ArrowLeft,
@@ -485,12 +486,7 @@ export default function EmailVerificationPage() {
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="bg-primary text-white p-1.5 rounded-lg group-hover:bg-blue-700 transition-colors">
-                <Building2 className="h-4 w-4" />
-              </div>
-              <span className="font-extrabold text-sm text-secondary tracking-tight hidden sm:block">AnveshakHub</span>
-            </Link>
+            <BrandLogo size="sm" />
           </div>
 
           <div className="flex items-center gap-2">

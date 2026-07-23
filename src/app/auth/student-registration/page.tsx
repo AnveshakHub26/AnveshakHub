@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import BrandLogo from "@/components/brand-logo";
 import { Activity, ArrowLeft, UploadCloud, CheckCircle } from "lucide-react";
 
 export default function StudentRegistration() {
@@ -33,14 +34,7 @@ export default function StudentRegistration() {
 
       <div className="max-w-xl mx-auto relative z-10">
         <div className="flex justify-center">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-white shadow-sm">
-              <Activity className="h-5 w-5" />
-            </div>
-            <span className="text-xl font-bold text-secondary">
-              Anveshak<span className="text-primary">Hub</span>
-            </span>
-          </Link>
+          <BrandLogo size="md" />
         </div>
         
         <h2 className="mt-6 text-center text-2xl font-extrabold text-secondary tracking-tight">

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import * as Dialog from "@radix-ui/react-dialog";
+import BrandLogo from "@/components/brand-logo";
 import {
   Building2,
   Lock,
@@ -278,12 +279,7 @@ export default function AccountStatusPage() {
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 py-3 px-6 sm:px-10 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="bg-primary text-white p-1.5 rounded-lg group-hover:bg-blue-700 transition-colors">
-            <Building2 className="h-4 w-4" />
-          </div>
-          <span className="font-extrabold text-sm text-secondary tracking-tight hidden sm:block">AnveshakHub</span>
-        </Link>
+        <BrandLogo size="sm" />
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowSupportModal(true)}

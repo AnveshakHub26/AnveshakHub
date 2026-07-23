@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import * as Dialog from "@radix-ui/react-dialog";
+import BrandLogo from "@/components/brand-logo";
 import {
   Building2,
   HelpCircle,
@@ -607,12 +608,7 @@ export default function RegistrationSuccessPage() {
       {/* ── Header ── */}
       <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200/80 py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-primary text-white p-1.5 rounded-lg group-hover:bg-blue-700 transition-colors">
-              <Building2 className="h-4 w-4" />
-            </div>
-            <span className="font-extrabold text-sm text-secondary tracking-tight">AnveshakHub</span>
-          </Link>
+          <BrandLogo size="sm" />
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowSupportModal(true)}

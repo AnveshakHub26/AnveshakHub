@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import BrandLogo from "@/components/brand-logo";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
@@ -112,14 +113,8 @@ export default function ResetPasswordPage() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-30 pointer-events-none" />
       <div className="absolute -top-32 -left-32 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 py-3 px-6 sm:px-10 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="bg-primary text-white p-1.5 rounded-lg group-hover:bg-blue-700 transition-colors">
-            <Building2 className="h-4 w-4" />
-          </div>
-          <span className="font-extrabold text-sm text-secondary tracking-tight hidden sm:block">AnveshakHub</span>
-        </Link>
+        <BrandLogo size="sm" />
         <a href="mailto:support@anveshakhub.com"
           className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">
           <HelpCircle className="h-4 w-4" /> Help

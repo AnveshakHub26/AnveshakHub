@@ -3,6 +3,8 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import * as Dialog from "@radix-ui/react-dialog";
+import BrandLogo from "@/components/brand-logo";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   Building2, Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle2,
@@ -40,15 +42,7 @@ function EnterprisePanel() {
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
 
       <div className="relative z-10 flex flex-col h-full px-10 py-10">
-        <div className="flex items-center gap-2.5">
-          <div className="bg-primary text-white p-2 rounded-xl">
-            <Building2 className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-white font-extrabold text-sm tracking-tight">AnveshakHub</p>
-            <p className="text-slate-400 text-[10px] font-medium">Enterprise Collaboration Platform</p>
-          </div>
-        </div>
+        <BrandLogo lightText size="md" />
 
         <div className="flex-1 flex flex-col justify-center">
           {/* Network illustration */}
@@ -238,10 +232,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
 
         <header className="relative z-10 flex items-center justify-between px-6 sm:px-10 py-5">
-          <Link href="/" className="flex items-center gap-2 group lg:hidden">
-            <div className="bg-primary text-white p-1.5 rounded-lg group-hover:bg-blue-700 transition-colors"><Building2 className="h-4 w-4" /></div>
-            <span className="font-extrabold text-sm text-secondary tracking-tight">AnveshakHub</span>
-          </Link>
+          <BrandLogo size="sm" />
           <div className="lg:hidden" />
           <a href="mailto:support@anveshakhub.com" className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">
             <HelpCircle className="h-4 w-4" /> Help
