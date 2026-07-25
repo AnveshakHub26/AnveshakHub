@@ -14,6 +14,9 @@ import { ApplicationsModule } from './modules/applications/applications.module';
 import { MeetingsModule } from './modules/meetings/meetings.module';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { EmailModule } from './modules/email/email.module';
+import { AuditModule } from './modules/audit/audit.module';
 import { HealthModule } from './health/health.module';
 import { OpenSearchModule } from './search/opensearch.module';
 import { QueueModule } from './queue/queue.module';
@@ -38,6 +41,9 @@ import { WebsocketModule } from './websocket/websocket.module';
     MeetingsModule,
     DocumentsModule,
     DashboardModule,
+    NotificationsModule,
+    EmailModule,
+    AuditModule,
     HealthModule,
     OpenSearchModule,
     QueueModule,
