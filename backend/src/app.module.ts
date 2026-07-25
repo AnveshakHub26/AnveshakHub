@@ -4,6 +4,7 @@ import { envConfig } from './common/config/env.config';
 import { PrismaModule } from './database/prisma.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
 import { OpenSearchModule } from './search/opensearch.module';
 import { QueueModule } from './queue/queue.module';
@@ -18,6 +19,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     PrismaModule,
     SupabaseModule,
     AuthModule,
+    UsersModule,
     HealthModule,
     OpenSearchModule,
     QueueModule,
