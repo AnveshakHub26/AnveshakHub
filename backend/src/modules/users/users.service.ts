@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { UserRepository } from './repositories/user.repository';
 import { SupabaseService } from '../../supabase/supabase.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -8,20 +8,12 @@ import { UserSettingsDto } from './dto/user-settings.dto';
 @Injectable()
 export class UsersService {
   constructor(
-    private prisma: PrismaService,
+    private userRepository: UserRepository,
     private supabaseService: SupabaseService,
   ) {}
 
   async getProfile(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        industryProfile: true,
-        expertProfile: true,
-        studentProfile: true,
-      },
-    });
-
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`User profile with ID ${userId} not found`);
     }
@@ -33,17 +25,14 @@ export class UsersService {
   }
 
   async updateProfile(userId: string, dto: UpdateUserDto) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    const updated = await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        ...(dto.name && { name: dto.name }),
-        ...(dto.phone && { phone: dto.phone }),
-      },
+    const updated = await this.userRepository.update(userId, {
+      ...(dto.name && { name: dto.name }),
+      ...(dto.phone && { phone: dto.phone }),
     });
 
     return {
@@ -57,10 +46,7 @@ export class UsersService {
     const path = `avatars/${userId}-${Date.now()}.${mimeType.split('/')[1] || 'jpg'}`;
     const publicUrl = await this.supabaseService.uploadFile('avatars', path, fileBuffer, mimeType);
 
-    const updated = await this.prisma.user.update({
-      where: { id: userId },
-      data: { avatarUrl: publicUrl },
-    });
+    const updated = await this.userRepository.update(userId, { avatarUrl: publicUrl });
 
     return {
       status: 'success',
@@ -86,17 +72,7 @@ export class UsersService {
   }
 
   async getSettings(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-      },
-    });
-
+    const user = await this.userRepository.findById(userId);
     return {
       status: 'success',
       settings: {
@@ -121,16 +97,13 @@ export class UsersService {
   }
 
   async softDelete(userId: string) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        name: `[Deactivated User ${userId.slice(0, 6)}]`,
-      },
+    await this.userRepository.update(userId, {
+      name: `[Deactivated User ${userId.slice(0, 6)}]`,
     });
 
     return {
@@ -140,30 +113,14 @@ export class UsersService {
   }
 
   async findAll() {
-    return this.prisma.user.findMany({
-      include: {
-        industryProfile: { select: { companyName: true } },
-        expertProfile: { select: { designation: true } },
-        studentProfile: { select: { institution: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.userRepository.findMany();
   }
 
   async findOne(id: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      include: {
-        industryProfile: true,
-        expertProfile: true,
-        studentProfile: true,
-      },
-    });
-
+    const user = await this.userRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-
     return user;
   }
 }
