@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
@@ -14,5 +14,19 @@ export class SupabaseService {
 
   getClient(): SupabaseClient {
     return this.client;
+  }
+
+  async uploadFile(bucket: string, path: string, fileBuffer: Buffer, mimeType: string): Promise<string> {
+    const { data, error } = await this.client.storage.from(bucket).upload(path, fileBuffer, {
+      contentType: mimeType,
+      upsert: true,
+    });
+
+    if (error) {
+      throw new BadRequestException(`Storage upload failed: ${error.message}`);
+    }
+
+    const { data: publicUrlData } = this.client.storage.from(bucket).getPublicUrl(path);
+    return publicUrlData.publicUrl;
   }
 }
