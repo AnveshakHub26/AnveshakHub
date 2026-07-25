@@ -9,6 +9,11 @@ import { AdminModule } from './modules/admin/admin.module';
 import { IndustryModule } from './modules/industry/industry.module';
 import { ExpertModule } from './modules/expert/expert.module';
 import { StudentModule } from './modules/student/student.module';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { ApplicationsModule } from './modules/applications/applications.module';
+import { MeetingsModule } from './modules/meetings/meetings.module';
+import { DocumentsModule } from './modules/documents/documents.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { HealthModule } from './health/health.module';
 import { OpenSearchModule } from './search/opensearch.module';
 import { QueueModule } from './queue/queue.module';
@@ -28,6 +33,11 @@ import { WebsocketModule } from './websocket/websocket.module';
     IndustryModule,
     ExpertModule,
     StudentModule,
+    ProjectsModule,
+    ApplicationsModule,
+    MeetingsModule,
+    DocumentsModule,
+    DashboardModule,
     HealthModule,
     OpenSearchModule,
     QueueModule,
