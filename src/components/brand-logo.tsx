@@ -16,18 +16,18 @@ export default function BrandLogo({
   showText = true,
   className = "",
   lightText = false,
-  href = "/"
+  href,
 }: BrandLogoProps) {
   const heightMap = {
     sm: "h-7",
     md: "h-9",
-    lg: "h-11"
+    lg: "h-11",
   };
 
   const textMap = {
     sm: "text-base font-extrabold tracking-tight",
     md: "text-xl font-black tracking-tight",
-    lg: "text-2xl font-black tracking-tight"
+    lg: "text-2xl font-black tracking-tight",
   };
 
   const content = (
@@ -42,8 +42,8 @@ export default function BrandLogo({
       </div>
 
       {showText && (
-        <span className={`${textMap[size]} ${lightText ? "text-white" : "text-slate-900"} font-bold tracking-tight`}>
-          Anveshak<span className="bg-gradient-to-r from-amber-500 via-blue-600 to-sky-500 bg-clip-text text-transparent font-black">Hub</span>
+        <span className={`${textMap[size]} ${lightText ? "text-white" : "text-[#FAF8F5]"} font-bold tracking-tight`}>
+          Anveshak<span className="bg-gradient-to-r from-[#FF7A45] via-[#6366F1] to-[#818CF8] bg-clip-text text-transparent font-black">Hub</span>
         </span>
       )}
     </div>
