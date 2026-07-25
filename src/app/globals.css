@@ -1,55 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Bespoke Warm Brand Design Tokens ── */
-  --bg-cream:          #FBF7F0;
-  --surface-cream:     #EFE9DF;
-  --surface-card:      #F5EFE6;
+  /* ── Semantic Design Tokens ── */
+  --bg-app:            #FBF7F0;
+  --bg-surface:        #EFE9DF;
+  --bg-card:           #F5EFE6;
   
-  --brand-ember:       #FF5A36;
-  --brand-ember-hover: #E04826;
-  --brand-ember-subtle:#FFF0ED;
-  
-  --ink-heading:       #211F1D;
-  --ink-body:          #57534E;
-  
-  --success-forest:    #2F6B4F;
+  --text-heading:      #211F1D;
+  --text-body:         #57534E;
+  --text-muted:        #78716A;
+  --text-subtle:       #A8A196;
+
+  --brand-primary:     #FF5A36;
+  --brand-hover:       #E04826;
+  --brand-subtle:      #FFF0ED;
+
+  --success-main:      #2F6B4F;
   --success-subtle:    #E8F2EC;
 
-  --neutral-warm-dark: #3D3935;
-  --neutral-warm-mid:  #78716A;
-  --neutral-warm-gray: #A8A196;
-  --neutral-warm-light:#D8D2C7;
-  --border-warm:       #E2DCD2;
+  --border-main:       #E2DCD2;
+  --border-muted:      #D8D2C7;
+
+  --radius-sm:         0.375rem;
+  --radius-md:         0.5rem;
+  --radius-lg:         0.75rem;
+  --radius-xl:         1rem;
+
+  --shadow-sm:         0 1px 2px 0 rgba(33, 31, 29, 0.05);
+  --shadow-md:         0 4px 12px -2px rgba(33, 31, 29, 0.08);
+  --shadow-lg:         0 12px 28px -6px rgba(33, 31, 29, 0.12);
 }
 
 @theme {
   --font-sans:     var(--font-sans), system-ui, -apple-system, sans-serif;
   --font-heading:  var(--font-heading), system-ui, -apple-system, sans-serif;
 
-  --color-cream-bg:       #FBF7F0;
-  --color-cream-surface:  #EFE9DF;
-
-  --color-ember-brand:    #FF5A36;
-  --color-ember-hover:    #E04826;
-  --color-ember-subtle:   #FFF0ED;
-
-  --color-forest-success: #2F6B4F;
-  --color-forest-subtle:  #E8F2EC;
-
-  --color-ink-heading:    #211F1D;
-  --color-ink-body:       #57534E;
-
-  --color-warm-dark:      #3D3935;
-  --color-warm-mid:       #78716A;
-  --color-warm-gray:      #A8A196;
-  --color-warm-light:     #D8D2C7;
-  --color-warm-border:    #E2DCD2;
+  --color-cream-bg:       var(--bg-app);
+  --color-cream-surface:  var(--bg-surface);
+  --color-ember-brand:    var(--brand-primary);
+  --color-ember-hover:    var(--brand-hover);
+  --color-forest-success: var(--success-main);
+  --color-ink-heading:    var(--text-heading);
+  --color-ink-body:       var(--text-body);
+  --color-warm-border:    var(--border-main);
 }
 
 body {
-  background-color: var(--bg-cream);
-  color: var(--ink-body);
+  background-color: var(--bg-app);
+  color: var(--text-body);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -57,16 +55,18 @@ body {
 
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
-  color: var(--ink-heading);
+  color: var(--text-heading);
   letter-spacing: -0.02em;
 }
 
-/* ── Signature Brand Buttons & Interactive Surfaces ── */
+/* ── Centralized Component System ── */
+
+/* Buttons */
 .btn-primary {
-  background-color: var(--brand-ember);
-  color: #FFFFFF;
+  background-color: var(--brand-primary);
+  color: #FFFFFF !important;
   font-weight: 600;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: inline-flex;
   align-items: center;
@@ -74,9 +74,11 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   gap: 0.5rem;
   min-height: 44px;
   padding: 0.625rem 1.25rem;
+  border: 1px solid transparent;
+  cursor: pointer;
 }
 .btn-primary:hover {
-  background-color: var(--brand-ember-hover);
+  background-color: var(--brand-hover);
   transform: translateY(-2px);
   box-shadow: 0 10px 25px -5px rgba(255, 90, 54, 0.35);
 }
@@ -85,11 +87,11 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 .btn-secondary {
-  background-color: var(--surface-cream);
-  color: var(--ink-heading);
-  border: 1px solid var(--border-warm);
+  background-color: var(--bg-surface);
+  color: var(--text-heading) !important;
+  border: 1px solid var(--border-main);
   font-weight: 600;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: inline-flex;
   align-items: center;
@@ -97,51 +99,150 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   gap: 0.5rem;
   min-height: 44px;
   padding: 0.625rem 1.25rem;
+  cursor: pointer;
 }
 .btn-secondary:hover {
   background-color: #E6DFD4;
-  border-color: var(--neutral-warm-gray);
+  border-color: var(--text-subtle);
   transform: translateY(-1px);
 }
 .btn-secondary:active {
   transform: scale(0.95);
 }
 
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-heading) !important;
+  border: 1px solid var(--border-main);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background-color: var(--bg-surface);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary) !important;
+}
+
+/* Form Inputs */
+.input-field {
+  width: 100%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-md);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--text-heading);
+  min-height: 44px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+.input-field:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(255, 90, 54, 0.15);
+}
+
+/* Cards & Surfaces */
 .card-warm {
-  background-color: var(--surface-cream);
-  border: 1px solid var(--border-warm);
-  border-radius: 0.75rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-lg);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.2s ease;
 }
 .card-warm:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -10px rgba(33, 31, 29, 0.08);
-  border-color: var(--neutral-warm-gray);
+  box-shadow: var(--shadow-md);
+  border-color: var(--text-subtle);
 }
 
-/* Touch Target Minimum 44px on Mobile */
+/* Badges */
+.badge-ember {
+  background-color: var(--brand-subtle);
+  color: var(--brand-primary);
+  border: 1px solid rgba(255, 90, 54, 0.3);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-forest {
+  background-color: var(--success-subtle);
+  color: var(--success-main);
+  border: 1px solid rgba(47, 107, 79, 0.3);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Tables */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-main);
+  background-color: var(--bg-surface);
+}
+.table-header {
+  position: sticky;
+  top: 0;
+  background-color: #E6DFD4;
+  color: var(--text-heading);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-main);
+  z-index: 10;
+}
+.table-row {
+  border-bottom: 1px solid var(--border-main);
+  transition: background-color 0.15s ease;
+}
+.table-row:hover {
+  background-color: #E8E1D5;
+}
+
+/* Touch Targets Minimum 44px */
 button, a, input, select, textarea {
   min-height: 44px;
 }
 
-/* Focus Ring */
+/* WCAG AA Visible Focus Ring */
 *:focus-visible {
-  outline: 2px solid var(--brand-ember);
+  outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
 }
 
-/* Custom Scrollbar */
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-cream);
+  background: var(--bg-app);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--neutral-warm-gray);
+  background: var(--text-subtle);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--brand-ember);
+  background: var(--brand-primary);
 }
