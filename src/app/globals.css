@@ -1,56 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Enterprise Design Tokens ── */
-  --bg-dark:           #0B0D10;
-  --bg-light:          #FAF8F5;
+  /* ── Bespoke Warm Brand Design Tokens ── */
+  --bg-cream:          #FBF7F0;
+  --surface-cream:     #EFE9DF;
+  --surface-card:      #F5EFE6;
   
-  --primary-indigo:    #4338CA;
-  --primary-hover:     #3730A3;
-  --primary-subtle:    #EEF2FF;
+  --brand-ember:       #FF5A36;
+  --brand-ember-hover: #E04826;
+  --brand-ember-subtle:#FFF0ED;
   
-  --accent-coral:      #FF7A45;
-  --accent-coral-hover:#F9571C;
-  --accent-coral-subtle:#FFF1EC;
+  --ink-heading:       #211F1D;
+  --ink-body:          #57534E;
   
-  --success-emerald:   #10B981;
-  --success-subtle:    #ECFDF5;
+  --success-forest:    #2F6B4F;
+  --success-subtle:    #E8F2EC;
 
-  --neutral-900:       #0B0D10;
-  --neutral-800:       #1C1F23;
-  --neutral-700:       #3A3F45;
-  --neutral-500:       #6B7280;
-  --neutral-300:       #D1D5DB;
-  --neutral-100:       #F3F4F6;
+  --neutral-warm-dark: #3D3935;
+  --neutral-warm-mid:  #78716A;
+  --neutral-warm-gray: #A8A196;
+  --neutral-warm-light:#D8D2C7;
+  --border-warm:       #E2DCD2;
 }
 
 @theme {
   --font-sans:     var(--font-sans), system-ui, -apple-system, sans-serif;
   --font-heading:  var(--font-heading), system-ui, -apple-system, sans-serif;
 
-  --color-dark-bg:        #0B0D10;
-  --color-light-bg:       #FAF8F5;
+  --color-cream-bg:       #FBF7F0;
+  --color-cream-surface:  #EFE9DF;
 
-  --color-indigo-brand:   #4338CA;
-  --color-indigo-hover:   #3730A3;
-  --color-indigo-subtle:  #EEF2FF;
+  --color-ember-brand:    #FF5A36;
+  --color-ember-hover:    #E04826;
+  --color-ember-subtle:   #FFF0ED;
 
-  --color-amber-coral:    #FF7A45;
-  --color-amber-hover:    #F9571C;
-  --color-amber-subtle:   #FFF1EC;
+  --color-forest-success: #2F6B4F;
+  --color-forest-subtle:  #E8F2EC;
 
-  --color-emerald-success:#10B981;
-  --color-emerald-subtle: #ECFDF5;
+  --color-ink-heading:    #211F1D;
+  --color-ink-body:       #57534E;
 
-  --color-warm-dark:      #1C1F23;
-  --color-warm-mid:       #3A3F45;
-  --color-warm-gray:      #6B7280;
-  --color-warm-light:     #E5E7EB;
+  --color-warm-dark:      #3D3935;
+  --color-warm-mid:       #78716A;
+  --color-warm-gray:      #A8A196;
+  --color-warm-light:     #D8D2C7;
+  --color-warm-border:    #E2DCD2;
 }
 
 body {
-  background-color: var(--bg-light);
-  color: var(--neutral-800);
+  background-color: var(--bg-cream);
+  color: var(--ink-body);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -58,12 +57,13 @@ body {
 
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
-  letter-spacing: -0.025em;
+  color: var(--ink-heading);
+  letter-spacing: -0.02em;
 }
 
-/* ── Interactive Spring & Hover Utilities ── */
+/* ── Signature Brand Buttons & Interactive Surfaces ── */
 .btn-primary {
-  background-color: var(--primary-indigo);
+  background-color: var(--brand-ember);
   color: #FFFFFF;
   font-weight: 600;
   border-radius: 0.5rem;
@@ -72,19 +72,22 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
 }
 .btn-primary:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--brand-ember-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(255, 90, 54, 0.35);
 }
 .btn-primary:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
-.btn-accent {
-  background-color: var(--accent-coral);
-  color: #FFFFFF;
+.btn-secondary {
+  background-color: var(--surface-cream);
+  color: var(--ink-heading);
+  border: 1px solid var(--border-warm);
   font-weight: 600;
   border-radius: 0.5rem;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -92,48 +95,53 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
 }
-.btn-accent:hover {
-  background-color: var(--accent-coral-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(255, 122, 69, 0.35);
+.btn-secondary:hover {
+  background-color: #E6DFD4;
+  border-color: var(--neutral-warm-gray);
+  transform: translateY(-1px);
 }
-.btn-accent:active {
-  transform: scale(0.96);
+.btn-secondary:active {
+  transform: scale(0.95);
 }
 
-.card-interactive {
+.card-warm {
+  background-color: var(--surface-cream);
+  border: 1px solid var(--border-warm);
+  border-radius: 0.75rem;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.2s ease;
 }
-.card-interactive:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
-  border-color: rgba(67, 56, 202, 0.3);
+.card-warm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -10px rgba(33, 31, 29, 0.08);
+  border-color: var(--neutral-warm-gray);
 }
 
 /* Touch Target Minimum 44px on Mobile */
-button, a {
+button, a, input, select, textarea {
   min-height: 44px;
 }
 
 /* Focus Ring */
 *:focus-visible {
-  outline: 2px solid var(--primary-indigo);
+  outline: 2px solid var(--brand-ember);
   outline-offset: 2px;
 }
 
-/* Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF8F5;
+  background: var(--bg-cream);
 }
 ::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
+  background: var(--neutral-warm-gray);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4338CA;
+  background: var(--brand-ember);
 }

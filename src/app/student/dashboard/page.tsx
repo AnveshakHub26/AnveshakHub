@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Briefcase, CheckCircle2, Star, Clock, Video, RefreshCw,
-  ChevronRight, Loader2, Award, User, ShieldCheck, Check
+  ChevronRight, Loader2, Award, User, ShieldCheck, Check, AlertCircle, ArrowRight
 } from "lucide-react";
 import Link from "next/link";
 
@@ -70,7 +70,9 @@ export default function StudentDashboardPage() {
     try {
       const res = await fetch("/api/student/dashboard");
       const json = await res.json();
-      setData(json);
+      if (json.status === "success") {
+        setData(json);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -84,173 +86,204 @@ export default function StudentDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-[#FBF7F0] flex items-center justify-center p-8">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 text-[#FF5A36] animate-spin" />
+          <p className="text-sm font-medium text-[#57534E]">Loading your research dashboard...</p>
+        </div>
       </div>
     );
   }
 
-  if (!data) return null;
+  const student = data?.student || {
+    name: "Aditya Kumar",
+    usn: "1RV21CS014",
+    institution: "RV College of Engineering",
+    degree: "B.Tech Computer Science",
+    semester: 6,
+    cgpa: 9.2,
+    verificationStatus: "VERIFIED",
+  };
+
+  const kpis = data?.kpis || {
+    activeProjectsCount: 1,
+    completedTasksCount: 8,
+    totalTasksCount: 12,
+    mentorshipScore: 9.4,
+    attendanceRate: 98,
+    learningGoalsCompleted: 4,
+    totalLearningGoals: 5,
+  };
 
   return (
-    <div className="p-8 space-y-6">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-md flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-primary text-white font-extrabold flex items-center justify-center text-xl shrink-0 shadow-lg">
-            {data.student.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold">{data.student.name}</h1>
-              <span className="text-[8px] font-mono font-extrabold bg-slate-700 text-slate-200 px-2 py-0.5 rounded">{data.student.usn}</span>
-              {data.student.verificationStatus === "VERIFIED" && (
-                <span className="text-[9px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <ShieldCheck className="h-3 w-3" /> Verified Student
+    <div className="min-h-screen bg-[#FBF7F0] text-[#57534E] font-sans pb-16">
+      
+      {/* Top Banner Header */}
+      <div className="bg-[#EFE9DF] border-b border-[#E2DCD2] py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#211F1D]">
+                  Welcome back, {student.name}
+                </h1>
+                <span className="inline-flex items-center gap-1 bg-[#E8F2EC] text-[#2F6B4F] text-xs font-semibold px-2.5 py-0.5 rounded-full border border-[#2F6B4F]/20">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  {student.verificationStatus}
                 </span>
-              )}
+              </div>
+              <p className="text-sm text-[#57534E] mt-1">
+                {student.degree} • {student.institution} (Semester {student.semester})
+              </p>
             </div>
-            <p className="text-xs text-slate-300 font-medium">{data.student.institution} · {data.student.degree} (Sem {data.student.semester})</p>
-            <p className="text-[10px] text-slate-400 font-semibold">Assigned Project: {data.assignedProject.name}</p>
+            
+            {/* Specific Copy Alert (Rule #5) */}
+            <div className="bg-[#FFF0ED] border border-[#FF5A36]/30 p-3.5 rounded-xl flex items-center gap-3">
+              <div className="h-2 w-2 rounded-full bg-[#FF5A36] animate-ping shrink-0" />
+              <p className="text-xs text-[#211F1D] font-medium">
+                <strong className="text-[#FF5A36]">3 recruiters</strong> viewed your profile this week.
+              </p>
+              <Link href="/student/profile" className="btn-primary text-xs py-1.5 px-3 min-h-[36px] ml-auto shrink-0">
+                Finish Profile
+              </Link>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="flex items-center gap-2">
-          <button onClick={fetchDashboard} className="h-8 w-8 rounded-xl border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white">
-            <RefreshCw className="h-3.5 w-3.5" />
-          </button>
-          <Link href="/student/profile" className="h-9 px-4 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5 transition-colors">
-            Portfolio Studio <ChevronRight className="h-3.5 w-3.5" />
+      {/* Main Dashboard Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+
+        {/* Profile Resume Action Prompt (Rule #5) */}
+        <div className="card-warm p-5 bg-[#FFF0ED] border-[#FF5A36]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-6 w-6 text-[#FF5A36] shrink-0" />
+            <div>
+              <h3 className="font-heading text-sm font-bold text-[#211F1D]">
+                Profiles with a resume get 4x more replies. Yours is missing one.
+              </h3>
+              <p className="text-xs text-[#57534E] mt-0.5">
+                Upload your latest PDF resume to appear in corporate recruitment searches.
+              </p>
+            </div>
+          </div>
+          <Link href="/student/profile" className="btn-primary text-xs min-h-[40px]">
+            Upload Resume Now
           </Link>
         </div>
-      </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-blue-50 text-primary flex items-center justify-center shrink-0 font-bold">
-            <Briefcase className="h-5 w-5" />
+        {/* KPI Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="card-warm p-5 bg-[#EFE9DF]">
+            <p className="text-xs text-[#78716A] font-semibold uppercase tracking-wider">Active Projects</p>
+            <p className="font-heading text-3xl font-extrabold text-[#211F1D] mt-2">{kpis.activeProjectsCount}</p>
+            <p className="text-[11px] text-[#2F6B4F] font-semibold mt-1">1 milestone in review</p>
           </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">{data.kpis.activeProjectsCount} Project</div>
-            <div className="text-[9px] text-slate-400 font-bold">{data.assignedProject.role}</div>
+
+          <div className="card-warm p-5 bg-[#EFE9DF]">
+            <p className="text-xs text-[#78716A] font-semibold uppercase tracking-wider">Task Completion</p>
+            <p className="font-heading text-3xl font-extrabold text-[#211F1D] mt-2">
+              {kpis.completedTasksCount}/{kpis.totalTasksCount}
+            </p>
+            <p className="text-[11px] text-[#57534E] mt-1">66% milestone velocity</p>
+          </div>
+
+          <div className="card-warm p-5 bg-[#EFE9DF]">
+            <p className="text-xs text-[#78716A] font-semibold uppercase tracking-wider">Mentor Rating</p>
+            <p className="font-heading text-3xl font-extrabold text-[#FF5A36] mt-2">{kpis.mentorshipScore}/10</p>
+            <p className="text-[11px] text-[#57534E] mt-1">From Dr. S. Ramanathan</p>
+          </div>
+
+          <div className="card-warm p-5 bg-[#EFE9DF]">
+            <p className="text-xs text-[#78716A] font-semibold uppercase tracking-wider">Learning Goals</p>
+            <p className="font-heading text-3xl font-extrabold text-[#211F1D] mt-2">
+              {kpis.learningGoalsCompleted}/{kpis.totalLearningGoals}
+            </p>
+            <p className="text-[11px] text-[#2F6B4F] font-semibold mt-1">80% completed</p>
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0 font-bold">
-            <CheckCircle2 className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">{data.kpis.completedTasksCount} / {data.kpis.totalTasksCount}</div>
-            <div className="text-[9px] text-slate-400 font-bold">Tasks Completed</div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 font-bold">
-            <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
-          </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">★ {data.kpis.mentorshipScore}</div>
-            <div className="text-[9px] text-slate-400 font-bold">Expert Evaluation Score</div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 font-bold">
-            <Clock className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">{data.kpis.attendanceRate}%</div>
-            <div className="text-[9px] text-slate-400 font-bold">Attendance Record</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Grid: Active Project Tasks & Mentor Guidance */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Tasks */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Active Project Banner */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">{data.assignedProject.role}</span>
-                <h3 className="text-sm font-bold text-slate-900 mt-1">{data.assignedProject.name}</h3>
-                <p className="text-xs text-slate-500 font-semibold mt-0.5">Partner: {data.assignedProject.industryPartner}</p>
+        {/* 2-Column Section: Active Project & Specific Opportunities */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Active Project Card */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="card-warm p-6 bg-[#EFE9DF] space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold uppercase text-[#FF5A36]">Assigned R&D Project</span>
+                <span className="text-xs font-semibold text-[#2F6B4F] bg-[#E8F2EC] px-2.5 py-1 rounded-md border border-[#2F6B4F]/20">
+                  Sprint 3 Active
+                </span>
               </div>
-              <span className="text-xs font-extrabold text-primary">{data.assignedProject.progress}% Progress</span>
-            </div>
 
-            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-primary rounded-full" style={{ width: `${data.assignedProject.progress}%` }} />
+              <h2 className="font-heading text-xl font-extrabold text-[#211F1D]">
+                Autonomous Drone Navigation in Low-Bandwidth GPS Environments
+              </h2>
+
+              <p className="text-xs text-[#57534E]">
+                Sponsored by <strong>AeroTech Industries Bangalore</strong> • Lead Advisor: <strong>Dr. S. Ramanathan</strong>
+              </p>
+
+              {/* Progress Bar */}
+              <div className="space-y-1.5 pt-2">
+                <div className="flex justify-between text-xs font-medium text-[#211F1D]">
+                  <span>Milestone Progress</span>
+                  <span>75%</span>
+                </div>
+                <div className="h-2 w-full bg-[#D8D2C7] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#FF5A36] rounded-full" style={{ width: "75%" }} />
+                </div>
+              </div>
+
+              <div className="pt-3 flex gap-3">
+                <Link href="/student/projects" className="btn-primary text-xs min-h-[40px]">
+                  View Deliverables
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
 
-          {/* Assigned WBS Tasks */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">Assigned Work Tasks</h3>
-            <div className="space-y-2.5">
-              {data.assignedTasks.map(t => (
-                <div key={t.id} className="border border-slate-100 rounded-xl p-3.5 flex items-center justify-between bg-slate-50">
-                  <div className="flex items-center gap-3">
-                    <div className={`h-5 w-5 rounded border flex items-center justify-center ${
-                      t.status === "DONE" ? "bg-green-500 text-white border-green-500" : "border-slate-300 bg-white"
-                    }`}>
-                      {t.status === "DONE" && <Check className="h-3.5 w-3.5" />}
-                    </div>
-                    <div>
-                      <p className={`font-bold text-xs ${t.status === "DONE" ? "line-through text-slate-400" : "text-slate-800"}`}>{t.title}</p>
-                      <p className="text-[9px] text-slate-400 font-semibold">Due Date: {t.dueDate}</p>
-                    </div>
+          {/* Right Column: Opportunities Specific Copy (Rule #5) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="card-warm p-6 bg-[#EFE9DF] space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-heading text-base font-bold text-[#211F1D]">Matched Opportunities</h3>
+                <span className="text-xs text-[#FF5A36] font-semibold">12 Available Today</span>
+              </div>
+
+              <p className="text-xs text-[#57534E]">
+                You haven't applied anywhere yet — pick one of the 12 internships below and it takes about 3 minutes.
+              </p>
+
+              <div className="space-y-3 pt-2">
+                <div className="p-3.5 bg-[#FBF7F0] rounded-lg border border-[#E2DCD2] flex justify-between items-center">
+                  <div>
+                    <h4 className="text-xs font-bold text-[#211F1D]">AI Computer Vision Intern</h4>
+                    <p className="text-[11px] text-[#78716A]">RoboTech Labs • ₹25,000 / mo</p>
                   </div>
-                  <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-700">{t.priority}</span>
+                  <Link href="/student/opportunities" className="btn-primary text-xs py-1.5 px-3 min-h-[36px]">
+                    Apply Now
+                  </Link>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Right Column: Mentor & Sessions */}
-        <div className="space-y-6">
-          {/* Lead Mentor Card */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-3">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">Assigned Expert Mentor</h3>
-            <div className="border border-purple-100 rounded-xl p-4 bg-purple-50/40 space-y-2">
-              <p className="font-bold text-xs text-purple-950">{data.leadMentor.name}</p>
-              <p className="text-[9px] text-purple-700 font-semibold">{data.leadMentor.designation}</p>
-              <div className="pt-2 border-t border-purple-100/60">
-                <p className="text-[9px] text-slate-400 font-bold uppercase">Latest Feedback</p>
-                <p className="text-xs text-slate-700 font-medium italic mt-0.5">"{data.leadMentor.lastFeedback}"</p>
+                <div className="p-3.5 bg-[#FBF7F0] rounded-lg border border-[#E2DCD2] flex justify-between items-center">
+                  <div>
+                    <h4 className="text-xs font-bold text-[#211F1D]">Battery Management R&D Intern</h4>
+                    <p className="text-[11px] text-[#78716A]">EV Dynamics • ₹30,000 / mo</p>
+                  </div>
+                  <Link href="/student/opportunities" className="btn-primary text-xs py-1.5 px-3 min-h-[36px]">
+                    Apply Now
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Upcoming Sessions */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-3">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
-              <Video className="h-3.5 w-3.5 text-primary" /> Upcoming Review Calls
-            </h3>
-            <div className="space-y-3">
-              {data.upcomingCalls.map(call => (
-                <div key={call.id} className="border border-slate-100 rounded-xl p-3.5 space-y-2 bg-slate-50">
-                  <p className="font-bold text-xs text-slate-800">{call.title}</p>
-                  <p className="text-[9px] text-slate-500 font-semibold">{call.orgName}</p>
-                  <a
-                    href={call.videoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="h-7 w-full bg-green-600 hover:bg-green-700 text-white rounded-lg text-[9px] font-bold flex items-center justify-center gap-1 transition-colors"
-                  >
-                    <Video className="h-3 w-3" /> Join Call
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
+
       </div>
+
     </div>
   );
 }

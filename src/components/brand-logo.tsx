@@ -42,8 +42,8 @@ export default function BrandLogo({
       </div>
 
       {showText && (
-        <span className={`${textMap[size]} ${lightText ? "text-white" : "text-[#FAF8F5]"} font-bold tracking-tight`}>
-          Anveshak<span className="bg-gradient-to-r from-[#FF7A45] via-[#6366F1] to-[#818CF8] bg-clip-text text-transparent font-black">Hub</span>
+        <span className={`${textMap[size]} ${lightText ? "text-[#211F1D]" : "text-[#211F1D]"} font-bold tracking-tight`}>
+          Anveshak<span className="text-[#FF5A36] font-black">Hub</span>
         </span>
       )}
     </div>

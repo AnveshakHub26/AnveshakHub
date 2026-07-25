@@ -59,98 +59,90 @@ export default function StudentNotificationsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "MARK_READ", id })
       });
-      await fetchNotifications();
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     } catch (e) {
       console.error(e);
     }
   };
 
   return (
-    <div className="p-8 space-y-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">Student Notification Center</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Real-time alerts for internship approvals, meeting invites, task assignments & stipend payouts</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={fetchNotifications} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
-            <RefreshCw className="h-3.5 w-3.5" /> Refresh
-          </button>
-          <button onClick={handleMarkAllRead} className="h-8 px-3 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
-            <Check className="h-3.5 w-3.5" /> Mark All as Read
-          </button>
+    <div className="min-h-screen bg-[#FBF7F0] text-[#57534E] font-sans pb-20">
+      
+      {/* Header Banner */}
+      <div className="bg-[#EFE9DF] border-b border-[#E2DCD2] py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FF5A36]">
+                Realtime Activity Center
+              </span>
+              <h1 className="font-heading text-3xl font-extrabold text-[#211F1D] mt-1">
+                Notifications & Stream
+              </h1>
+            </div>
+
+            <div className="flex gap-3">
+              <button onClick={handleMarkAllRead} className="btn-secondary text-xs min-h-[40px]">
+                <Check className="h-4 w-4" /> Mark All Read
+              </button>
+              <button onClick={fetchNotifications} className="btn-primary text-xs min-h-[40px]">
+                <RefreshCw className="h-4 w-4" /> Refresh
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-3 flex items-center gap-1.5">
-        {[
-          { key: "ALL", label: "All Alerts" },
-          { key: "OPPORTUNITY", label: "Opportunities" },
-          { key: "MEETING", label: "Meetings" },
-          { key: "TASK", label: "Tasks" },
-          { key: "FINANCE", label: "Finance" }
-        ].map(cat => (
-          <button
-            key={cat.key}
-            onClick={() => setCategoryFilter(cat.key)}
-            className={`h-7 px-3 text-[10px] font-bold rounded-lg border transition-all ${
-              categoryFilter === cat.key ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-600 border-slate-200"
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
+      {/* Main List */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
 
-      {/* Notifications List */}
-      {loading ? (
-        <div className="flex items-center justify-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      ) : notifications.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-          <Bell className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-xs font-bold text-slate-800">No Notifications</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {notifications.map((n, idx) => (
-            <motion.div
-              key={n.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.04 }}
-              className={`border rounded-2xl p-4 flex items-start justify-between gap-4 transition-all ${
-                n.read ? "bg-white border-slate-200" : "bg-blue-50/40 border-blue-200 shadow-sm"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <div className={`h-9 w-9 rounded-xl flex items-center justify-center font-bold shrink-0 ${
-                  !n.read ? "bg-primary text-white" : "bg-slate-100 text-slate-500"
-                }`}>
-                  <Bell className="h-4.5 w-4.5" />
-                </div>
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 uppercase">{n.category}</span>
-                    <h3 className="text-xs font-bold text-slate-800">{n.title}</h3>
+        {loading ? (
+          <div className="py-16 text-center">
+            <Loader2 className="h-8 w-8 text-[#FF5A36] animate-spin mx-auto" />
+            <p className="text-xs text-[#78716A] mt-2">Checking realtime notifications...</p>
+          </div>
+        ) : notifications.length === 0 ? (
+          /* Specific Empty State Copy (Rule #5) */
+          <div className="card-warm p-12 text-center bg-[#EFE9DF] space-y-3">
+            <Bell className="h-10 w-10 text-[#FF5A36] mx-auto" />
+            <h3 className="font-heading text-lg font-bold text-[#211F1D]">
+              Nothing new yet — we'll ping you the second a recruiter responds.
+            </h3>
+            <p className="text-xs text-[#78716A] max-w-md mx-auto">
+              Application reviews, meeting invites, and milestone updates will stream here automatically.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {notifications.map((n) => (
+              <div
+                key={n.id}
+                onClick={() => !n.read && handleMarkRead(n.id)}
+                className={`card-warm p-5 rounded-xl border flex items-start justify-between gap-4 cursor-pointer transition-all ${
+                  n.read ? "bg-[#EFE9DF] border-[#E2DCD2]" : "bg-[#FFF0ED] border-[#FF5A36]/30"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`p-2.5 rounded-lg shrink-0 ${n.read ? "bg-[#FBF7F0] text-[#78716A]" : "bg-[#FF5A36] text-white"}`}>
+                    <Bell className="h-4 w-4" />
                   </div>
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed">{n.message}</p>
-                  <p className="text-[9px] text-slate-400 font-semibold pt-1">{new Date(n.createdAt).toLocaleString("en-IN")}</p>
+                  <div>
+                    <h4 className="font-heading text-sm font-bold text-[#211F1D]">{n.title}</h4>
+                    <p className="text-xs text-[#57534E] mt-1">{n.message}</p>
+                    <span className="text-[11px] text-[#78716A] mt-2 block">{n.createdAt}</span>
+                  </div>
                 </div>
-              </div>
 
-              {!n.read && (
-                <button onClick={() => handleMarkRead(n.id)} className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[9px] font-bold shrink-0">
-                  Mark Read
-                </button>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      )}
+                {!n.read && (
+                  <span className="h-2 w-2 rounded-full bg-[#FF5A36] shrink-0 mt-2" />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+      </div>
+
     </div>
   );
 }
