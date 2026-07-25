@@ -21,10 +21,10 @@ export class RegisterDto {
   @ApiPropertyOptional({ example: 'EXPERT', enum: ['SUPER_ADMIN', 'ADMIN', 'INDUSTRY', 'EXPERT', 'STUDENT'] })
   @IsOptional()
   @IsString()
-  @IsIn(['SUPER_ADMIN', 'ADMIN', 'INDUSTRY', 'EXPERT', 'STUDENT'], { message: 'Role must be one of SUPER_ADMIN, ADMIN, INDUSTRY, EXPERT, STUDENT' })
+  @IsIn(['SUPER_ADMIN', 'ADMIN', 'INDUSTRY', 'EXPERT', 'STUDENT'])
   role?: string;
 
-  @ApiPropertyOptional({ example: 'Indian Institute of Science (IISc)', description: 'Associated organization or institution' })
+  @ApiPropertyOptional({ example: 'Indian Institute of Science (IISc)' })
   @IsOptional()
   @IsString()
   organization?: string;

@@ -1,6 +1,6 @@
-import { Injectable, UnauthorizedException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '../database/prisma.service';
-import { SupabaseService } from '../supabase/supabase.service';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../../database/prisma.service';
+import { SupabaseService } from '../../supabase/supabase.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -25,7 +25,6 @@ export class AuthService {
       throw new UnauthorizedException(error?.message || 'Invalid email or password credentials');
     }
 
-    // Sync user record in Supabase PostgreSQL via Prisma
     let dbUser = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
@@ -60,7 +59,6 @@ export class AuthService {
     const supabase = this.supabaseService.getClient();
     const userRole = dto.role || 'STUDENT';
 
-    // 1. Create User in Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email: dto.email,
       password: dto.password,
@@ -76,7 +74,6 @@ export class AuthService {
       throw new BadRequestException(`Registration failed: ${authError.message}`);
     }
 
-    // 2. Sync / Upsert User in Supabase PostgreSQL
     const dbUser = await this.prisma.user.upsert({
       where: { email: dto.email },
       update: {
