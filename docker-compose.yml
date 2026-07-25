@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # Next.js Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+    depends_on:
+      - backend
+    networks:
+      - anveshakhub-network
+    restart: always
+
+  # NestJS Enterprise Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - REDIS_URL=redis://redis:6379
+      - OPENSEARCH_NODE=http://opensearch:9200
+    depends_on:
+      - redis
+      - opensearch
+    networks:
+      - anveshakhub-network
+    restart: always
+
+  # BullMQ Worker Service
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["node", "dist/main.js"]
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+      - IS_WORKER_MODE=true
+    depends_on:
+      - redis
+    networks:
+      - anveshakhub-network
+    restart: always
+
+  # Redis In-Memory Cache & Socket.IO Broker
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - anveshakhub-network
+    restart: always
+
+  # OpenSearch Enterprise Search Engine
+  opensearch:
+    image: opensearchproject/opensearch:2.13.0
+    environment:
+      - cluster.name=anveshakhub-cluster
+      - node.name=anveshakhub-node
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    networks:
+      - anveshakhub-network
+    restart: always
+
+networks:
+  anveshakhub-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  opensearch-data:

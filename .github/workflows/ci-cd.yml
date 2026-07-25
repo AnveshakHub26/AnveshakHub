@@ -1,0 +1,71 @@
+name: AnveshakHub Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate-and-test:
+    name: Lint, Test & Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Validate Prisma Schema
+        run: npx prisma validate --schema=prisma/schema.prisma
+
+      - name: Build Next.js Frontend
+        run: npm run build
+
+      - name: Build NestJS Backend
+        run: |
+          cd backend
+          npm run build
+
+  docker-build:
+    name: Build & Push Docker Images
+    needs: validate-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Backend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: false
+          tags: anveshakhub/backend:latest
+
+      - name: Build Frontend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: anveshakhub/frontend:latest
