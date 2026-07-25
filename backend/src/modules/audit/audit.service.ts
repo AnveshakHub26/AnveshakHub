@@ -1,9 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 
 @Injectable()
 export class AuditService {
+  private readonly logger = new Logger(AuditService.name);
+
   constructor(private prisma: PrismaService) {}
+
+  // Asynchronous non-blocking audit logging
+  logActionAsync(data: {
+    userId?: string;
+    action: string;
+    entity?: string;
+    entityId?: string;
+    details?: any;
+    ip?: string;
+    userAgent?: string;
+  }): void {
+    setImmediate(async () => {
+      try {
+        await this.prisma.auditLog.create({
+          data: {
+            userId: data.userId || null,
+            action: data.action,
+            entity: data.entity || 'SYSTEM',
+            entityId: data.entityId || null,
+            details: data.details ? JSON.stringify(data.details) : null,
+            ipAddress: data.ip || '127.0.0.1',
+            userAgent: data.userAgent || 'AnveshakHub Enterprise Agent',
+          },
+        });
+      } catch (e) {
+        this.logger.error(`[Audit Log Async Failure] ${(e as Error).message}`);
+      }
+    });
+  }
 
   async logAction(data: {
     userId?: string;
@@ -14,7 +45,7 @@ export class AuditService {
     ip?: string;
     userAgent?: string;
   }) {
-    const log = await this.prisma.auditLog.create({
+    return this.prisma.auditLog.create({
       data: {
         userId: data.userId || null,
         action: data.action,
@@ -25,8 +56,6 @@ export class AuditService {
         userAgent: data.userAgent || 'AnveshakHub Enterprise Agent',
       },
     });
-
-    return log;
   }
 
   async getLogs(page = 1, limit = 20) {
