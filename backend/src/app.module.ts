@@ -17,6 +17,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { EmailModule } from './modules/email/email.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { SearchModule } from './modules/search/search.module';
 import { HealthModule } from './health/health.module';
 import { OpenSearchModule } from './search/opensearch.module';
 import { QueueModule } from './queue/queue.module';
@@ -44,6 +45,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     NotificationsModule,
     EmailModule,
     AuditModule,
+    SearchModule,
     HealthModule,
     OpenSearchModule,
     QueueModule,

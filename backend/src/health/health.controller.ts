@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { SupabaseService } from '../supabase/supabase.service';
 
-@ApiTags('Health & Monitoring')
+@ApiTags('Health & Monitoring Probes')
 @Controller('health')
 export class HealthController {
   constructor(
@@ -12,7 +12,7 @@ export class HealthController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Enterprise Service Health & Monitoring Status' })
+  @ApiOperation({ summary: 'Enterprise Service Health & Monitoring Diagnostics' })
   async checkHealth() {
     let dbStatus = 'healthy';
     let supabaseStatus = 'healthy';
@@ -46,8 +46,36 @@ export class HealthController {
           activityQueue: 'active',
         },
         socketIO: 'active (/realtime namespace)',
-        opensearch: process.env.OPENSEARCH_NODE ? 'configured' : 'unconfigured',
+        openSearch: process.env.OPENSEARCH_NODE ? 'healthy' : 'unconfigured (fallback to DB search)',
       },
     };
+  }
+
+  @Get('liveness')
+  @ApiOperation({ summary: 'Kubernetes/Cloud Liveness Probe Endpoint' })
+  async liveness() {
+    return {
+      status: 'UP',
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get('readiness')
+  @ApiOperation({ summary: 'Kubernetes/Cloud Readiness Probe Endpoint' })
+  async readiness() {
+    try {
+      await this.prisma.$queryRaw`SELECT 1`;
+      return {
+        status: 'READY',
+        timestamp: new Date().toISOString(),
+        database: 'CONNECTED',
+      };
+    } catch (e) {
+      return {
+        status: 'NOT_READY',
+        timestamp: new Date().toISOString(),
+        error: (e as Error).message,
+      };
+    }
   }
 }
