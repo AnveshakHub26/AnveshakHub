@@ -74,10 +74,15 @@ function EnterprisePanel() {
   );
 }
 
-export default function LoginPage() {
-  const router = useRouter();
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
-  const [email, setEmail] = useState("");
+function LoginFormContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialEmail = searchParams?.get("email") || "";
+
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -224,5 +229,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#FBF7F0] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-[#FF5A36] animate-spin" />
+      </div>
+    }>
+      <LoginFormContent />
+    </Suspense>
   );
 }

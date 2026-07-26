@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Activity, ArrowLeft, UploadCloud, CheckCircle, Plus, Trash2, ShieldCheck, Mail, User, Building, Landmark } from "lucide-react";
+import {
+  Activity, ArrowLeft, UploadCloud, CheckCircle2, Plus, Trash2,
+  ShieldCheck, Mail, User, Building, Lock, Eye, EyeOff, ArrowRight,
+  Loader2, Sparkles, CheckCircle
+} from "lucide-react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 
@@ -16,16 +20,24 @@ interface Qualification {
 export default function RegisterRolePage() {
   const { role } = useParams() as { role: string };
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
-  // Common Form States
-  const [agree, setAgree] = useState(false);
+  // Wizard Step State: 1 = Create Account, 2 = Profile Details, 3 = Success & Proceed to Login
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Step 1 Account Credentials
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Step 2 Profile Information
   const [phone, setPhone] = useState("");
   const [organization, setOrganization] = useState("");
   const [domain, setDomain] = useState("");
+  const [agree, setAgree] = useState(false);
 
   // Role-Specific Form States
   const [companyType, setCompanyType] = useState("Startup/MSME");
@@ -41,14 +53,18 @@ export default function RegisterRolePage() {
   const [govSector, setGovSector] = useState("State Department");
   const [vendorCategory, setVendorCategory] = useState("Software Licensing");
 
-  // Reset states on role change
+  // Reset state on role change
   useEffect(() => {
+    setStep(1);
     setFullName("");
     setEmail("");
+    setPassword("");
+    setConfirmPassword("");
     setPhone("");
     setOrganization("");
     setDomain("");
     setAgree(false);
+    setErrorMessage(null);
   }, [role]);
 
   const addQualification = () => {
@@ -65,66 +81,99 @@ export default function RegisterRolePage() {
     setQualifications(updated);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle Step 1 Validation & Proceed
+  const handleStep1Next = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setErrorMessage(null);
 
-    // Simulated NestJS API Registration call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!fullName.trim()) {
+      setErrorMessage("Please enter your full name");
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Please enter a valid email address");
+      return;
+    }
+    if (password.length < 8) {
+      setErrorMessage("Password must be at least 8 characters long");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
+    setStep(2);
   };
 
-  // Define role metadata for titles
+  // Handle Step 2 Final Submission
+  const handleFinalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    if (!agree) {
+      setErrorMessage("Please accept the compliance and security terms to proceed.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          fullName,
+          role,
+          phone,
+          organizationName: organization,
+          domain,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setIsSubmitting(false);
+        setStep(3);
+      } else {
+        setIsSubmitting(false);
+        setErrorMessage(data.error || "Registration failed. Please try again.");
+      }
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMessage("Network error occurred. Please try again.");
+    }
+  };
+
+  // Role Metadata for titles and badges
   const getRoleMeta = () => {
     switch (role) {
       case "industry":
         return {
           title: "Industry Partner Registration",
-          desc: "Create an enterprise profile to submit problems and match with vetted expert advisors.",
-          badge: "Verification Required"
+          desc: "Create an enterprise profile to submit problem statements & match with vetted experts.",
+          badge: "Enterprise Onboarding"
         };
       case "expert":
         return {
           title: "Subject Expert Registration",
-          desc: "Register as a verified researcher or technical expert to lead high-impact projects.",
-          badge: "Professional Verification"
+          desc: "Register as a verified research advisor or technical expert to lead R&D milestones.",
+          badge: "Expert Credential"
         };
       case "student":
         return {
           title: "Student Intern Onboarding",
           desc: "Set up your student profile to discover and apply for expert-supervised research internships.",
-          badge: "Resume Required"
-        };
-      case "contributor":
-        return {
-          title: "External Contributor Onboarding",
-          desc: "Register as a freelance specialist, vendor consultant, or external executor.",
-          badge: "Verification Required"
-        };
-      case "partner":
-        return {
-          title: "Strategic Partner Onboarding",
-          desc: "Onboard your institution or laboratory for joint strategic research and incubation ventures.",
-          badge: "MOU Governed"
-        };
-      case "government":
-        return {
-          title: "Government Agency Integration",
-          desc: "Register to manage state-sponsored grants, audit research schemes, and oversee public R&D.",
-          badge: "Agency Approval Required"
-        };
-      case "vendor":
-        return {
-          title: "Vendor / Supplier Registration",
-          desc: "Onboard to supply specialized software licensing, hardware, laboratory facilities, or logistics.",
-          badge: "Vetted Supplier"
+          badge: "Student Verification"
         };
       default:
         return {
           title: "Platform Onboarding Gateway",
-          desc: "Complete your identity profile details to join the AnveshakHub enterprise platform.",
+          desc: "Create your identity profile details to join the AnveshakHub enterprise platform.",
           badge: "Verification Required"
         };
     }
@@ -133,77 +182,184 @@ export default function RegisterRolePage() {
   const meta = getRoleMeta();
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      {/* Shared sticky navigation with back button */}
+    <div className="flex flex-col min-h-screen bg-[#FBF7F0]">
       <Navigation showBack={true} />
 
-      <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-[#FBF7F0]/40">
+      <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {/* Background mesh grid */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-35 pointer-events-none" />
 
         <div className="max-w-xl mx-auto relative z-10">
-          
+
           {/* Header titles */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-extrabold text-secondary tracking-tight">{meta.title}</h1>
-            <p className="mt-2 text-xs text-slate-550 max-w-sm mx-auto leading-relaxed">{meta.desc}</p>
+            <span className="text-[10px] font-extrabold px-3 py-1 rounded-full bg-[#FFF0ED] text-[#FF5A36] uppercase tracking-widest border border-[#FFCFC4] inline-block mb-3">
+              {meta.badge}
+            </span>
+            <h1 className="text-3xl font-extrabold text-[#211F1D] tracking-tight">{meta.title}</h1>
+            <p className="mt-2 text-xs text-[#78716A] max-w-sm mx-auto leading-relaxed">{meta.desc}</p>
           </div>
 
-          <div className="bg-white border border-[#E2DCD2] shadow-md rounded-2xl p-8">
-            {isSuccess ? (
-              <div className="py-12 flex flex-col items-center justify-center text-center">
-                <CheckCircle className="h-14 w-14 text-emerald-600 mb-4 animate-[bounce_1.5s_infinite_alternate]" />
-                <h3 className="text-lg font-bold text-secondary">
-                  {role === "student" ? "Account Activated" : "Application Submitted"}
-                </h3>
-                <p className="mt-3 text-xs text-[#78716A] max-w-sm leading-relaxed">
-                  {role === "student"
-                    ? "Welcome to AnveshakHub! Your student account is active immediately. You can now log in and discover research vacancies."
-                    : `Thank you. Your onboarding profile as an enterprise ${role} has been submitted to the verification queue. Our administrators will review the documents within 24 hours.`}
-                </p>
-                <div className="mt-8 flex gap-4">
-                  <Link href="/" className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-[#57534E] border border-[#E2DCD2] rounded-lg hover:bg-[#FBF7F0] transition-colors cursor-pointer">
-                    <ArrowLeft className="h-4 w-4" /> Back to Homepage
-                  </Link>
-                  <Link href="/auth/login" className="inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-primary rounded-lg shadow-sm hover:bg-blue-700 transition-colors cursor-pointer">
-                    Go to Login
-                  </Link>
-                </div>
+          {/* Step Progress Bar */}
+          <div className="flex items-center justify-between mb-6 px-4">
+            <div className="flex items-center gap-2">
+              <span className={`h-6 w-6 rounded-full text-xs font-bold flex items-center justify-center ${step >= 1 ? "bg-[#FF5A36] text-white" : "bg-[#EFE9DF] text-[#78716A]"}`}>1</span>
+              <span className={`text-xs font-bold ${step === 1 ? "text-[#211F1D]" : "text-[#78716A]"}`}>Create Account</span>
+            </div>
+            <div className={`flex-1 h-0.5 mx-3 ${step >= 2 ? "bg-[#FF5A36]" : "bg-[#E2DCD2]"}`} />
+            <div className="flex items-center gap-2">
+              <span className={`h-6 w-6 rounded-full text-xs font-bold flex items-center justify-center ${step >= 2 ? "bg-[#FF5A36] text-white" : "bg-[#EFE9DF] text-[#78716A]"}`}>2</span>
+              <span className={`text-xs font-bold ${step === 2 ? "text-[#211F1D]" : "text-[#78716A]"}`}>Profile Details</span>
+            </div>
+            <div className={`flex-1 h-0.5 mx-3 ${step >= 3 ? "bg-[#FF5A36]" : "bg-[#E2DCD2]"}`} />
+            <div className="flex items-center gap-2">
+              <span className={`h-6 w-6 rounded-full text-xs font-bold flex items-center justify-center ${step === 3 ? "bg-[#2F6B4F] text-white" : "bg-[#EFE9DF] text-[#78716A]"}`}>3</span>
+              <span className={`text-xs font-bold ${step === 3 ? "text-[#211F1D]" : "text-[#78716A]"}`}>Sign In</span>
+            </div>
+          </div>
+
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] shadow-sm rounded-2xl p-6 sm:p-8">
+
+            {/* Error Message Box */}
+            {errorMessage && (
+              <div className="mb-6 p-4 bg-[#FFF0ED] border border-[#FFCFC4] rounded-xl text-xs space-y-1">
+                <p className="font-bold text-[#FF5A36]">Registration Error</p>
+                <p className="text-[#57534E]">{errorMessage}</p>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                
-                {/* Visual indicator badge */}
-                <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
-                  <span className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest">
-                    Role Category: {role}
-                  </span>
-                  <span className="inline-flex items-center rounded bg-[#FFF0ED] px-2 py-0.5 text-[9px] font-bold text-primary border border-blue-100">
-                    {meta.badge}
-                  </span>
+            )}
+
+            {/* ================= STEP 1: CREATE ACCOUNT (EMAIL & PASSWORD) ================= */}
+            {step === 1 && (
+              <form onSubmit={handleStep1Next} className="space-y-5">
+                <div className="border-b border-[#D8D2C7] pb-3 mb-2">
+                  <h2 className="text-sm font-extrabold text-[#211F1D]">Step 1: Account Credentials</h2>
+                  <p className="text-xs text-[#78716A] mt-0.5">Enter your email and password to create your account credentials.</p>
                 </div>
 
-                {/* ================= INDUSTRY FORM FIELDS ================= */}
+                <div>
+                  <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Full Name *</label>
+                  <div className="relative">
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                    <input
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="e.g. Dr. Priyan Sharma"
+                      className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Email Address *</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="name@organization.com or student@iitm.ac.in"
+                      className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Password *</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Min 8 characters"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#78716A] hover:text-[#211F1D]"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Confirm Password *</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter password"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t border-[#D8D2C7]">
+                  <Link
+                    href="/auth/role-selection"
+                    className="w-1/3 h-11 inline-flex items-center justify-center border border-[#E2DCD2] rounded-xl text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] transition-all cursor-pointer"
+                  >
+                    Change Role
+                  </Link>
+                  <button
+                    type="submit"
+                    className="w-2/3 h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-xs font-bold text-white shadow-md shadow-[#FF5A36]/30 transition-all cursor-pointer"
+                  >
+                    Continue to Profile Details <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* ================= STEP 2: ROLE-SPECIFIC PROFILE DETAILS ================= */}
+            {step === 2 && (
+              <form onSubmit={handleFinalSubmit} className="space-y-5">
+                <div className="border-b border-[#D8D2C7] pb-3 mb-2 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-extrabold text-[#211F1D]">Step 2: {meta.title}</h2>
+                    <p className="text-xs text-[#78716A] mt-0.5">Account email: <span className="font-bold text-[#211F1D]">{email}</span></p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="text-[10px] font-bold text-[#FF5A36] hover:underline"
+                  >
+                    Edit Credentials
+                  </button>
+                </div>
+
+                {/* INDUSTRY SPECIFIC FIELDS */}
                 {role === "industry" && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Company Name *</label>
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Company / Organization Name *</label>
                       <input
                         type="text"
                         required
                         value={organization}
                         onChange={(e) => setOrganization(e.target.value)}
-                        placeholder="e.g. Aether Technologies Ltd"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                        placeholder="e.g. Apex Robotics India Pvt Ltd"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                       />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Company Type *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Company Type *</label>
                         <select
                           value={companyType}
                           onChange={(e) => setCompanyType(e.target.value)}
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         >
                           <option>Startup/MSME</option>
                           <option>LLP</option>
@@ -212,453 +368,226 @@ export default function RegisterRolePage() {
                         </select>
                       </div>
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Industry Domain *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Industry Domain *</label>
                         <input
                           type="text"
                           required
                           value={domain}
                           onChange={(e) => setDomain(e.target.value)}
-                          placeholder="e.g. Robotics / Fintech"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                          placeholder="e.g. Robotics / Autonomous Systems"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
                       </div>
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Website URL</label>
-                      <input
-                        type="url"
-                        value={website}
-                        onChange={(e) => setWebsite(e.target.value)}
-                        placeholder="https://company.com"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Contact Person Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="e.g. Dr. Elena Rostova"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                      />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Corporate Email *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Website URL</label>
                         <input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="elena@company.com"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                          type="url"
+                          value={website}
+                          onChange={(e) => setWebsite(e.target.value)}
+                          placeholder="https://apexrobotics.in"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Contact Number *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Contact Number *</label>
                         <input
                           type="tel"
                           required
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="10-digit phone"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                          placeholder="+91 9876543210"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Company Registration Documents * (Max 10MB)</label>
-                      <div className="border-2 border-dashed border-[#E2DCD2] rounded-xl p-5 text-center bg-[#FBF7F0]/50 hover:bg-[#FBF7F0] hover:border-primary/40 transition-colors cursor-pointer flex flex-col items-center justify-center">
-                        <UploadCloud className="h-7 w-7 text-[#A8A196] mb-1" />
-                        <span className="text-[11px] font-semibold text-[#57534E]">Click to upload tax or corporation documents</span>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* ================= EXPERT FORM FIELDS ================= */}
+                {/* EXPERT SPECIFIC FIELDS */}
                 {role === "expert" && (
                   <div className="space-y-4">
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="e.g. Prof. Rajesh Kumar"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                      />
-                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Institution / University *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Institution / University *</label>
                         <input
                           type="text"
                           required
                           value={organization}
                           onChange={(e) => setOrganization(e.target.value)}
-                          placeholder="e.g. IISc Bangalore"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                          placeholder="e.g. IISc Bangalore / IIT Madras"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Experience (Years) *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Research Experience (Years) *</label>
                         <input
                           type="number"
                           required
                           value={experienceYears}
                           onChange={(e) => setExperienceYears(parseInt(e.target.value) || 0)}
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Expertise Tags *</label>
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Core Expertise Tags *</label>
                       <input
                         type="text"
                         required
                         value={domain}
                         onChange={(e) => setDomain(e.target.value)}
-                        placeholder="e.g. Neural Networks, Cyber-physical systems"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                        placeholder="e.g. Artificial Intelligence, Embedded Systems, Quantum Computing"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                       />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Email Address *</label>
-                        <input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="rajesh@iisc.ac.in"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Phone Number</label>
-                        <input
-                          type="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          placeholder="Phone number"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between border-b border-[#E2DCD2] pt-2 pb-1.5">
-                      <span className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest">Qualifications</span>
-                      <button type="button" onClick={addQualification} className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1">
-                        <Plus className="h-3 w-3" /> Add Row
-                      </button>
-                    </div>
-
-                    {qualifications.map((q, idx) => (
-                      <div key={idx} className="p-3 bg-[#FBF7F0] border border-[#E2DCD2] rounded-lg relative space-y-2">
-                        {qualifications.length > 1 && (
-                          <button type="button" onClick={() => removeQualification(idx)} className="absolute right-2 top-2 text-[#A8A196] hover:text-red-500">
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                        <div className="grid grid-cols-3 gap-2">
-                          <input
-                            type="text"
-                            required
-                            placeholder="Degree"
-                            value={q.degree}
-                            onChange={(e) => updateQualification(idx, "degree", e.target.value)}
-                            className="text-xs p-1.5 border border-[#E2DCD2] rounded bg-white"
-                          />
-                          <input
-                            type="text"
-                            required
-                            placeholder="Institution"
-                            value={q.institution}
-                            onChange={(e) => updateQualification(idx, "institution", e.target.value)}
-                            className="text-xs p-1.5 border border-[#E2DCD2] rounded bg-white"
-                          />
-                          <input
-                            type="text"
-                            required
-                            placeholder="Year"
-                            value={q.year}
-                            onChange={(e) => updateQualification(idx, "year", e.target.value)}
-                            className="text-xs p-1.5 border border-[#E2DCD2] rounded bg-white"
-                          />
-                        </div>
-                      </div>
-                    ))}
-
                     <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Detailed CV / Publication Record * (Max 10MB)</label>
-                      <div className="border-2 border-dashed border-[#E2DCD2] rounded-xl p-5 text-center bg-[#FBF7F0]/50 hover:bg-[#FBF7F0] hover:border-primary/40 transition-colors cursor-pointer flex flex-col items-center justify-center">
-                        <UploadCloud className="h-7 w-7 text-[#A8A196] mb-1" />
-                        <span className="text-[11px] font-semibold text-[#57534E]">Click to upload professional CV</span>
-                      </div>
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Phone Number</label>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="+91 9876543210"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
+                      />
                     </div>
                   </div>
                 )}
 
-                {/* ================= STUDENT FORM FIELDS ================= */}
+                {/* STUDENT SPECIFIC FIELDS */}
                 {role === "student" && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="e.g. Priyan Sharma"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">University / College *</label>
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">University / College Name *</label>
                       <input
                         type="text"
                         required
                         value={organization}
                         onChange={(e) => setOrganization(e.target.value)}
-                        placeholder="e.g. IIT Madras"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                        placeholder="e.g. IIT Madras / BITS Pilani"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                       />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Course / Major *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Course / Major *</label>
                         <input
                           type="text"
                           required
                           value={course}
                           onChange={(e) => setCourse(e.target.value)}
-                          placeholder="e.g. B.Tech Engineering Physics"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                          placeholder="e.g. B.Tech Computer Science"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Current Year *</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Current Year of Study *</label>
                         <select
                           value={yearOfStudy}
                           onChange={(e) => setYearOfStudy(e.target.value)}
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         >
                           <option>1st Year</option>
                           <option>2nd Year</option>
                           <option>3rd Year</option>
                           <option>4th Year</option>
-                          <option>Graduate</option>
-                          <option>Postgraduate</option>
+                          <option>Postgraduate / PhD</option>
                         </select>
                       </div>
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Technical Skill Tags * (Min 3)</label>
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Technical Skill Tags *</label>
                       <input
                         type="text"
                         required
                         value={skills}
                         onChange={(e) => setSkills(e.target.value)}
-                        placeholder="e.g. Python, ROS, AutoCAD, PyTorch"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                        placeholder="e.g. Python, ROS, PyTorch, C++"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                       />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Email Address *</label>
-                        <input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="priyan@student.iitm.ac.in"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Phone Number</label>
-                        <input
-                          type="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          placeholder="Contact phone"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                        />
-                      </div>
-                    </div>
                     <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Academic Resume * (PDF Max 10MB)</label>
-                      <div className="border-2 border-dashed border-[#E2DCD2] rounded-xl p-5 text-center bg-[#FBF7F0]/50 hover:bg-[#FBF7F0] hover:border-primary/40 transition-colors cursor-pointer flex flex-col items-center justify-center">
-                        <UploadCloud className="h-7 w-7 text-[#A8A196] mb-1" />
-                        <span className="text-[11px] font-semibold text-[#57534E]">Click to upload Resume PDF</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* ================= OTHER ROLES FORM FIELDS ================= */}
-                {["contributor", "partner", "government", "vendor"].includes(role) && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">
-                        {role === "contributor" ? "Full Name *" : "Organization Name *"}
-                      </label>
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Contact Number</label>
                       <input
-                        type="text"
-                        required
-                        value={organization || fullName}
-                        onChange={(e) => {
-                          if (role === "contributor") setFullName(e.target.value);
-                          else setOrganization(e.target.value);
-                        }}
-                        placeholder={`e.g. ${role === "contributor" ? "Sarah Jenkins" : "Strategic Tech Labs"}`}
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="+91 9876543210"
+                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                       />
-                    </div>
-
-                    {role === "partner" && (
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Partner Type *</label>
-                        <select
-                          value={partnerType}
-                          onChange={(e) => setPartnerType(e.target.value)}
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white"
-                        >
-                          <option>Academic Partner</option>
-                          <option>Incubator / Accelerator</option>
-                          <option>Research Laboratory</option>
-                          <option>Corporate Venture Group</option>
-                        </select>
-                      </div>
-                    )}
-
-                    {role === "government" && (
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Government Sector *</label>
-                        <select
-                          value={govSector}
-                          onChange={(e) => setGovSector(e.target.value)}
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white"
-                        >
-                          <option>State Department</option>
-                          <option>Central Agency / Ministry</option>
-                          <option>Defense/Aerospace Lab</option>
-                          <option>Public Venture fund</option>
-                        </select>
-                      </div>
-                    )}
-
-                    {role === "vendor" && (
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Supply/Service Category *</label>
-                        <select
-                          value={vendorCategory}
-                          onChange={(e) => setVendorCategory(e.target.value)}
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white"
-                        >
-                          <option>Software Licensing</option>
-                          <option>Lab Equipment & Hardware</option>
-                          <option>Cloud Infrastructure</option>
-                          <option>Logistics & Support</option>
-                        </select>
-                      </div>
-                    )}
-
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Operational Domain / Core Focus *</label>
-                      <input
-                        type="text"
-                        required
-                        value={domain}
-                        onChange={(e) => setDomain(e.target.value)}
-                        placeholder="e.g. Biotech logistics, Cybersecurity compliance, Academic incubation"
-                        className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Official Email *</label>
-                        <input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="name@organization.gov / .com"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">Contact Number *</label>
-                        <input
-                          type="tel"
-                          required
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          placeholder="Phone number"
-                          className="w-full text-xs py-2 px-3 border border-[#E2DCD2] rounded-lg focus:border-primary focus:outline-none bg-white placeholder-slate-400"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">
-                        {role === "partner" ? "MOU Agreement Draft / Credentials Draft" : "Supporting Documents / Supply Catalogue"} *
-                      </label>
-                      <div className="border-2 border-dashed border-[#E2DCD2] rounded-xl p-5 text-center bg-[#FBF7F0]/50 hover:bg-[#FBF7F0] hover:border-primary/40 transition-colors cursor-pointer flex flex-col items-center justify-center">
-                        <UploadCloud className="h-7 w-7 text-[#A8A196] mb-1" />
-                        <span className="text-[11px] font-semibold text-[#57534E]">Click to upload verification files (Max 10MB)</span>
-                      </div>
                     </div>
                   </div>
                 )}
 
                 {/* Consent Checkbox */}
-                <div className="flex items-start pt-2 border-t border-[#E2DCD2]">
+                <div className="flex items-start pt-2 border-t border-[#D8D2C7]">
                   <input
                     id="agree"
                     type="checkbox"
                     required
                     checked={agree}
                     onChange={(e) => setAgree(e.target.checked)}
-                    className="h-4 w-4 text-primary focus:ring-[#FF5A36]/20 border-slate-300 rounded mt-0.5"
+                    className="h-4 w-4 text-[#FF5A36] focus:ring-[#FF5A36]/20 border-[#E2DCD2] rounded mt-0.5"
                   />
-                  <label htmlFor="agree" className="ml-2.5 text-[11px] leading-normal text-[#78716A]">
+                  <label htmlFor="agree" className="ml-2.5 text-xs text-[#78716A] leading-relaxed">
                     I accept that all details submitted represent authentic credentials, and I agree to the AnveshakHub{" "}
-                    <Link href="/" className="font-semibold text-primary hover:underline">Compliance & Security Policy</Link>.
+                    <Link href="/" className="font-semibold text-[#FF5A36] hover:underline">Compliance & Security Policy</Link>.
                   </label>
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex gap-4 pt-4 border-t border-[#E2DCD2]">
-                  <Link
-                    href="/auth/role-selection"
-                    className="w-1/3 h-11 inline-flex items-center justify-center border border-[#E2DCD2] rounded-lg text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] transition-all cursor-pointer"
+                <div className="flex gap-3 pt-4 border-t border-[#D8D2C7]">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="w-1/3 h-11 inline-flex items-center justify-center border border-[#E2DCD2] rounded-xl text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] transition-all cursor-pointer"
                   >
                     Back
-                  </Link>
+                  </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-2/3 h-11 inline-flex items-center justify-center rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-xs font-bold text-white shadow-md shadow-[#FF5A36]/30 disabled:opacity-50 transition-all hover:scale-[1.01] cursor-pointer"
+                    className="w-2/3 h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-xs font-bold text-white shadow-md shadow-[#FF5A36]/30 disabled:opacity-50 transition-all cursor-pointer"
                   >
                     {isSubmitting ? (
-                      <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       "Submit Onboarding"
                     )}
                   </button>
                 </div>
-
               </form>
             )}
+
+            {/* ================= STEP 3: SUCCESS & PROCEED TO SIGN IN ================= */}
+            {step === 3 && (
+              <div className="py-8 flex flex-col items-center justify-center text-center">
+                <div className="h-16 w-16 rounded-full bg-[#E8F2EC] flex items-center justify-center mb-4">
+                  <CheckCircle2 className="h-10 w-10 text-[#2F6B4F]" />
+                </div>
+                <h3 className="text-xl font-extrabold text-[#211F1D]">Registration Submitted Successfully!</h3>
+                <p className="mt-2 text-xs text-[#78716A] max-w-md leading-relaxed">
+                  Your account credentials (<span className="font-bold text-[#211F1D]">{email}</span>) have been created and your profile has been submitted to the verification queue.
+                </p>
+                
+                <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 my-6 w-full text-left space-y-1">
+                  <p className="text-[10px] font-extrabold text-[#78716A] uppercase tracking-wider">Account Created:</p>
+                  <p className="text-xs font-bold text-[#211F1D]">Email: {email}</p>
+                  <p className="text-xs text-[#78716A]">Role: {role.toUpperCase()}</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 w-full">
+                  <Link
+                    href={`/auth/login?email=${encodeURIComponent(email)}`}
+                    className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-xs font-bold text-white shadow-md shadow-[#FF5A36]/30 transition-all cursor-pointer"
+                  >
+                    Proceed to Sign In <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </main>
