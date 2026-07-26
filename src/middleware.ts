@@ -39,7 +39,10 @@ export async function middleware(request: NextRequest) {
   const isProtectedExpert = pathname.startsWith('/expert');
   const isProtectedStudent = pathname.startsWith('/student');
 
-  if ((isProtectedAdmin || isProtectedIndustry || isProtectedExpert || isProtectedStudent) && !user) {
+  const customAuthCookie = request.cookies.get('anveshakhub-auth')?.value;
+  const isAuthenticated = !!user || !!customAuthCookie;
+
+  if ((isProtectedAdmin || isProtectedIndustry || isProtectedExpert || isProtectedStudent) && !isAuthenticated) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/login';
     url.searchParams.set('redirectTo', pathname);

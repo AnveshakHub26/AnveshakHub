@@ -146,7 +146,7 @@ export async function POST(request: Request) {
       redirectUrl = "/expert/dashboard";
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       user: {
         id: dbUser.id,
@@ -164,6 +164,20 @@ export async function POST(request: Request) {
         expiresAt: authExpiresAt || Math.floor(Date.now() / 1000) + 3600,
       }
     });
+
+    response.cookies.set("anveshakhub-auth", JSON.stringify({
+      userId: dbUser.id,
+      email: dbUser.email,
+      role: dbUser.role,
+    }), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
+
+    return response;
   } catch (error: any) {
     console.error("Login API Error:", error);
     return NextResponse.json(
