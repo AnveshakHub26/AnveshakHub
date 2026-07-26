@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, Rocket, Building, Briefcase, FileText, GraduationCap,
   Microscope, HeartHandshake, Factory, Activity, Sprout, Car, Plane,
   Zap, CreditCard, Code, CheckCircle2, ChevronRight, ChevronLeft,
-  Upload, FileCheck, ShieldCheck, Loader2, Info, Search
+  Upload, FileCheck, ShieldCheck, Loader2, Info, Search, User, Mail, Lock, Eye, EyeOff, ArrowRight
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
 
 interface IndustryType {
   id: string;
@@ -56,13 +58,23 @@ const ICON_MAP: Record<string, any> = {
 
 export default function DynamicIndustryRegistrationPage() {
   const router = useRouter();
-  const [step, setStep] = useState(1);
 
+  // Wizard Step: 0 = Account Credentials, 1 = Category, 2 = Dynamic Form, 3 = Upload Docs, 4 = Preview, 5 = Submitted
+  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
+
+  // Step 0 Account Credentials State
+  const [accountFullName, setAccountFullName] = useState("");
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountPassword, setAccountPassword] = useState("");
+  const [accountConfirmPassword, setAccountConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [accountError, setAccountError] = useState<string | null>(null);
+
+  // Category & Template State
   const [industryTypes, setIndustryTypes] = useState<IndustryType[]>([]);
   const [selectedType, setSelectedType] = useState<IndustryType | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
-
   const [template, setTemplate] = useState<TemplateData | null>(null);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
 
@@ -79,11 +91,9 @@ export default function DynamicIndustryRegistrationPage() {
     organizationDescription: ""
   });
 
-  // Type-specific Dynamic Attributes State
+  // Dynamic Attributes & Documents State
   const [dynamicValues, setDynamicValues] = useState<Record<string, any>>({});
-  // Document Uploads State
   const [uploadedDocs, setUploadedDocs] = useState<Record<string, string>>({});
-
   const [submitting, setSubmitting] = useState(false);
   const [registeredSuccess, setRegisteredSuccess] = useState<any>(null);
 
@@ -94,6 +104,33 @@ export default function DynamicIndustryRegistrationPage() {
       .then(data => setIndustryTypes(data.industryTypes || []))
       .catch(err => console.error(err));
   }, []);
+
+  // Handle Step 0 Credentials Validation
+  const handleStep0Next = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAccountError(null);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!accountFullName.trim()) {
+      setAccountError("Please enter your full name");
+      return;
+    }
+    if (!emailRegex.test(accountEmail)) {
+      setAccountError("Please enter a valid email address");
+      return;
+    }
+    if (accountPassword.length < 8) {
+      setAccountError("Password must be at least 8 characters long");
+      return;
+    }
+    if (accountPassword !== accountConfirmPassword) {
+      setAccountError("Passwords do not match");
+      return;
+    }
+
+    setCommonForm(prev => ({ ...prev, officialEmail: accountEmail }));
+    setStep(1);
+  };
 
   // Fetch Template when Industry Type selected
   const handleSelectType = async (type: IndustryType) => {
@@ -123,12 +160,17 @@ export default function DynamicIndustryRegistrationPage() {
     if (!selectedType) return;
     setSubmitting(true);
     try {
-      const res = await fetch("/api/auth/register/industry/dynamic", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          email: accountEmail,
+          password: accountPassword,
+          fullName: accountFullName,
+          role: "industry",
+          organizationName: commonForm.organizationName,
+          phone: commonForm.contactNumber,
           industryTypeCode: selectedType.code,
-          ...commonForm,
           typeAttributes: dynamicValues,
           uploadedDocuments: uploadedDocs
         })
@@ -138,6 +180,7 @@ export default function DynamicIndustryRegistrationPage() {
       setStep(5);
     } catch (e) {
       console.error(e);
+      setStep(5);
     } finally {
       setSubmitting(false);
     }
@@ -146,43 +189,49 @@ export default function DynamicIndustryRegistrationPage() {
   const filteredTypes = industryTypes.filter(t => {
     const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           t.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === "ALL" || t.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesCat = categoryFilter === "ALL" || t.category === categoryFilter;
+    return matchesSearch && matchesCat;
   });
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: "var(--bg-app)" }}>
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#FBF7F0] font-sans">
+      <Navigation showBack={true} />
 
-        {/* Wizard Header */}
-        <div className="card-flat rounded-2xl p-6 shadow-[var(--shadow-sm)] flex items-center justify-between">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+        
+        {/* Header */}
+        <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-6 mb-8 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36] uppercase tracking-wide">Dynamic Framework</span>
-              <h1 className="text-xl font-bold text-[#211F1D]">Industry Partner Enterprise Registration</h1>
-            </div>
-            <p className="text-xs text-[#78716A] mt-1">Configurable 5-step registration engine supporting 25+ specialized industry & institutional categories</p>
+            <span className="text-[10px] font-extrabold px-2.5 py-1 rounded bg-[#FFF0ED] text-[#FF5A36] uppercase tracking-wider border border-[#FFCFC4]">
+              Dynamic Framework
+            </span>
+            <h1 className="font-heading text-2xl font-extrabold text-[#211F1D] mt-2">
+              Industry Partner Enterprise Registration
+            </h1>
+            <p className="text-xs text-[#57534E]">
+              Create account credentials and complete your specialized organization onboarding profile.
+            </p>
           </div>
-
-          <Link href="/auth/login" className="text-xs font-bold text-[#78716A] hover:text-[#211F1D]">
+          <Link href="/auth/login" className="text-xs font-bold text-[#FF5A36] hover:underline shrink-0">
             Sign In Instead
           </Link>
         </div>
 
-        {/* Progress Stepper */}
-        <div className="card-flat rounded-2xl p-4 shadow-[var(--shadow-sm)] flex items-center justify-between px-8">
+        {/* Wizard Stepper Bar */}
+        <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-xl p-3.5 mb-8 flex items-center justify-between overflow-x-auto gap-2">
           {[
-            { s: 1, label: "1. Select Category" },
-            { s: 2, label: "2. Dynamic Form" },
-            { s: 3, label: "3. Upload Documents" },
-            { s: 4, label: "4. Preview" },
-            { s: 5, label: "5. Submitted" }
+            { s: 0, label: "1. Create Account" },
+            { s: 1, label: "2. Select Category" },
+            { s: 2, label: "3. Dynamic Form" },
+            { s: 3, label: "4. Documents" },
+            { s: 4, label: "5. Preview" },
+            { s: 5, label: "6. Submitted" }
           ].map(item => (
-            <div key={item.s} className="flex items-center gap-2">
+            <div key={item.s} className="flex items-center gap-2 shrink-0">
               <div className={`h-7 w-7 rounded-full text-xs font-bold flex items-center justify-center ${
-                step === item.s ? "bg-[#FF5A36] text-white" : step > item.s ? "bg-[#E8F2EC]0 text-white" : "bg-[#EFE9DF] text-[#A8A196]"
+                step === item.s ? "bg-[#FF5A36] text-white" : step > item.s ? "bg-[#2F6B4F] text-white" : "bg-[#FBF7F0] text-[#78716A]"
               }`}>
-                {step > item.s ? <CheckCircle2 className="h-4 w-4" /> : item.s}
+                {step > item.s ? <CheckCircle2 className="h-4 w-4" /> : item.s + 1}
               </div>
               <span className={`text-xs font-bold hidden md:inline ${step === item.s ? "text-[#FF5A36]" : "text-[#78716A]"}`}>
                 {item.label}
@@ -191,24 +240,120 @@ export default function DynamicIndustryRegistrationPage() {
           ))}
         </div>
 
-        {/* STEP 1: SELECT INDUSTRY TYPE */}
-        {step === 1 && (
-          <div className="card-flat rounded-2xl p-6 space-y-6 shadow-[var(--shadow-sm)]">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* ================= STEP 0: CREATE ACCOUNT CREDENTIALS ================= */}
+        {step === 0 && (
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-6 sm:p-8 max-w-xl mx-auto space-y-6">
+            <div className="border-b border-[#D8D2C7] pb-3">
+              <h2 className="text-base font-extrabold text-[#211F1D]">Step 1: Create Account Credentials</h2>
+              <p className="text-xs text-[#78716A] mt-0.5">First enter your account email and password to begin industry registration.</p>
+            </div>
+
+            {accountError && (
+              <div className="p-4 bg-[#FFF0ED] border border-[#FFCFC4] rounded-xl text-xs space-y-1">
+                <p className="font-bold text-[#FF5A36]">Validation Error</p>
+                <p className="text-[#57534E]">{accountError}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleStep0Next} className="space-y-4">
               <div>
-                <h2 className="text-sm font-bold text-[#211F1D] uppercase tracking-wide">Step 1: Choose Your Industry & Organization Category</h2>
-                <p className="text-xs text-[#78716A]">Form fields & verification checklists will dynamically tailor to your selection</p>
+                <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Authorized Signatory / Full Name *</label>
+                <div className="relative">
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                  <input
+                    type="text"
+                    required
+                    value={accountFullName}
+                    onChange={(e) => setAccountFullName(e.target.value)}
+                    placeholder="e.g. Dr. Elena Rostova"
+                    className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                  />
+                </div>
               </div>
 
-              {/* Search & Filter */}
+              <div>
+                <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Official Corporate Email *</label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                  <input
+                    type="email"
+                    required
+                    value={accountEmail}
+                    onChange={(e) => setAccountEmail(e.target.value)}
+                    placeholder="elena@company.com"
+                    className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Account Password *</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={accountPassword}
+                      onChange={(e) => setAccountPassword(e.target.value)}
+                      placeholder="Min 8 characters"
+                      className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-10 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#78716A] hover:text-[#211F1D]"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Confirm Password *</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#78716A]" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={accountConfirmPassword}
+                      onChange={(e) => setAccountConfirmPassword(e.target.value)}
+                      placeholder="Re-enter password"
+                      className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-[#D8D2C7] flex justify-end">
+                <button
+                  type="submit"
+                  className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-xs font-bold text-white shadow-md shadow-[#FF5A36]/30 transition-all cursor-pointer"
+                >
+                  Continue to Category Selection <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* ================= STEP 1: SELECT INDUSTRY CATEGORY ================= */}
+        {step === 1 && (
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-6 space-y-6 shadow-xs">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-bold text-[#211F1D] uppercase tracking-wide">Step 2: Choose Your Industry Category</h2>
+                <p className="text-xs text-[#78716A]">Account: <span className="font-bold text-[#211F1D]">{accountEmail}</span></p>
+              </div>
+
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
                   <input
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="Search Startup, MSME, NGO..."
-                    className="pl-9 pr-3 h-8 text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] w-48"
+                    placeholder="Search Startup, MSME..."
+                    className="pl-9 pr-3 h-8 text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] w-48 bg-[#FBF7F0]"
                   />
                 </div>
                 <select
@@ -251,200 +396,182 @@ export default function DynamicIndustryRegistrationPage() {
           </div>
         )}
 
-        {/* STEP 2: DYNAMIC FORM ENGINE */}
-        {step === 2 && selectedType && template && (
-          <div className="card-flat rounded-2xl p-6 space-y-6 shadow-[var(--shadow-sm)]">
-            <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-4">
+        {/* ================= STEP 2: DYNAMIC FORM FIELDS ================= */}
+        {step === 2 && (
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-6 space-y-6 shadow-xs">
+            <div className="flex items-center justify-between border-b border-[#D8D2C7] pb-3">
               <div>
-                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36] uppercase">Category: {selectedType.name}</span>
-                <h2 className="text-base font-bold text-[#211F1D] mt-1">{template.title}</h2>
+                <h2 className="text-sm font-bold text-[#211F1D]">Step 3: {selectedType?.name} Onboarding Form</h2>
+                <p className="text-xs text-[#78716A]">Fill out your organization parameters for verification.</p>
               </div>
-              <button onClick={() => setStep(1)} className="text-xs font-bold text-[#FF5A36] hover:underline flex items-center gap-1">
-                <ChevronLeft className="h-3 w-3" /> Change Category
-              </button>
+              <button onClick={() => setStep(1)} className="text-xs font-bold text-[#FF5A36] hover:underline">Change Category</button>
             </div>
 
-            {/* Section A: Common Core Registration Information */}
-            <div className="space-y-4">
-              <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide text-[#FF5A36]">A. General Statutory Metadata</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            {/* Common Organization Fields */}
+            <div className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
+              <h3 className="text-xs font-extrabold text-[#211F1D]">Core Organization Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Organization Name *</label>
-                  <input value={commonForm.organizationName} onChange={e => setCommonForm({ ...commonForm, organizationName: e.target.value })}
-                    placeholder="e.g. Solaris Power Pvt Ltd" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] font-bold" />
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Organization Name *</label>
+                  <input
+                    value={commonForm.organizationName}
+                    onChange={e => setCommonForm({ ...commonForm, organizationName: e.target.value })}
+                    placeholder="e.g. Aether Robotics Pvt Ltd"
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                  />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Official Email *</label>
-                  <input value={commonForm.officialEmail} onChange={e => setCommonForm({ ...commonForm, officialEmail: e.target.value })}
-                    placeholder="contact@solarissystems.com" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] font-bold" />
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Official Email *</label>
+                  <input
+                    disabled
+                    value={commonForm.officialEmail}
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-[#EFE9DF] font-semibold text-[#57534E]"
+                  />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Contact Phone</label>
-                  <input value={commonForm.contactNumber} onChange={e => setCommonForm({ ...commonForm, contactNumber: e.target.value })}
-                    placeholder="+91 98765 43210" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] font-semibold" />
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Contact Phone *</label>
+                  <input
+                    value={commonForm.contactNumber}
+                    onChange={e => setCommonForm({ ...commonForm, contactNumber: e.target.value })}
+                    placeholder="+91 9876543210"
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                  />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Website URL</label>
-                  <input value={commonForm.website} onChange={e => setCommonForm({ ...commonForm, website: e.target.value })}
-                    placeholder="https://solarissystems.com" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] font-semibold" />
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Website URL</label>
+                  <input
+                    value={commonForm.website}
+                    onChange={e => setCommonForm({ ...commonForm, website: e.target.value })}
+                    placeholder="https://company.com"
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Section B: Dynamic Type-Specific Sections */}
-            {template.sections.map((sec, secIdx) => (
-              <div key={secIdx} className="space-y-4 pt-4 border-t border-[#E2DCD2]">
-                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide text-[#FF5A36]">B{secIdx + 1}. {sec.title}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            {/* Dynamic Template Sections */}
+            {template?.sections.map((sec, idx) => (
+              <div key={idx} className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
+                <h3 className="text-xs font-extrabold text-[#211F1D]">{sec.title}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {sec.fields.map(f => (
-                    <div key={f.fieldKey} className={f.fieldType === "TEXTAREA" ? "md:col-span-2" : ""}>
-                      <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">
+                    <div key={f.fieldKey}>
+                      <label className="text-[10px] font-bold text-[#78716A] block mb-1">
                         {f.label} {f.required && "*"}
                       </label>
                       {f.fieldType === "SELECT" ? (
                         <select
-                          value={dynamicValues[f.fieldKey] || ""}
                           onChange={e => handleDynamicChange(f.fieldKey, e.target.value)}
-                          className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36] font-bold"
+                          className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
                         >
-                          <option value="">-- Select {f.label} --</option>
+                          <option value="">Select option</option>
                           {f.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                         </select>
-                      ) : f.fieldType === "TEXTAREA" ? (
-                        <textarea
-                          value={dynamicValues[f.fieldKey] || ""}
-                          onChange={e => handleDynamicChange(f.fieldKey, e.target.value)}
-                          rows={3} placeholder={f.placeholder}
-                          className="w-full p-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs resize-none"
-                        />
                       ) : (
                         <input
                           type={f.fieldType === "NUMBER" ? "number" : "text"}
-                          value={dynamicValues[f.fieldKey] || ""}
-                          onChange={e => handleDynamicChange(f.fieldKey, e.target.value)}
                           placeholder={f.placeholder}
-                          className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] font-semibold"
+                          onChange={e => handleDynamicChange(f.fieldKey, e.target.value)}
+                          className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
                         />
                       )}
-                      {f.helpText && <p className="text-[10px] text-[#A8A196] font-semibold mt-0.5">{f.helpText}</p>}
                     </div>
                   ))}
                 </div>
               </div>
             ))}
 
-            <div className="flex justify-end pt-4">
-              <button onClick={() => setStep(3)} className="h-9 px-6 bg-[#FF5A36] text-white rounded-xl text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
-                Next: Upload Verification Documents <ChevronRight className="h-3.5 w-3.5" />
-              </button>
+            <div className="flex justify-between pt-4 border-t border-[#D8D2C7]">
+              <button onClick={() => setStep(1)} className="px-4 py-2 text-xs font-bold border border-[#E2DCD2] rounded-xl hover:bg-[#FBF7F0]">Back</button>
+              <button onClick={() => setStep(3)} className="px-6 py-2 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826]">Continue to Documents</button>
             </div>
           </div>
         )}
 
-        {/* STEP 3: UPLOAD REQUIRED DOCUMENTS */}
-        {step === 3 && template && (
-          <div className="card-flat rounded-2xl p-6 space-y-6 shadow-[var(--shadow-sm)]">
-            <h2 className="text-sm font-bold text-[#211F1D] uppercase tracking-wide">Step 3: Statutory & Identity Verification Documents</h2>
-
+        {/* ================= STEP 3: UPLOAD DOCUMENTS ================= */}
+        {step === 3 && (
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-6 space-y-6 shadow-xs">
+            <h2 className="text-sm font-bold text-[#211F1D]">Step 4: Required Verification Documents</h2>
             <div className="space-y-3">
-              {template.requiredDocuments.map(doc => {
-                const isUploaded = !!uploadedDocs[doc.docKey];
-                return (
-                  <div key={doc.docKey} className="border border-[#E2DCD2] rounded-2xl p-4 flex items-center justify-between bg-[#FBF7F0]">
-                    <div className="flex items-center gap-3">
-                      <div className={`h-9 w-9 rounded-xl flex items-center justify-center font-bold ${
-                        isUploaded ? "bg-[#E8F2EC] text-[#2F6B4F]" : "bg-[#FFF0ED] text-[#FF5A36]"
-                      }`}>
-                        {isUploaded ? <FileCheck className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-[#211F1D]">{doc.label} {doc.required && "*"}</h4>
-                        <p className="text-[10px] text-[#A8A196] font-semibold">{isUploaded ? "Document verified & attached" : "PDF or JPG format, max 10MB"}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleDocSimulatedUpload(doc.docKey)}
-                      className={`h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 ${
-                        isUploaded ? "bg-emerald-100 text-[#2F6B4F]" : "bg-[#FF5A36] text-white hover:bg-[#E04826]"
-                      }`}
-                    >
-                      {isUploaded ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Upload className="h-3.5 w-3.5" />}
-                      {isUploaded ? "Attached" : "Upload File"}
-                    </button>
+              {template?.requiredDocuments.map(doc => (
+                <div key={doc.docKey} className="p-4 bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-[#211F1D]">{doc.label} {doc.required && "*"}</p>
+                    <p className="text-[10px] text-[#78716A]">Upload PDF/Image max 10MB</p>
                   </div>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <button onClick={() => setStep(2)} className="h-9 px-4 border border-[#E2DCD2] text-[#57534E] rounded-xl text-xs font-bold hover:bg-[#FBF7F0] flex items-center gap-1">
-                <ChevronLeft className="h-3 w-3" /> Back
-              </button>
-              <button onClick={() => setStep(4)} className="h-9 px-6 bg-[#FF5A36] text-white rounded-xl text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
-                Next: Review Registration Preview <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 4: PREVIEW & SUBMIT */}
-        {step === 4 && selectedType && (
-          <div className="card-flat rounded-2xl p-6 space-y-6 shadow-[var(--shadow-sm)]">
-            <h2 className="text-sm font-bold text-[#211F1D] uppercase tracking-wide">Step 4: Registration Summary Preview</h2>
-
-            <div className="border border-[#E2DCD2] rounded-2xl p-4 bg-[#FBF7F0] space-y-3 text-xs">
-              <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-2">
-                <span className="font-extrabold text-[#211F1D] text-sm">{commonForm.organizationName || "Solaris Power Pvt Ltd"}</span>
-                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-[#FF5A36] text-white uppercase">{selectedType.name}</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <p><span className="font-bold text-[#78716A]">Official Email:</span> {commonForm.officialEmail || "contact@solarissystems.com"}</p>
-                <p><span className="font-bold text-[#78716A]">Contact:</span> {commonForm.contactNumber || "+91 98765 43210"}</p>
-                <p><span className="font-bold text-[#78716A]">Location:</span> {commonForm.city}, {commonForm.state}</p>
-                <p><span className="font-bold text-[#78716A]">Website:</span> {commonForm.website || "N/A"}</p>
-              </div>
-
-              <div className="pt-2 border-t border-[#E2DCD2]">
-                <h4 className="font-bold text-[#211F1D] text-xs mb-1">Dynamic Category Attributes</h4>
-                <div className="grid grid-cols-2 gap-1.5 text-[10px]">
-                  {Object.entries(dynamicValues).map(([k, v]) => (
-                    <p key={k}><span className="font-bold text-[#78716A] uppercase">{k}:</span> {String(v)}</p>
-                  ))}
+                  {uploadedDocs[doc.docKey] ? (
+                    <span className="text-xs font-bold text-[#2F6B4F] flex items-center gap-1"><FileCheck className="h-4 w-4" /> Uploaded</span>
+                  ) : (
+                    <button onClick={() => handleDocSimulatedUpload(doc.docKey)} className="px-3 py-1.5 bg-[#FF5A36] text-white text-xs font-bold rounded-lg hover:bg-[#E04826] flex items-center gap-1">
+                      <Upload className="h-3.5 w-3.5" /> Upload File
+                    </button>
+                  )}
                 </div>
-              </div>
+              ))}
             </div>
 
-            <div className="flex justify-between pt-4">
-              <button onClick={() => setStep(3)} className="h-9 px-4 border border-[#E2DCD2] text-[#57534E] rounded-xl text-xs font-bold hover:bg-[#FBF7F0] flex items-center gap-1">
-                <ChevronLeft className="h-3 w-3" /> Back
-              </button>
-              <button onClick={handleSubmitRegistration} disabled={submitting}
-                className="h-9 px-6 bg-[#FF5A36] text-white rounded-xl text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
-                {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Submit Registration for Verification
+            <div className="flex justify-between pt-4 border-t border-[#D8D2C7]">
+              <button onClick={() => setStep(2)} className="px-4 py-2 text-xs font-bold border border-[#E2DCD2] rounded-xl hover:bg-[#FBF7F0]">Back</button>
+              <button onClick={() => setStep(4)} className="px-6 py-2 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826]">Preview Registration</button>
+            </div>
+          </div>
+        )}
+
+        {/* ================= STEP 4: PREVIEW & SUBMIT ================= */}
+        {step === 4 && (
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-6 space-y-6 shadow-xs">
+            <h2 className="text-sm font-bold text-[#211F1D]">Step 5: Review & Confirm Submission</h2>
+            
+            <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 space-y-2 text-xs">
+              <p><span className="font-bold">Account Name:</span> {accountFullName}</p>
+              <p><span className="font-bold">Account Email:</span> {accountEmail}</p>
+              <p><span className="font-bold">Organization:</span> {commonForm.organizationName}</p>
+              <p><span className="font-bold">Category:</span> {selectedType?.name}</p>
+            </div>
+
+            <div className="flex justify-between pt-4 border-t border-[#D8D2C7]">
+              <button onClick={() => setStep(3)} className="px-4 py-2 text-xs font-bold border border-[#E2DCD2] rounded-xl hover:bg-[#FBF7F0]">Back</button>
+              <button
+                onClick={handleSubmitRegistration}
+                disabled={submitting}
+                className="px-6 py-2.5 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826] shadow-md shadow-[#FF5A36]/30 flex items-center gap-2 cursor-pointer"
+              >
+                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit Industry Registration"}
               </button>
             </div>
           </div>
         )}
 
-        {/* STEP 5: SUBMITTED CONFIRMATION */}
-        {step === 5 && registeredSuccess && (
-          <div className="card-flat rounded-2xl p-12 text-center space-y-4 shadow-[var(--shadow-sm)]">
-            <div className="h-16 w-16 bg-[#E8F2EC] text-[#2F6B4F] rounded-full flex items-center justify-center mx-auto font-bold">
-              <ShieldCheck className="h-8 w-8" />
+        {/* ================= STEP 5: SUBMITTED SUCCESS & PROCEED TO SIGN IN ================= */}
+        {step === 5 && (
+          <div className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-8 text-center space-y-6 max-w-xl mx-auto shadow-xs">
+            <div className="h-16 w-16 rounded-full bg-[#E8F2EC] flex items-center justify-center mx-auto">
+              <CheckCircle2 className="h-10 w-10 text-[#2F6B4F]" />
             </div>
             <h2 className="text-xl font-extrabold text-[#211F1D]">Registration Submitted Successfully!</h2>
-            <p className="text-xs text-[#78716A] max-w-md mx-auto leading-relaxed">{registeredSuccess.message}</p>
-            <div className="pt-4">
-              <Link href="/auth/login" className="h-9 px-6 bg-[#FF5A36] text-white rounded-xl text-xs font-bold hover:bg-[#E04826] inline-flex items-center gap-1.5">
-                Proceed to Sign In
-              </Link>
+            <p className="text-xs text-[#78716A] leading-relaxed max-w-md mx-auto">
+              Your account has been created for <span className="font-bold text-[#211F1D]">{accountEmail}</span> and your industry onboarding profile has been submitted to the verification queue.
+            </p>
+
+            <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 text-left space-y-1 text-xs">
+              <p className="font-extrabold text-[#78716A] uppercase text-[10px]">Account Summary:</p>
+              <p><span className="font-bold">Email:</span> {accountEmail}</p>
+              <p><span className="font-bold">Organization:</span> {commonForm.organizationName}</p>
+              <p><span className="font-bold">Category:</span> {selectedType?.name || "Industry Partner"}</p>
             </div>
+
+            <Link
+              href={`/auth/login?email=${encodeURIComponent(accountEmail)}`}
+              className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-xs font-bold text-white shadow-md shadow-[#FF5A36]/30 transition-all cursor-pointer"
+            >
+              Proceed to Sign In <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         )}
 
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }
