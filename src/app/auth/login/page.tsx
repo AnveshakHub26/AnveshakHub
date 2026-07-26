@@ -120,15 +120,18 @@ function LoginFormContent() {
       });
       const data = await res.json();
 
-      if (res.ok && data.status === "success") {
+      if (res.ok && (data.success || data.status === "success")) {
         setLoginState("success");
         setTimeout(() => {
-          const role = data.user?.role || "STUDENT";
-          if (role === "SUPER_ADMIN" || role === "ADMIN") router.push("/admin/dashboard");
-          else if (role === "INDUSTRY") router.push("/industry/dashboard");
-          else if (role === "EXPERT") router.push("/expert/dashboard");
-          else router.push("/student/dashboard");
-        }, 600);
+          const role = data.user?.role || "";
+          const redirectUrl = data.redirectUrl || (
+            role === "SUPER_ADMIN" || role === "ADMIN" || role === "CRM_SPECIALIST" ? "/admin/dashboard" :
+            role === "INDUSTRY_MANAGER" || role === "INDUSTRY" ? "/industry/dashboard" :
+            role === "EXPERT" ? "/expert/dashboard" :
+            "/student/dashboard"
+          );
+          router.push(redirectUrl);
+        }, 300);
       } else {
         setLoginState("error");
         setLoginError("invalid_credentials");
