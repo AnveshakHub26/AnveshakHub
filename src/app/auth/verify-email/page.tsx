@@ -168,7 +168,7 @@ function CountdownRing({ seconds, total }: { seconds: number; total: number }) {
           style={{ transition: "stroke-dashoffset 1s linear" }}
         />
       </svg>
-      <span className="text-[10px] font-black text-primary tabular-nums leading-none">
+      <span className="text-[10px] font-black text-[#FF5A36] tabular-nums leading-none">
         {String(Math.floor(seconds / 60)).padStart(2, "0")}:{String(seconds % 60).padStart(2, "0")}
       </span>
     </div>
@@ -251,12 +251,12 @@ function OtpInput({ value, onChange, disabled, hasError }: OtpInputProps) {
           className={[
             "w-11 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-black rounded-xl border-2 transition-all duration-150 outline-none select-none",
             "focus:ring-4",
-            disabled ? "opacity-50 cursor-not-allowed bg-slate-50" : "bg-white cursor-text",
+            disabled ? "opacity-50 cursor-not-allowed bg-[#FBF7F0]" : "bg-[#FBF7F0] cursor-text",
             hasError
-              ? "border-red-300 bg-red-50/50 text-red-700 focus:border-red-500 focus:ring-red-500/20"
+              ? "border-red-300 bg-[#FEE2E2]/50 text-[#C0392B] focus:border-red-500 focus:ring-red-500/20"
               : digit
-              ? "border-primary bg-blue-50/40 text-primary focus:border-primary focus:ring-primary/20"
-              : "border-slate-200 text-slate-800 focus:border-primary focus:ring-primary/20"
+              ? "border-[#FF5A36] bg-[#FFF0ED]/40 text-[#FF5A36] focus:border-[#FF5A36] focus:ring-[#FF5A36]/20"
+              : "border-[#E2DCD2] text-[#211F1D] focus:border-[#FF5A36] focus:ring-[#FF5A36]/20"
           ].join(" ")}
         />
       ))}
@@ -280,8 +280,8 @@ function ProgressStep({ index, label, sublabel, state, isLast }: ProgressStepPro
         <div className={[
           "h-7 w-7 rounded-full flex items-center justify-center shrink-0 text-[11px] font-black transition-all",
           state === "completed" ? "bg-emerald-600 text-white" :
-          state === "active"    ? "bg-primary text-white ring-4 ring-primary/20" :
-                                  "bg-slate-100 text-slate-400"
+          state === "active"    ? "bg-[#FF5A36] text-white ring-4 ring-[#FF5A36]/20" :
+                                  "bg-[#EFE9DF] text-[#A8A196]"
         ].join(" ")}>
           {state === "completed" ? <Check className="h-3.5 w-3.5" /> : index}
         </div>
@@ -295,11 +295,11 @@ function ProgressStep({ index, label, sublabel, state, isLast }: ProgressStepPro
       <div className="pb-5 min-w-0">
         <p className={[
           "text-xs font-bold",
-          state === "active" ? "text-primary" :
-          state === "completed" ? "text-emerald-700" :
-          "text-slate-400"
+          state === "active" ? "text-[#FF5A36]" :
+          state === "completed" ? "text-[#2F6B4F]" :
+          "text-[#A8A196]"
         ].join(" ")}>{label}</p>
-        <p className="text-[10px] text-slate-400 mt-0.5 leading-snug">{sublabel}</p>
+        <p className="text-[10px] text-[#A8A196] mt-0.5 leading-snug">{sublabel}</p>
       </div>
     </div>
   );
@@ -455,8 +455,8 @@ export default function EmailVerificationPage() {
   // ── Loading guard ──────────────────────────────────────────────────────────
   if (loading || !draft) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-[#FBF7F0]">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#FF5A36]" />
       </div>
     );
   }
@@ -468,21 +468,21 @@ export default function EmailVerificationPage() {
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 relative overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[#FBF7F0] relative overflow-hidden">
 
       {/* ── Background Decoration ── */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-30 pointer-events-none" />
-      <div className="absolute -top-32 -right-32 w-[480px] h-[480px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 -right-32 w-[480px] h-[480px] bg-[#FF5A36]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-32 w-[360px] h-[360px] bg-blue-300/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* ── Sticky Header ── */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 py-3 px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-50 bg-[#FBF7F0]/80 backdrop-blur-md border-b border-[#E2DCD2]/80 py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push("/auth/register/review")}
               aria-label="Back to review"
-              className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors"
+              className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-[#E2DCD2] text-[#78716A] hover:bg-[#FBF7F0] hover:text-[#211F1D] transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
@@ -491,13 +491,13 @@ export default function EmailVerificationPage() {
 
           <div className="flex items-center gap-2">
             {/* Security indicator */}
-            <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-              <Lock className="h-3 w-3 text-emerald-600" />
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">End-to-End Encrypted</span>
+            <div className="hidden sm:flex items-center gap-1.5 bg-[#E8F2EC] border border-[#BBD9C8] px-2.5 py-1 rounded-full">
+              <Lock className="h-3 w-3 text-[#2F6B4F]" />
+              <span className="text-[10px] font-bold text-[#2F6B4F] uppercase tracking-widest">End-to-End Encrypted</span>
             </div>
             <button
               aria-label="Help"
-              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-500 hover:bg-slate-50 hover:text-primary transition-colors"
+              className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-[#E2DCD2] text-xs font-bold text-[#78716A] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors"
             >
               <HelpCircle className="h-4 w-4" /> Help
             </button>
@@ -516,7 +516,7 @@ export default function EmailVerificationPage() {
             transition={{ duration: 0.25 }}
             className="flex justify-center mb-8"
           >
-            <div className="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-full px-4 py-1.5 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-[#FBF7F0] border border-[#E2DCD2] rounded-full px-4 py-1.5 shadow-[var(--shadow-sm)]">
               {[
                 { label: "Organization Info", done: true },
                 { label: "Review & Confirm", done: true },
@@ -526,13 +526,13 @@ export default function EmailVerificationPage() {
                 <div key={step.label} className="flex items-center gap-1.5">
                   <span className={[
                     "text-[10px] font-bold",
-                    step.active ? "text-primary" :
-                    step.done  ? "text-emerald-600" :
-                    "text-slate-400"
+                    step.active ? "text-[#FF5A36]" :
+                    step.done  ? "text-[#2F6B4F]" :
+                    "text-[#A8A196]"
                   ].join(" ")}>
                     {step.done ? <span className="inline-flex items-center gap-0.5"><CheckCircle2 className="h-3 w-3" /> {step.label}</span> : step.label}
                   </span>
-                  {i < arr.length - 1 && <span className="text-slate-300 text-xs">›</span>}
+                  {i < arr.length - 1 && <span className="text-[#D8D2C7] text-xs">›</span>}
                 </div>
               ))}
             </div>
@@ -548,42 +548,42 @@ export default function EmailVerificationPage() {
               animate="visible"
               className="lg:col-span-7 xl:col-span-7"
             >
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden">
+              <div className="card-flat rounded-2xl shadow-lg overflow-hidden">
 
                 {/* Card Header */}
-                <div className="px-8 pt-8 pb-6 border-b border-slate-100">
+                <div className="px-8 pt-8 pb-6 border-b border-[#E2DCD2]">
                   <div className="flex items-center gap-3 mb-5">
-                    <div className="h-11 w-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                      <Mail className="h-5 w-5 text-primary" />
+                    <div className="h-11 w-11 rounded-xl bg-[#FFF0ED] border border-blue-100 flex items-center justify-center">
+                      <Mail className="h-5 w-5 text-[#FF5A36]" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Step 3 of 4</p>
-                      <h1 className="text-lg font-black text-secondary tracking-tight leading-tight">
+                      <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest">Step 3 of 4</p>
+                      <h1 className="text-lg font-black text-[#211F1D] tracking-tight leading-tight">
                         Verify Your Official Email Address
                       </h1>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <p className="text-xs text-[#78716A] leading-relaxed">
                     We have sent a 6-digit verification code to your registered organization email address.
                     Enter the code below to confirm ownership and continue registration.
                   </p>
                 </div>
 
                 {/* Email Display */}
-                <div className="px-8 py-4 bg-slate-50/60 border-b border-slate-100">
+                <div className="px-8 py-4 bg-[#FBF7F0]/60 border-b border-[#E2DCD2]">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-9 w-9 rounded-full bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm">
-                        <Mail className="h-4 w-4 text-slate-400" />
+                      <div className="h-9 w-9 rounded-full bg-[#FBF7F0] border border-[#E2DCD2] flex items-center justify-center shrink-0 shadow-[var(--shadow-sm)]">
+                        <Mail className="h-4 w-4 text-[#A8A196]" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Verification Email Sent To</p>
-                        <p className="text-sm font-bold text-slate-700 truncate">{maskedEmail}</p>
+                        <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest">Verification Email Sent To</p>
+                        <p className="text-sm font-bold text-[#211F1D] truncate">{maskedEmail}</p>
                       </div>
                     </div>
                     <Link
                       href="/auth/register/industry"
-                      className="h-8 px-3 shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[10px] font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors shadow-sm"
+                      className="h-8 px-3 shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-[#E2DCD2] bg-[#FBF7F0] text-[10px] font-bold text-[#57534E] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors shadow-[var(--shadow-sm)]"
                     >
                       <Pencil className="h-3 w-3" /> Change Email
                     </Link>
@@ -601,7 +601,7 @@ export default function EmailVerificationPage() {
                         exit={{ opacity: 0, scale: 0.97 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-5">
+                        <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest text-center mb-5">
                           Enter 6-Digit Verification Code
                         </p>
 
@@ -636,8 +636,8 @@ export default function EmailVerificationPage() {
                               <div className={[
                                 "flex items-start gap-2.5 rounded-xl px-4 py-3 border text-xs",
                                 verificationError === "expired" || verificationError === "network"
-                                  ? "bg-amber-50 border-amber-200 text-amber-800"
-                                  : "bg-red-50 border-red-200 text-red-800"
+                                  ? "bg-[#FEF3C7] border-amber-200 text-amber-800"
+                                  : "bg-[#FEE2E2] border-[#FECACA] text-red-800"
                               ].join(" ")}>
                                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                                 <div>
@@ -655,16 +655,16 @@ export default function EmailVerificationPage() {
                               exit={{ opacity: 0, y: -6, height: 0 }}
                               className="mb-5 overflow-hidden"
                             >
-                              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 border bg-red-50 border-red-200">
-                                <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 border bg-[#FEE2E2] border-[#FECACA]">
+                                <AlertTriangle className="h-4 w-4 text-[#C0392B] shrink-0 mt-0.5" />
                                 <div>
                                   <p className="text-xs font-bold text-red-800">Too Many Failed Attempts</p>
-                                  <p className="text-xs font-medium text-red-700 mt-0.5 opacity-80">
+                                  <p className="text-xs font-medium text-[#C0392B] mt-0.5 opacity-80">
                                     Your account has been temporarily locked for security. Please contact support.
                                   </p>
                                   <a
                                     href="mailto:support@anveshakhub.com"
-                                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-red-700 hover:underline"
+                                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-[#C0392B] hover:underline"
                                   >
                                     <HelpCircle className="h-3 w-3" /> Contact Support
                                   </a>
@@ -678,7 +678,7 @@ export default function EmailVerificationPage() {
                         <button
                           onClick={handleVerify}
                           disabled={isDisabled || otp.join("").length !== 6 || verificationError === "limit_exceeded"}
-                          className="w-full h-12 flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold shadow-sm transition-all focus:outline-none focus:ring-4 focus:ring-primary/30"
+                          className="w-full h-12 flex items-center justify-center gap-2 bg-[#FF5A36] hover:bg-[#E04826] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold shadow-[var(--shadow-sm)] transition-all focus:outline-none focus:ring-4 focus:ring-[#FF5A36]/30"
                           aria-label="Verify email address"
                         >
                           {screenState === "verifying" ? (
@@ -702,8 +702,8 @@ export default function EmailVerificationPage() {
                                 <div className="flex items-center gap-2">
                                   <CountdownRing seconds={resendCooldown} total={RESEND_COOLDOWN_SECONDS} />
                                   <div>
-                                    <p className="text-[10px] font-bold text-slate-500">Resend available in</p>
-                                    <p className="text-xs font-black text-primary tabular-nums">
+                                    <p className="text-[10px] font-bold text-[#78716A]">Resend available in</p>
+                                    <p className="text-xs font-black text-[#FF5A36] tabular-nums">
                                       {String(Math.floor(resendCooldown / 60)).padStart(2, "0")}:{String(resendCooldown % 60).padStart(2, "0")}
                                     </p>
                                   </div>
@@ -712,7 +712,7 @@ export default function EmailVerificationPage() {
                                 <button
                                   onClick={handleResend}
                                   disabled={!canResend}
-                                  className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-blue-700 hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FF5A36] hover:text-[#FF5A36] hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                   {isResending ? (
                                     <><RefreshCw className="h-3.5 w-3.5 animate-spin" /> Sending…</>
@@ -722,12 +722,12 @@ export default function EmailVerificationPage() {
                                 </button>
                               )}
                               <span className="text-slate-200">|</span>
-                              <span className="text-[10px] text-slate-400 font-medium">
+                              <span className="text-[10px] text-[#A8A196] font-medium">
                                 {MAX_RESEND_ATTEMPTS - resendAttempts} attempt{MAX_RESEND_ATTEMPTS - resendAttempts !== 1 ? "s" : ""} remaining
                               </span>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-1.5 text-xs text-amber-700 font-bold bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                            <div className="flex items-center gap-1.5 text-xs text-[#B45309] font-bold bg-[#FEF3C7] border border-amber-200 rounded-lg px-3 py-2">
                               <AlertTriangle className="h-3.5 w-3.5" />
                               Resend limit reached.{" "}
                               <a href="mailto:support@anveshakhub.com" className="underline hover:no-underline">
@@ -738,19 +738,19 @@ export default function EmailVerificationPage() {
 
                           <button
                             onClick={() => setShowCancelModal(true)}
-                            className="text-[10px] font-bold text-slate-400 hover:text-red-600 transition-colors"
+                            className="text-[10px] font-bold text-[#A8A196] hover:text-[#C0392B] transition-colors"
                           >
                             Cancel Registration
                           </button>
                         </div>
 
                         {/* Demo hint */}
-                        <div className="mt-6 flex items-start gap-2 bg-blue-50/60 border border-blue-100 rounded-xl px-4 py-3">
-                          <Info className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                          <p className="text-[10px] text-slate-500 leading-relaxed">
-                            <span className="font-bold text-primary">Demo Mode: </span>
-                            Enter <code className="bg-white border border-blue-100 px-1 rounded font-mono text-primary">123456</code> to verify successfully,{" "}
-                            <code className="bg-white border border-blue-100 px-1 rounded font-mono text-amber-600">000000</code> to test an expired code, or any other code for an error state.
+                        <div className="mt-6 flex items-start gap-2 bg-[#FFF0ED]/60 border border-blue-100 rounded-xl px-4 py-3">
+                          <Info className="h-3.5 w-3.5 text-[#FF5A36] shrink-0 mt-0.5" />
+                          <p className="text-[10px] text-[#78716A] leading-relaxed">
+                            <span className="font-bold text-[#FF5A36]">Demo Mode: </span>
+                            Enter <code className="bg-[#FBF7F0] border border-blue-100 px-1 rounded font-mono text-[#FF5A36]">123456</code> to verify successfully,{" "}
+                            <code className="bg-[#FBF7F0] border border-blue-100 px-1 rounded font-mono text-amber-600">000000</code> to test an expired code, or any other code for an error state.
                           </p>
                         </div>
                       </motion.div>
@@ -778,7 +778,7 @@ export default function EmailVerificationPage() {
                               variants={successRingVariants}
                               initial="hidden"
                               animate="visible"
-                              className="absolute inset-0 rounded-full bg-emerald-50 border-4 border-emerald-200 flex items-center justify-center"
+                              className="absolute inset-0 rounded-full bg-[#E8F2EC] border-4 border-[#BBD9C8] flex items-center justify-center"
                             >
                               <svg width="40" height="40" viewBox="0 0 40 40">
                                 <motion.path
@@ -802,12 +802,12 @@ export default function EmailVerificationPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
                         >
-                          <div className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full mb-4">
-                            <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" />
-                            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Identity Verified</span>
+                          <div className="inline-flex items-center gap-1.5 bg-[#E8F2EC] border border-[#BBD9C8] px-3 py-1 rounded-full mb-4">
+                            <BadgeCheck className="h-3.5 w-3.5 text-[#2F6B4F]" />
+                            <span className="text-[10px] font-bold text-[#2F6B4F] uppercase tracking-widest">Identity Verified</span>
                           </div>
-                          <h2 className="text-xl font-black text-secondary tracking-tight">Email Address Confirmed</h2>
-                          <p className="mt-2 text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
+                          <h2 className="text-xl font-black text-[#211F1D] tracking-tight">Email Address Confirmed</h2>
+                          <p className="mt-2 text-xs text-[#78716A] leading-relaxed max-w-xs mx-auto">
                             Your organization's official email address has been successfully verified.
                             Your registration has been submitted to the AnveshakHub compliance team.
                           </p>
@@ -818,9 +818,9 @@ export default function EmailVerificationPage() {
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.45 }}
-                          className="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 text-left"
+                          className="mt-6 bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 text-left"
                         >
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                          <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest mb-3 flex items-center gap-1.5">
                             <Clock className="h-3.5 w-3.5" /> What Happens Next?
                           </p>
                           <ul className="space-y-2">
@@ -829,8 +829,8 @@ export default function EmailVerificationPage() {
                               "The AnveshakHub compliance team will review your credentials within 24 business hours.",
                               "Upon approval, your secure organization dashboard will be activated."
                             ].map((item) => (
-                              <li key={item} className="flex items-start gap-2 text-[10px] text-slate-600 leading-relaxed">
-                                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                              <li key={item} className="flex items-start gap-2 text-[10px] text-[#57534E] leading-relaxed">
+                                <CheckCircle2 className="h-3.5 w-3.5 text-[#2F6B4F] shrink-0 mt-0.5" />
                                 {item}
                               </li>
                             ))}
@@ -845,16 +845,16 @@ export default function EmailVerificationPage() {
                           className="mt-6 flex flex-col items-center gap-3"
                         >
                           {redirectCountdown > 0 ? (
-                            <p className="text-[10px] text-slate-400 font-medium">
+                            <p className="text-[10px] text-[#A8A196] font-medium">
                               Redirecting to confirmation page in{" "}
-                              <span className="font-black text-primary">{redirectCountdown}s</span>…
+                              <span className="font-black text-[#FF5A36]">{redirectCountdown}s</span>…
                             </p>
                           ) : (
-                            <p className="text-[10px] text-slate-400 font-medium">Redirecting…</p>
+                            <p className="text-[10px] text-[#A8A196] font-medium">Redirecting…</p>
                           )}
                           <Link
                             href="/auth/registration-success"
-                            className="h-10 px-5 inline-flex items-center justify-center gap-1.5 bg-primary hover:bg-blue-700 rounded-xl text-xs font-bold text-white shadow-sm transition-colors"
+                            className="h-10 px-5 inline-flex items-center justify-center gap-1.5 bg-[#FF5A36] hover:bg-[#E04826] rounded-xl text-xs font-bold text-white shadow-[var(--shadow-sm)] transition-colors"
                           >
                             <CheckCircle2 className="h-4 w-4" /> Continue to Confirmation
                           </Link>
@@ -865,14 +865,14 @@ export default function EmailVerificationPage() {
                 </div>
 
                 {/* Card Footer */}
-                <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                <div className="px-8 py-4 bg-[#FBF7F0] border-t border-[#E2DCD2] flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <Lock className="h-3 w-3 text-slate-400" />
-                    <span className="text-[10px] text-slate-400 font-medium">OTP expires in 10 minutes</span>
+                    <Lock className="h-3 w-3 text-[#A8A196]" />
+                    <span className="text-[10px] text-[#A8A196] font-medium">OTP expires in 10 minutes</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="h-3 w-3 text-emerald-500" />
-                    <span className="text-[10px] text-emerald-600 font-bold">Secured by AnveshakHub</span>
+                    <ShieldCheck className="h-3 w-3 text-[#2F6B4F]/500" />
+                    <span className="text-[10px] text-[#2F6B4F] font-bold">Secured by AnveshakHub</span>
                   </div>
                 </div>
               </div>
@@ -886,8 +886,8 @@ export default function EmailVerificationPage() {
               className="hidden lg:flex lg:col-span-5 xl:col-span-5 flex-col gap-4"
             >
               {/* Registration Progress */}
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-5 flex items-center gap-1.5">
+              <div className="card-flat rounded-2xl p-6">
+                <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest mb-5 flex items-center gap-1.5">
                   <Layers className="h-3.5 w-3.5" /> Registration Pipeline
                 </p>
                 <ProgressStep index={1} label="Organization Profile" sublabel="Submitted and reviewed" state="completed" />
@@ -902,12 +902,12 @@ export default function EmailVerificationPage() {
               </div>
 
               {/* Security Card */}
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-                  <div className="h-7 w-7 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+              <div className="card-flat rounded-2xl p-6">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#E2DCD2]">
+                  <div className="h-7 w-7 rounded-lg bg-[#E8F2EC] border border-emerald-100 flex items-center justify-center">
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#2F6B4F]" />
                   </div>
-                  <p className="text-xs font-extrabold text-secondary">Security Information</p>
+                  <p className="text-xs font-extrabold text-[#211F1D]">Security Information</p>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -917,22 +917,22 @@ export default function EmailVerificationPage() {
                     { icon: Server, text: "OTP validation happens exclusively on our secure backend — never client-side." }
                   ].map(({ icon: Icon, text }) => (
                     <li key={text} className="flex items-start gap-2.5">
-                      <div className="h-5 w-5 rounded bg-slate-100 flex items-center justify-center shrink-0 mt-0.5">
-                        <Icon className="h-3 w-3 text-slate-500" />
+                      <div className="h-5 w-5 rounded bg-[#EFE9DF] flex items-center justify-center shrink-0 mt-0.5">
+                        <Icon className="h-3 w-3 text-[#78716A]" />
                       </div>
-                      <p className="text-[10px] text-slate-500 leading-relaxed">{text}</p>
+                      <p className="text-[10px] text-[#78716A] leading-relaxed">{text}</p>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Why Email Verification */}
-              <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-                  <div className="h-7 w-7 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center">
-                    <FileSearch className="h-3.5 w-3.5 text-primary" />
+              <div className="card-flat rounded-2xl p-6">
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#E2DCD2]">
+                  <div className="h-7 w-7 rounded-lg bg-[#FFF0ED] border border-blue-100 flex items-center justify-center">
+                    <FileSearch className="h-3.5 w-3.5 text-[#FF5A36]" />
                   </div>
-                  <p className="text-xs font-extrabold text-secondary">Why Verification Is Required</p>
+                  <p className="text-xs font-extrabold text-[#211F1D]">Why Verification Is Required</p>
                 </div>
                 <ul className="space-y-2.5">
                   {[
@@ -942,27 +942,27 @@ export default function EmailVerificationPage() {
                     "Required by our compliance framework before entering the review pipeline."
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2">
-                      <BadgeCheck className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-slate-500 leading-relaxed">{item}</p>
+                      <BadgeCheck className="h-3.5 w-3.5 text-[#FF5A36] shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-[#78716A] leading-relaxed">{item}</p>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Support */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex items-center justify-between">
+              <div className="card-flat rounded-2xl p-5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center shadow-sm">
-                    <HelpCircle className="h-4 w-4 text-slate-500" />
+                  <div className="h-8 w-8 rounded-lg bg-[#FBF7F0] border border-[#E2DCD2] flex items-center justify-center shadow-[var(--shadow-sm)]">
+                    <HelpCircle className="h-4 w-4 text-[#78716A]" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-700">Need Help?</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Enterprise Support Desk</p>
+                    <p className="text-xs font-bold text-[#211F1D]">Need Help?</p>
+                    <p className="text-[10px] text-[#A8A196] mt-0.5">Enterprise Support Desk</p>
                   </div>
                 </div>
                 <a
                   href="mailto:support@anveshakhub.com"
-                  className="h-8 px-3 inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white text-[10px] font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors shadow-sm"
+                  className="h-8 px-3 inline-flex items-center gap-1 rounded-lg border border-[#E2DCD2] bg-[#FBF7F0] text-[10px] font-bold text-[#57534E] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors shadow-[var(--shadow-sm)]"
                 >
                   Contact Support
                 </a>
@@ -985,15 +985,15 @@ export default function EmailVerificationPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 p-7 mx-4"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl border border-[#E2DCD2] p-7 mx-4"
             >
               <div className="flex items-start gap-4 mb-5">
-                <div className="h-10 w-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center shrink-0">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                <div className="h-10 w-10 rounded-xl bg-[#FEE2E2] border border-[#FECACA] flex items-center justify-center shrink-0">
+                  <AlertTriangle className="h-5 w-5 text-[#C0392B]" />
                 </div>
                 <div>
-                  <Dialog.Title className="text-sm font-extrabold text-secondary">Cancel Registration?</Dialog.Title>
-                  <p id="cancel-modal-desc" className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  <Dialog.Title className="text-sm font-extrabold text-[#211F1D]">Cancel Registration?</Dialog.Title>
+                  <p id="cancel-modal-desc" className="text-xs text-[#78716A] mt-1 leading-relaxed">
                     This will permanently delete your saved organization profile and all entered information.
                     You will need to start the registration process from the beginning.
                   </p>
@@ -1002,7 +1002,7 @@ export default function EmailVerificationPage() {
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setShowCancelModal(false)}
-                  className="h-9 px-4 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                  className="h-9 px-4 border border-[#E2DCD2] rounded-lg text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] transition-colors"
                 >
                   Keep Registration
                 </button>
@@ -1015,7 +1015,7 @@ export default function EmailVerificationPage() {
               </div>
               <Dialog.Close asChild>
                 <button
-                  className="absolute top-4 right-4 h-7 w-7 inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="absolute top-4 right-4 h-7 w-7 inline-flex items-center justify-center rounded-lg text-[#A8A196] hover:text-[#57534E] hover:bg-[#EFE9DF] transition-colors"
                   aria-label="Close"
                 >
                   <X className="h-4 w-4" />

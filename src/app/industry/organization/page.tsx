@@ -36,10 +36,10 @@ interface OrgUser {
 // ─── Constants ─────────────────────────────────────────────────────
 const ROLE_STYLES: Record<string, string> = {
   ORG_ADMIN:      "bg-purple-50 text-purple-700 border border-purple-200",
-  PROJECT_LEAD:   "bg-blue-50 text-blue-700 border border-blue-200",
-  FINANCE_HEAD:   "bg-green-50 text-green-700 border border-green-200",
-  HR_COORDINATOR: "bg-amber-50 text-amber-700 border border-amber-200",
-  VIEWER:         "bg-slate-100 text-slate-600 border border-slate-200",
+  PROJECT_LEAD:   "bg-[#FFF0ED] text-[#FF5A36] border border-[#FFCFC4]",
+  FINANCE_HEAD:   "bg-[#E8F2EC] text-[#2F6B4F] border border-green-200",
+  HR_COORDINATOR: "bg-[#FEF3C7] text-[#B45309] border border-amber-200",
+  VIEWER:         "bg-[#EFE9DF] text-[#57534E] border border-[#E2DCD2]",
 };
 
 // ─── Main Page ─────────────────────────────────────────────────────
@@ -123,7 +123,7 @@ export default function OrganizationManagement() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-full">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
     </div>
   );
 
@@ -132,33 +132,33 @@ export default function OrganizationManagement() {
   );
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full bg-[#FBF7F0]">
       {/* ── Page Header ── */}
-      <div className="bg-white border-b border-slate-200 px-8 py-5">
+      <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Organization Management</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Manage profile, branches, departments, representatives and team</p>
+            <h1 className="text-xl font-bold text-[#211F1D]">Organization Management</h1>
+            <p className="text-xs text-[#78716A] mt-0.5">Manage profile, branches, departments, representatives and team</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={fetchAll} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+            <button onClick={fetchAll} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
-            <button onClick={() => setInviteOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
+            <button onClick={() => setInviteOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826]">
               <Plus className="h-3.5 w-3.5" /> Invite Member
             </button>
           </div>
         </div>
 
         {org && (
-          <div className="mt-4 flex items-center gap-3 bg-primary-light border border-primary-border rounded-xl px-4 py-2.5 w-fit">
-            <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+          <div className="mt-4 flex items-center gap-3 bg-[#FFF0ED] border border-[#FF5A36]-border rounded-xl px-4 py-2.5 w-fit">
+            <CheckCircle2 className="h-4 w-4 text-[#FF5A36] shrink-0" />
             <div className="text-xs">
-              <span className="font-bold text-primary-text">{org.orgName}</span>
-              <span className="text-primary mx-1.5">·</span>
-              <span className="font-semibold text-primary-text">{org.verificationStatus}</span>
-              <span className="text-primary mx-1.5">·</span>
-              <span className="text-primary text-[10px]">DPIIT: {org.dpiitNumber} · GSTIN: {org.gstin}</span>
+              <span className="font-bold text-[#FF5A36]-text">{org.orgName}</span>
+              <span className="text-[#FF5A36] mx-1.5">·</span>
+              <span className="font-semibold text-[#FF5A36]-text">{org.verificationStatus}</span>
+              <span className="text-[#FF5A36] mx-1.5">·</span>
+              <span className="text-[#FF5A36] text-[10px]">DPIIT: {org.dpiitNumber} · GSTIN: {org.gstin}</span>
             </div>
           </div>
         )}
@@ -172,11 +172,11 @@ export default function OrganizationManagement() {
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all -mb-0 ${
-                activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === tab.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"
               }`}
             >
               {tab.label}
-              {tab.count !== null && <span className="text-[9px] px-1.5 bg-slate-100 text-slate-500 rounded-full font-bold">{tab.count}</span>}
+              {tab.count !== null && <span className="text-[10px] px-1.5 bg-[#EFE9DF] text-[#78716A] rounded-full font-bold">{tab.count}</span>}
             </button>
           ))}
         </div>
@@ -189,19 +189,19 @@ export default function OrganizationManagement() {
           {/* ── PROFILE TAB ── */}
           {activeTab === "profile" && org && (
             <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-3xl space-y-5">
-              <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Business Information</h3>
+              <div className="card-flat rounded-2xl p-6 space-y-5">
+                <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
+                  <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Business Information</h3>
                   {!editMode ? (
-                    <button onClick={() => setEditMode(true)} className="h-7 px-3 inline-flex items-center gap-1 border border-slate-200 text-slate-600 rounded-lg text-[10px] font-bold hover:bg-slate-50">
+                    <button onClick={() => setEditMode(true)} className="h-7 px-3 inline-flex items-center gap-1 border border-[#E2DCD2] text-[#57534E] rounded-lg text-[10px] font-bold hover:bg-[#EFE9DF]">
                       <Pencil className="h-3 w-3" /> Edit Profile
                     </button>
                   ) : (
                     <div className="flex gap-2">
-                      <button onClick={handleSaveProfile} disabled={saving} className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1">
+                      <button onClick={handleSaveProfile} disabled={saving} className="h-7 px-3 bg-[#FF5A36] text-white rounded-lg text-[10px] font-bold hover:bg-[#E04826] flex items-center gap-1">
                         {saving && <Loader2 className="h-3 w-3 animate-spin" />} Save Changes
                       </button>
-                      <button onClick={() => setEditMode(false)} className="h-7 px-3 border border-slate-200 text-slate-500 rounded-lg text-[10px] font-semibold hover:bg-slate-50">Cancel</button>
+                      <button onClick={() => setEditMode(false)} className="h-7 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-[10px] font-semibold hover:bg-[#EFE9DF]">Cancel</button>
                     </div>
                   )}
                 </div>
@@ -220,62 +220,62 @@ export default function OrganizationManagement() {
                     const Icon = f.icon;
                     return (
                       <div key={f.label} className="space-y-1">
-                        <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+                        <label className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide flex items-center gap-1">
                           <Icon className="h-2.5 w-2.5" /> {f.label}
                         </label>
-                        <p className="font-semibold text-slate-800">{f.value}</p>
+                        <p className="font-semibold text-[#211F1D]">{f.value}</p>
                       </div>
                     );
                   })}
                 </div>
 
-                <div className="border-t border-slate-100 pt-4 space-y-3 text-xs">
+                <div className="border-t border-[#E2DCD2] pt-4 space-y-3 text-xs">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wide block mb-1">About Organization</label>
+                    <label className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide block mb-1">About Organization</label>
                     {editMode
-                      ? <textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={3} className="w-full p-2.5 border border-slate-200 rounded-lg bg-white text-xs resize-none" />
-                      : <p className="text-slate-700 leading-relaxed font-medium">{org.description}</p>
+                      ? <textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} rows={3} className="w-full p-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] text-xs resize-none" />
+                      : <p className="text-[#211F1D] leading-relaxed font-medium">{org.description}</p>
                     }
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-1 flex items-center gap-1"><Globe className="h-2.5 w-2.5" /> Website</label>
+                      <label className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide mb-1 flex items-center gap-1"><Globe className="h-2.5 w-2.5" /> Website</label>
                       {editMode
-                        ? <input value={editWebsite} onChange={e => setEditWebsite(e.target.value)} className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white text-xs" />
-                        : <p className="font-semibold text-blue-600">{org.website}</p>
+                        ? <input value={editWebsite} onChange={e => setEditWebsite(e.target.value)} className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] text-xs" />
+                        : <p className="font-semibold text-[#FF5A36]">{org.website}</p>
                       }
                     </div>
                     <div>
-                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-1 flex items-center gap-1"><Phone className="h-2.5 w-2.5" /> Phone</label>
+                      <label className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide mb-1 flex items-center gap-1"><Phone className="h-2.5 w-2.5" /> Phone</label>
                       {editMode
-                        ? <input value={editPhone} onChange={e => setEditPhone(e.target.value)} className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white text-xs" />
-                        : <p className="font-semibold text-slate-800">{org.phone}</p>
+                        ? <input value={editPhone} onChange={e => setEditPhone(e.target.value)} className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] text-xs" />
+                        : <p className="font-semibold text-[#211F1D]">{org.phone}</p>
                       }
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-slate-100 pt-4 text-xs">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-1"><MapPin className="h-2.5 w-2.5" /> Registered Address</label>
-                  <p className="font-semibold text-slate-700">{org.addressLine}, {org.city}, {org.state} — {org.pin}</p>
+                <div className="border-t border-[#E2DCD2] pt-4 text-xs">
+                  <label className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide flex items-center gap-1 mb-1"><MapPin className="h-2.5 w-2.5" /> Registered Address</label>
+                  <p className="font-semibold text-[#211F1D]">{org.addressLine}, {org.city}, {org.state} — {org.pin}</p>
                 </div>
 
                 {/* Dynamic Industry Type Framework Metadata Card */}
-                <div className="border-t border-slate-100 pt-4 space-y-3">
+                <div className="border-t border-[#E2DCD2] pt-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-primary-light text-primary uppercase tracking-wide">
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36] uppercase tracking-wide">
                       Framework Config: {org.orgType}
                     </span>
-                    <span className="text-[9px] text-slate-400 font-bold">Metadata-Driven Dynamic Profile</span>
+                    <span className="text-[10px] text-[#A8A196] font-bold">Metadata-Driven Dynamic Profile</span>
                   </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 grid grid-cols-2 gap-3 text-xs">
+                  <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <span className="text-[9px] font-bold text-slate-400 uppercase block">Category Verification</span>
-                      <span className="font-extrabold text-emerald-700">VERIFIED TEMPLATE</span>
+                      <span className="text-[10px] font-bold text-[#A8A196] uppercase block">Category Verification</span>
+                      <span className="font-extrabold text-[#2F6B4F]">VERIFIED TEMPLATE</span>
                     </div>
                     <div>
-                      <span className="text-[9px] font-bold text-slate-400 uppercase block">Dynamic Statutory Attributes</span>
-                      <span className="font-bold text-slate-800">DPIIT / UDYAM / CIN Validated</span>
+                      <span className="text-[10px] font-bold text-[#A8A196] uppercase block">Dynamic Statutory Attributes</span>
+                      <span className="font-bold text-[#211F1D]">DPIIT / UDYAM / CIN Validated</span>
                     </div>
                   </div>
                 </div>
@@ -286,40 +286,40 @@ export default function OrganizationManagement() {
           {/* ── BRANCHES & DEPARTMENTS TAB ── */}
           {activeTab === "branches" && (
             <motion.div key="branches" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+              <div className="card-flat rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><MapPin className="h-4 w-4 text-blue-500" /> Branch Offices ({branches.length})</h3>
-                  <button className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1"><Plus className="h-3 w-3" /> Add Branch</button>
+                  <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><MapPin className="h-4 w-4 text-[#FF5A36]" /> Branch Offices ({branches.length})</h3>
+                  <button className="h-7 px-3 bg-[#FF5A36] text-white rounded-lg text-[10px] font-bold hover:bg-[#E04826] flex items-center gap-1"><Plus className="h-3 w-3" /> Add Branch</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {branches.map(b => (
-                    <div key={b.id} className="border border-slate-100 rounded-xl p-4 space-y-2 text-xs hover:border-slate-200 transition-colors">
+                    <div key={b.id} className="border border-[#E2DCD2] rounded-xl p-4 space-y-2 text-xs hover:border-[#E2DCD2] transition-colors">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-800">{b.name}</span>
-                        {b.isHeadquarters && <span className="text-[8px] bg-primary-light text-primary-text border border-primary-border rounded px-1.5 font-bold">HQ</span>}
+                        <span className="font-bold text-[#211F1D]">{b.name}</span>
+                        {b.isHeadquarters && <span className="text-[8px] bg-[#FFF0ED] text-[#FF5A36]-text border border-[#FF5A36]-border rounded px-1.5 font-bold">HQ</span>}
                       </div>
-                      <p className="text-[10px] text-slate-500">{b.addressLine}</p>
-                      <p className="text-[10px] font-semibold text-slate-600">{b.city}, {b.state} — {b.pinCode}</p>
-                      {b.headName && <p className="text-[9px] text-slate-400">Head: {b.headName}</p>}
+                      <p className="text-[10px] text-[#78716A]">{b.addressLine}</p>
+                      <p className="text-[10px] font-semibold text-[#57534E]">{b.city}, {b.state} — {b.pinCode}</p>
+                      {b.headName && <p className="text-[10px] text-[#A8A196]">Head: {b.headName}</p>}
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+              <div className="card-flat rounded-2xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><Building2 className="h-4 w-4 text-indigo-500" /> Departments ({departments.length})</h3>
-                  <button className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1"><Plus className="h-3 w-3" /> Add Department</button>
+                  <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><Building2 className="h-4 w-4 text-[#FF5A36]/500" /> Departments ({departments.length})</h3>
+                  <button className="h-7 px-3 bg-[#FF5A36] text-white rounded-lg text-[10px] font-bold hover:bg-[#E04826] flex items-center gap-1"><Plus className="h-3 w-3" /> Add Department</button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {departments.map(d => (
-                    <div key={d.id} className="border border-slate-100 rounded-xl p-4 space-y-2 text-xs hover:border-slate-200 transition-colors">
+                    <div key={d.id} className="border border-[#E2DCD2] rounded-xl p-4 space-y-2 text-xs hover:border-[#E2DCD2] transition-colors">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-800">{d.name}</span>
-                        <span className="text-[9px] font-bold bg-blue-50 text-blue-600 border border-blue-200 rounded px-1.5">{d.memberCount} members</span>
+                        <span className="font-bold text-[#211F1D]">{d.name}</span>
+                        <span className="text-[10px] font-bold bg-[#FFF0ED] text-[#FF5A36] border border-[#FFCFC4] rounded px-1.5">{d.memberCount} members</span>
                       </div>
-                      {d.description && <p className="text-[10px] text-slate-500">{d.description}</p>}
-                      {d.headName && <p className="text-[9px] text-slate-400">Head: {d.headName} · {d.headEmail}</p>}
+                      {d.description && <p className="text-[10px] text-[#78716A]">{d.description}</p>}
+                      {d.headName && <p className="text-[10px] text-[#A8A196]">Head: {d.headName} · {d.headEmail}</p>}
                     </div>
                   ))}
                 </div>
@@ -329,28 +329,28 @@ export default function OrganizationManagement() {
 
           {/* ── REPRESENTATIVES TAB ── */}
           {activeTab === "reps" && (
-            <motion.div key="reps" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+            <motion.div key="reps" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="card-flat rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><UserCheck className="h-4 w-4 text-purple-500" /> Authorized Representatives & Signatories</h3>
-                <button className="h-7 px-3 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-primary-hover flex items-center gap-1"><Plus className="h-3 w-3" /> Add Representative</button>
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><UserCheck className="h-4 w-4 text-purple-500" /> Authorized Representatives & Signatories</h3>
+                <button className="h-7 px-3 bg-[#FF5A36] text-white rounded-lg text-[10px] font-bold hover:bg-[#E04826] flex items-center gap-1"><Plus className="h-3 w-3" /> Add Representative</button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {representatives.map(rep => (
-                  <div key={rep.id} className="border border-slate-100 rounded-2xl p-4 space-y-3 text-xs hover:border-slate-200 transition-colors">
+                  <div key={rep.id} className="border border-[#E2DCD2] rounded-2xl p-4 space-y-3 text-xs hover:border-[#E2DCD2] transition-colors">
                     <div className="flex items-start justify-between">
                       <div>
-                        <div className="font-bold text-slate-800">{rep.name}</div>
-                        <div className="text-[9px] text-slate-500 font-semibold mt-0.5">{rep.designation}</div>
+                        <div className="font-bold text-[#211F1D]">{rep.name}</div>
+                        <div className="text-[10px] text-[#78716A] font-semibold mt-0.5">{rep.designation}</div>
                       </div>
                       <div className="flex flex-col gap-1 items-end">
                         {rep.isPrimary && <span className="text-[8px] bg-purple-50 text-purple-700 border border-purple-200 rounded px-1.5 font-bold">PRIMARY</span>}
-                        {rep.isAuthorizedSignatory && <span className="text-[8px] bg-primary-light text-primary-text border border-primary-border rounded px-1.5 font-bold">SIGNATORY</span>}
+                        {rep.isAuthorizedSignatory && <span className="text-[8px] bg-[#FFF0ED] text-[#FF5A36]-text border border-[#FF5A36]-border rounded px-1.5 font-bold">SIGNATORY</span>}
                       </div>
                     </div>
-                    <div className="space-y-1 text-[9px] text-slate-500">
+                    <div className="space-y-1 text-[10px] text-[#78716A]">
                       <p className="flex items-center gap-1"><Mail className="h-2.5 w-2.5" /> {rep.email}</p>
                       <p className="flex items-center gap-1"><Phone className="h-2.5 w-2.5" /> {rep.phone}</p>
-                      {rep.department && <p className="text-slate-400">{rep.department}</p>}
+                      {rep.department && <p className="text-[#A8A196]">{rep.department}</p>}
                     </div>
                   </div>
                 ))}
@@ -360,44 +360,44 @@ export default function OrganizationManagement() {
 
           {/* ── TEAM TAB ── */}
           {activeTab === "team" && (
-            <motion.div key="team" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+            <motion.div key="team" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="card-flat rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><Users className="h-4 w-4 text-blue-500" /> Team Members ({orgUsers.length})</h3>
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><Users className="h-4 w-4 text-[#FF5A36]" /> Team Members ({orgUsers.length})</h3>
                 <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-400" />
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members…" className="pl-8 pr-3 h-7 text-[10px] border border-slate-200 rounded-lg focus:outline-none focus:border-primary bg-white w-44" />
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-[#A8A196]" />
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members…" className="pl-8 pr-3 h-7 text-[10px] border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] bg-[#FBF7F0] w-44" />
                 </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100">
+                    <tr className="border-b border-[#E2DCD2]">
                       {["Name", "Email", "Role", "Department", "Status", "Last Login", "Actions"].map(h => (
-                        <th key={h} className="text-left py-2 px-3 text-[9px] font-bold text-slate-400 uppercase tracking-wide">{h}</th>
+                        <th key={h} className="text-left py-2 px-3 text-[10px] font-bold text-[#A8A196] uppercase tracking-wide">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
                     {filteredUsers.map(u => (
-                      <tr key={u.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="py-2.5 px-3 font-bold text-slate-800">{u.name}</td>
-                        <td className="py-2.5 px-3 text-slate-500 text-[10px]">{u.email}</td>
+                      <tr key={u.id} className="hover:bg-[#FBF7F0] transition-colors">
+                        <td className="py-2.5 px-3 font-bold text-[#211F1D]">{u.name}</td>
+                        <td className="py-2.5 px-3 text-[#78716A] text-[10px]">{u.email}</td>
                         <td className="py-2.5 px-3">
                           <span className={`text-[8px] px-2 py-0.5 rounded font-bold ${ROLE_STYLES[u.role] ?? ROLE_STYLES.VIEWER}`}>
                             {u.role.replace(/_/g, " ")}
                           </span>
                         </td>
-                        <td className="py-2.5 px-3 text-slate-500 text-[10px]">{u.department ?? "—"}</td>
+                        <td className="py-2.5 px-3 text-[#78716A] text-[10px]">{u.department ?? "—"}</td>
                         <td className="py-2.5 px-3">
-                          <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold ${u.isActive ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>
+                          <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold ${u.isActive ? "bg-[#E8F2EC] text-[#2F6B4F]" : "bg-[#FEE2E2] text-[#C0392B]"}`}>
                             {u.isActive ? "Active" : "Inactive"}
                           </span>
                         </td>
-                        <td className="py-2.5 px-3 text-slate-400 text-[9px]">
+                        <td className="py-2.5 px-3 text-[#A8A196] text-[10px]">
                           {u.lastLoginAt ? new Date(u.lastLoginAt).toLocaleDateString("en-IN") : "—"}
                         </td>
                         <td className="py-2.5 px-3">
-                          <button className="text-[9px] font-bold text-slate-400 hover:text-red-500 transition-colors">Deactivate</button>
+                          <button className="text-[10px] font-bold text-[#A8A196] hover:text-red-500 transition-colors">Deactivate</button>
                         </td>
                       </tr>
                     ))}
@@ -418,25 +418,25 @@ export default function OrganizationManagement() {
             onClick={() => setInviteOpen(false)}
           >
             <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl shadow-2xl p-6 w-[420px] max-w-full mx-4"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[420px] max-w-full mx-4"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-sm font-bold text-slate-800">Invite Team Member</h3>
-                <button onClick={() => setInviteOpen(false)}><X className="h-4 w-4 text-slate-400 hover:text-slate-600" /></button>
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
+                <h3 className="text-sm font-bold text-[#211F1D]">Invite Team Member</h3>
+                <button onClick={() => setInviteOpen(false)}><X className="h-4 w-4 text-[#A8A196] hover:text-[#57534E]" /></button>
               </div>
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Full Name *</label>
-                  <input value={inviteName} onChange={e => setInviteName(e.target.value)} placeholder="e.g. Ravi Kumar" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Full Name *</label>
+                  <input value={inviteName} onChange={e => setInviteName(e.target.value)} placeholder="e.g. Ravi Kumar" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36]" />
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Work Email *</label>
-                  <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="e.g. ravi@solarispower.in" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Work Email *</label>
+                  <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="e.g. ravi@solarispower.in" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36]" />
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Platform Role *</label>
-                  <select value={inviteRole} onChange={e => setInviteRole(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary">
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Platform Role *</label>
+                  <select value={inviteRole} onChange={e => setInviteRole(e.target.value)} className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36]">
                     <option value="ORG_ADMIN">Org Admin</option>
                     <option value="PROJECT_LEAD">Project Lead</option>
                     <option value="FINANCE_HEAD">Finance Head</option>
@@ -445,9 +445,9 @@ export default function OrganizationManagement() {
                   </select>
                 </div>
               </div>
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
-                <button onClick={handleInviteUser} className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover text-xs">Send Invitation</button>
-                <button onClick={() => setInviteOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-3.5 mt-4">
+                <button onClick={handleInviteUser} className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold hover:bg-[#E04826] text-xs">Send Invitation</button>
+                <button onClick={() => setInviteOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-xs font-semibold hover:bg-[#EFE9DF]">Cancel</button>
               </div>
             </motion.div>
           </motion.div>

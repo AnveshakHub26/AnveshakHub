@@ -4,7 +4,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   TrendingUp, Award, Star, BookOpen, Clock, Download, RefreshCw,
-  Loader2, CheckCircle2, ShieldCheck
+  Loader2, CheckCircle2, ShieldCheck, Trophy, Flame, Target,
+  ArrowUpRight, Calendar, ChevronRight
 } from "lucide-react";
 
 interface ProgressData {
@@ -39,14 +40,21 @@ interface ProgressData {
   }>;
 }
 
+const LEVEL_COLORS: Record<string, string> = {
+  Beginner:     "#A8A196",
+  Intermediate: "#FF5A36",
+  Advanced:     "#4338CA",
+  Expert:       "#2F6B4F",
+};
+
 export default function StudentProgressPage() {
-  const [data, setData] = useState<ProgressData | null>(null);
+  const [data, setData]     = useState<ProgressData | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProgress = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/student/progress");
+      const res  = await fetch("/api/student/progress");
       const json = await res.json();
       setData(json);
     } catch (e) {
@@ -56,118 +64,204 @@ export default function StudentProgressPage() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchProgress();
-  }, [fetchProgress]);
+  useEffect(() => { fetchProgress(); }, [fetchProgress]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
+        <p className="text-xs text-[#78716A] font-semibold">Loading your growth report…</p>
       </div>
     );
   }
 
   if (!data) return null;
 
+  const kpis = [
+    { label: "CGPA",            value: `${data.academicSummary.cgpa}`,          sub: `Rank #${data.academicSummary.classRank}`,                    icon: TrendingUp,    color: "#FF5A36", bg: "#FFF0ED" },
+    { label: "Credits Earned",  value: `${data.academicSummary.creditsEarned}`,  sub: `${data.academicSummary.completedSemesters} Sems done`,       icon: BookOpen,      color: "#4338CA", bg: "#EEF2FF" },
+    { label: "Milestones",      value: `${data.growthMetrics.milestonesCompleted}`, sub: `${data.growthMetrics.internshipsCompleted} internships`, icon: CheckCircle2,  color: "#2F6B4F", bg: "#E8F2EC" },
+    { label: "Mentor Rating",   value: `★ ${data.growthMetrics.mentorshipScore}`, sub: "Out of 10",                                                 icon: Star,          color: "#92400E", bg: "#FEF3C7" },
+  ];
+
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-6 lg:p-8 space-y-8">
+
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Academic & Professional Growth Console</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Comprehensive analytics on CGPA trends, milestone completion velocity, hackathons & expert mentorship scores</p>
+          <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#4338CA]/10 text-[#4338CA] uppercase tracking-widest">
+            Growth Console
+          </span>
+          <h1 className="text-2xl font-extrabold text-[#211F1D] mt-1">
+            Academic & Professional Progress
+          </h1>
+          <p className="text-sm text-[#78716A] mt-1">
+            CGPA trends, milestone velocity, mentor scores — all in one view.
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={fetchProgress} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
-            <RefreshCw className="h-3.5 w-3.5" /> Refresh
+          <button onClick={fetchProgress} className="h-9 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-xl text-xs font-semibold hover:bg-[#EFE9DF] transition-colors">
+            <RefreshCw className="h-3.5 w-3.5" />
           </button>
-          <button className="h-8 px-3 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
-            <Download className="h-3.5 w-3.5" /> Export Progress Report PDF
+          <button className="h-9 px-4 bg-[#FF5A36] text-white rounded-xl text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5 transition-colors shadow-sm shadow-[#FF5A36]/30">
+            <Download className="h-3.5 w-3.5" /> Export Report
           </button>
         </div>
       </div>
 
-      {/* KPI Stat Cards */}
+      {/* KPI Strip */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-blue-50 text-primary flex items-center justify-center shrink-0 font-bold">
-            <TrendingUp className="h-5 w-5" />
+        {kpis.map((k, i) => (
+          <motion.div
+            key={k.label}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.07 }}
+            className="bg-[#EFE9DF] rounded-2xl p-5 space-y-3"
+          >
+            <div className="flex items-center justify-between">
+              <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: k.bg }}>
+                <k.icon className="h-5 w-5" style={{ color: k.color }} />
+              </div>
+              <ArrowUpRight className="h-4 w-4 text-[#A8A196]" />
+            </div>
+            <div>
+              <p className="text-2xl font-extrabold text-[#211F1D]">{k.value}</p>
+              <p className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide">{k.label}</p>
+              <p className="text-[10px] text-[#A8A196] mt-0.5">{k.sub}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Attendance Banner */}
+      <div className="bg-[#211F1D] rounded-2xl p-5 flex items-center justify-between overflow-hidden relative">
+        <div className="absolute right-0 top-0 h-full w-64 bg-gradient-to-l from-[#FF5A36]/20 to-transparent" />
+        <div className="flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-[#FF5A36]/10 flex items-center justify-center">
+            <Flame className="h-6 w-6 text-[#FF5A36]" />
           </div>
           <div>
-            <div className="text-lg font-extrabold text-slate-900">{data.academicSummary.cgpa} CGPA</div>
-            <div className="text-[9px] text-slate-400 font-bold">Rank #{data.academicSummary.classRank} ({data.academicSummary.creditsEarned} Credits)</div>
+            <p className="text-white font-extrabold text-sm">Attendance Rate</p>
+            <p className="text-[#A8A196] text-xs">Based on all scheduled sessions this term</p>
           </div>
         </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0 font-bold">
-            <CheckCircle2 className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">{data.growthMetrics.milestonesCompleted} Milestones</div>
-            <div className="text-[9px] text-slate-400 font-bold">{data.growthMetrics.internshipsCompleted} R&D Internship</div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 font-bold">
-            <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
-          </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">★ {data.growthMetrics.mentorshipScore}</div>
-            <div className="text-[9px] text-slate-400 font-bold">Lead Mentor Rating</div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 font-bold">
-            <Award className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-lg font-extrabold text-slate-900">{data.achievements.length} Honors</div>
-            <div className="text-[9px] text-slate-400 font-bold">Awards & Fellowships</div>
-          </div>
+        <div className="text-right z-10">
+          <p className="text-4xl font-extrabold text-[#FF5A36]">{data.growthMetrics.attendanceRate}%</p>
+          <p className="text-[10px] text-[#78716A] uppercase tracking-wide font-semibold">Session attendance</p>
         </div>
       </div>
 
-      {/* Main Grid: Skill Velocity & Achievements */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
         {/* Skill Velocity */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">Technical Skill Mastery Velocity</h3>
-          <div className="space-y-4 pt-1">
+        <div className="bg-[#EFE9DF] rounded-2xl p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-extrabold text-[#211F1D] flex items-center gap-2">
+              <Target className="h-4 w-4 text-[#FF5A36]" /> Skill Mastery Velocity
+            </h3>
+            <span className="text-[10px] font-bold text-[#78716A]">{data.skillVelocity.length} tracked skills</span>
+          </div>
+          <div className="space-y-5">
             {data.skillVelocity.map((s, idx) => (
-              <div key={idx} className="space-y-1">
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-slate-800 font-bold">{s.skill}</span>
-                  <span className="text-primary font-extrabold">{s.level} ({s.progress}%)</span>
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + idx * 0.07 }}
+                className="space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#211F1D]">{s.skill}</span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase"
+                      style={{ background: (LEVEL_COLORS[s.level] || "#A8A196") + "18", color: LEVEL_COLORS[s.level] || "#A8A196" }}
+                    >
+                      {s.level}
+                    </span>
+                    <span className="text-xs font-extrabold text-[#FF5A36]">{s.progress}%</span>
+                  </div>
                 </div>
-                <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary rounded-full" style={{ width: `${s.progress}%` }} />
+                <div className="h-2 bg-[#D8D2C7] rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{ background: LEVEL_COLORS[s.level] || "#FF5A36" }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${s.progress}%` }}
+                    transition={{ duration: 0.8, delay: 0.4 + idx * 0.07, ease: "easeOut" }}
+                  />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Achievements Showcase */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">Achievements, Awards & Fellowships</h3>
-          <div className="space-y-3 pt-1">
-            {data.achievements.map(ach => (
-              <div key={ach.id} className="border border-slate-100 rounded-xl p-4 bg-slate-50 flex items-center justify-between">
-                <div>
-                  <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 uppercase">{ach.category}</span>
-                  <h4 className="text-xs font-bold text-slate-800 mt-1">{ach.title}</h4>
-                  <p className="text-[9px] text-slate-400 font-semibold">{ach.issuer}</p>
-                </div>
-                <span className="text-[9px] font-extrabold text-primary">{ach.year}</span>
+        {/* Achievements */}
+        <div className="bg-[#EFE9DF] rounded-2xl p-6 space-y-5">
+          <h3 className="text-sm font-extrabold text-[#211F1D] flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-[#FF5A36]" /> Honors, Awards & Fellowships
+          </h3>
+          <div className="space-y-3">
+            {data.achievements.length === 0 ? (
+              <div className="text-center py-8">
+                <Award className="h-8 w-8 text-[#D8D2C7] mx-auto mb-2" />
+                <p className="text-xs text-[#78716A] font-semibold">No achievements recorded yet</p>
               </div>
+            ) : data.achievements.map((ach, idx) => (
+              <motion.div
+                key={ach.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + idx * 0.07 }}
+                className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between hover:border-[#FF5A36]/40 transition-colors"
+              >
+                <div>
+                  <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-[#EEF2FF] text-[#4338CA] uppercase">
+                    {ach.category}
+                  </span>
+                  <h4 className="text-xs font-bold text-[#211F1D] mt-1">{ach.title}</h4>
+                  <p className="text-[10px] text-[#78716A] font-semibold">{ach.issuer}</p>
+                </div>
+                <span className="text-sm font-extrabold text-[#FF5A36]">{ach.year}</span>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Activity Timeline */}
+      {data.timeline && data.timeline.length > 0 && (
+        <div className="bg-[#EFE9DF] rounded-2xl p-6 space-y-5">
+          <h3 className="text-sm font-extrabold text-[#211F1D] flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-[#FF5A36]" /> Activity Timeline
+          </h3>
+          <div className="relative pl-5 space-y-0">
+            {/* Vertical line */}
+            <div className="absolute left-1.5 top-1 bottom-1 w-px bg-[#D8D2C7]" />
+            {data.timeline.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 + idx * 0.05 }}
+                className="relative pb-4"
+              >
+                <div className="absolute -left-5 top-1 h-3 w-3 rounded-full bg-[#FF5A36] border-2 border-[#EFE9DF]" />
+                <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-3 ml-2">
+                  <p className="text-xs font-bold text-[#211F1D]">{item.event}</p>
+                  <p className="text-[10px] text-[#78716A] font-semibold mt-0.5">
+                    {new Date(item.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                    <span className="ml-2 px-1.5 py-0.5 rounded bg-[#EFE9DF] text-[#A8A196]">{item.category}</span>
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

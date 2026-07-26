@@ -59,23 +59,23 @@ const TABS = [
 ];
 
 const STAGE_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  SUBMITTED:             { label: "Submitted",          color: "text-slate-600",   bg: "bg-slate-100" },
-  INITIAL_REVIEW:        { label: "Initial Review",     color: "text-blue-600",    bg: "bg-blue-50" },
-  DOCUMENT_VERIFICATION: { label: "Doc Verification",   color: "text-amber-600",   bg: "bg-amber-50" },
+  SUBMITTED:             { label: "Submitted",          color: "text-[#57534E]",   bg: "bg-[#EFE9DF]" },
+  INITIAL_REVIEW:        { label: "Initial Review",     color: "text-[#FF5A36]",    bg: "bg-[#FFF0ED]" },
+  DOCUMENT_VERIFICATION: { label: "Doc Verification",   color: "text-amber-600",   bg: "bg-[#FEF3C7]" },
   BUSINESS_VALIDATION:   { label: "Business Validation",color: "text-purple-600",  bg: "bg-purple-50" },
   MEETING_SCHEDULED:     { label: "Meeting Scheduled",  color: "text-teal-600",    bg: "bg-teal-50" },
-  COMPLIANCE_REVIEW:     { label: "Compliance Review",  color: "text-orange-600",  bg: "bg-orange-50" },
-  APPROVAL_COMMITTEE:    { label: "Approval Committee", color: "text-indigo-600",  bg: "bg-indigo-50" },
-  APPROVED:              { label: "Approved",           color: "text-green-600",   bg: "bg-green-50" },
-  REJECTED:              { label: "Rejected",           color: "text-red-600",     bg: "bg-red-50" },
+  COMPLIANCE_REVIEW:     { label: "Compliance Review",  color: "text-orange-600",  bg: "bg-[#FFF4ED]" },
+  APPROVAL_COMMITTEE:    { label: "Approval Committee", color: "text-[#FF5A36]/600",  bg: "bg-[#FF5A36]/50" },
+  APPROVED:              { label: "Approved",           color: "text-[#2F6B4F]",   bg: "bg-[#E8F2EC]" },
+  REJECTED:              { label: "Rejected",           color: "text-[#C0392B]",     bg: "bg-[#FEE2E2]" },
   ON_HOLD:               { label: "On Hold",            color: "text-yellow-600",  bg: "bg-yellow-50" },
 };
 
 const PRIORITY_STYLES: Record<string, { color: string; bg: string; dot: string }> = {
-  STANDARD: { color: "text-slate-600", bg: "bg-slate-100", dot: "bg-slate-400" },
-  HIGH:     { color: "text-amber-700", bg: "bg-amber-50",  dot: "bg-amber-500" },
-  URGENT:   { color: "text-orange-700",bg: "bg-orange-50", dot: "bg-orange-500" },
-  CRITICAL: { color: "text-red-700",   bg: "bg-red-50",    dot: "bg-red-500" },
+  STANDARD: { color: "text-[#57534E]", bg: "bg-[#EFE9DF]", dot: "bg-[#A8A196]" },
+  HIGH:     { color: "text-[#B45309]", bg: "bg-[#FEF3C7]",  dot: "bg-[#FEF3C7]0" },
+  URGENT:   { color: "text-[#C2410C]",bg: "bg-[#FFF4ED]", dot: "bg-[#FFF4ED]0" },
+  CRITICAL: { color: "text-[#C0392B]",   bg: "bg-[#FEE2E2]",    dot: "bg-[#FEE2E2]0" },
 };
 
 const OFFICERS = ["Priya Nair", "Karan Mehta", "Anjali Sharma", "Rohan Das"];
@@ -83,7 +83,7 @@ const OFFICERS = ["Priya Nair", "Karan Mehta", "Anjali Sharma", "Rohan Das"];
 // ─── Sub-components ────────────────────────────────────────────────
 
 function StageBadge({ stage }: { stage: string }) {
-  const s = STAGE_LABELS[stage] || { label: stage, color: "text-slate-600", bg: "bg-slate-100" };
+  const s = STAGE_LABELS[stage] || { label: stage, color: "text-[#57534E]", bg: "bg-[#EFE9DF]" };
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${s.bg} ${s.color}`}>
       {s.label}
@@ -102,7 +102,7 @@ function PriorityBadge({ priority }: { priority: string }) {
 }
 
 function RiskBadge({ score }: { score: number }) {
-  const color = score <= 25 ? "text-green-600 bg-green-50" : score <= 50 ? "text-amber-600 bg-amber-50" : "text-red-600 bg-red-50";
+  const color = score <= 25 ? "text-[#2F6B4F] bg-[#E8F2EC]" : score <= 50 ? "text-amber-600 bg-[#FEF3C7]" : "text-[#C0392B] bg-[#FEE2E2]";
   const label = score <= 25 ? "Low" : score <= 50 ? "Medium" : "High";
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${color}`}>
@@ -113,13 +113,13 @@ function RiskBadge({ score }: { score: number }) {
 
 function DocProgress({ approved, total }: { approved: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((approved / total) * 100);
-  const color = pct === 100 ? "bg-green-500" : pct >= 60 ? "bg-amber-500" : "bg-red-400";
+  const color = pct === 100 ? "bg-[#E8F2EC]0" : pct >= 60 ? "bg-[#FEF3C7]0" : "bg-red-400";
   return (
     <div className="flex items-center gap-2 min-w-[80px]">
-      <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+      <div className="flex-1 h-1.5 bg-[#EFE9DF] rounded-full overflow-hidden">
         <div className={`h-full rounded-full transition-all ${color}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-[10px] text-slate-500 whitespace-nowrap">{approved}/{total}</span>
+      <span className="text-[10px] text-[#78716A] whitespace-nowrap">{approved}/{total}</span>
     </div>
   );
 }
@@ -207,23 +207,23 @@ export default function VerificationCenterPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full bg-[#FBF7F0]">
 
       {/* ── Page Header ── */}
-      <div className="bg-white border-b border-slate-200 px-8 py-5">
+      <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Verification & Approval Center</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Review, validate and approve all incoming stakeholder registration requests</p>
+            <h1 className="text-xl font-bold text-[#211F1D]">Verification & Approval Center</h1>
+            <p className="text-xs text-[#78716A] mt-0.5">Review, validate and approve all incoming stakeholder registration requests</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={fetchRequests} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+            <button onClick={fetchRequests} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#FBF7F0] transition-colors">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
-            <button className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+            <button className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#FBF7F0] transition-colors">
               <Download className="h-3.5 w-3.5" /> Export CSV
             </button>
-            <button className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors">
+            <button className="h-8 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] transition-colors">
               <Radio className="h-3.5 w-3.5" /> Broadcast Alert
             </button>
           </div>
@@ -239,13 +239,13 @@ export default function VerificationCenterPage() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex flex-col items-start px-3 py-2 rounded-xl border transition-all text-left ${activeTab === tab.key ? "border-primary bg-blue-50 shadow-sm" : "border-slate-200 bg-white hover:border-slate-300"}`}
+                  className={`flex flex-col items-start px-3 py-2 rounded-xl border transition-all text-left ${activeTab === tab.key ? "border-[#FF5A36] bg-[#FFF0ED] shadow-[var(--shadow-sm)]" : "border-[#E2DCD2] bg-[#FBF7F0] hover:border-[#D8D2C7]"}`}
                 >
                   <div className="flex items-center gap-1.5">
-                    <Icon className={`h-3.5 w-3.5 ${activeTab === tab.key ? "text-primary" : "text-slate-400"}`} />
-                    <span className="text-[9px] text-slate-500 uppercase tracking-wide font-semibold">{tab.label}</span>
+                    <Icon className={`h-3.5 w-3.5 ${activeTab === tab.key ? "text-[#FF5A36]" : "text-[#A8A196]"}`} />
+                    <span className="text-[10px] text-[#78716A] uppercase tracking-wide font-semibold">{tab.label}</span>
                   </div>
-                  <span className={`text-lg font-extrabold mt-0.5 ${activeTab === tab.key ? "text-primary" : "text-slate-800"}`}>{count}</span>
+                  <span className={`text-lg font-extrabold mt-0.5 ${activeTab === tab.key ? "text-[#FF5A36]" : "text-[#211F1D]"}`}>{count}</span>
                 </button>
               );
             })}
@@ -257,7 +257,7 @@ export default function VerificationCenterPage() {
         <div className="flex-1 flex flex-col overflow-hidden">
 
           {/* ── Tab Bar ── */}
-          <div className="bg-white border-b border-slate-200 px-8">
+          <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8">
             <div className="flex items-center gap-0 overflow-x-auto">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
@@ -266,17 +266,17 @@ export default function VerificationCenterPage() {
                   <button
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
-                    className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all whitespace-nowrap ${activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+                    className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all whitespace-nowrap ${activeTab === tab.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"}`}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     {tab.label}
                     {tab.key !== "ALL" && (
-                      <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold ${activeTab === tab.key ? "bg-blue-100 text-primary" : "bg-slate-100 text-slate-500"}`}>
+                      <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${activeTab === tab.key ? "bg-[#FFE9E3] text-[#FF5A36]" : "bg-[#EFE9DF] text-[#78716A]"}`}>
                         {stats?.byType[tab.key] ?? 0}
                       </span>
                     )}
                     {tab.key === "ALL" && (
-                      <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold ${activeTab === tab.key ? "bg-blue-100 text-primary" : "bg-slate-100 text-slate-500"}`}>
+                      <span className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${activeTab === tab.key ? "bg-[#FFE9E3] text-[#FF5A36]" : "bg-[#EFE9DF] text-[#78716A]"}`}>
                         {stats?.total ?? 0}
                       </span>
                     )}
@@ -287,23 +287,23 @@ export default function VerificationCenterPage() {
           </div>
 
           {/* ── Toolbar ── */}
-          <div className="bg-white border-b border-slate-100 px-8 py-3 flex items-center gap-3">
+          <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-3 flex items-center gap-3">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search organization, email, domain…"
-                className="w-full pl-9 pr-3 h-8 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 bg-white"
+                className="w-full pl-9 pr-3 h-8 text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36]/20 bg-[#FBF7F0]"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`h-8 px-3 inline-flex items-center gap-1.5 border rounded-lg text-xs font-medium transition-colors ${showFilters ? "border-primary bg-blue-50 text-primary" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}
+              className={`h-8 px-3 inline-flex items-center gap-1.5 border rounded-lg text-xs font-medium transition-colors ${showFilters ? "border-[#FF5A36] bg-[#FFF0ED] text-[#FF5A36]" : "border-[#E2DCD2] text-[#57534E] hover:bg-[#EFE9DF]"}`}
             >
               <Filter className="h-3.5 w-3.5" /> Filters
               {(stageFilter !== "ALL" || priorityFilter !== "ALL") && (
-                <span className="ml-0.5 w-4 h-4 bg-primary text-white rounded-full text-[9px] flex items-center justify-center font-bold">
+                <span className="ml-0.5 w-4 h-4 bg-[#FF5A36] text-white rounded-full text-[10px] flex items-center justify-center font-bold">
                   {[stageFilter !== "ALL", priorityFilter !== "ALL"].filter(Boolean).length}
                 </span>
               )}
@@ -313,27 +313,27 @@ export default function VerificationCenterPage() {
             <AnimatePresence>
               {selected.size > 0 && (
                 <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 font-medium">{selected.size} selected</span>
+                  <span className="text-xs text-[#78716A] font-medium">{selected.size} selected</span>
                   <button onClick={() => bulkAction("APPROVE")} disabled={bulkLoading} className="h-7 px-3 bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1">
                     {bulkLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />} Bulk Approve
                   </button>
                   <button onClick={() => bulkAction("REJECT")} disabled={bulkLoading} className="h-7 px-3 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1">
                     <X className="h-3 w-3" /> Bulk Reject
                   </button>
-                  <button onClick={() => bulkAction("HOLD")} disabled={bulkLoading} className="h-7 px-3 bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1">
+                  <button onClick={() => bulkAction("HOLD")} disabled={bulkLoading} className="h-7 px-3 bg-[#FEF3C7]0 hover:bg-amber-600 text-white text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1">
                     <Clock className="h-3 w-3" /> Put On Hold
                   </button>
-                  <button onClick={() => bulkAction("ASSIGN")} disabled={bulkLoading} className="h-7 px-3 border border-slate-300 text-slate-700 text-[11px] font-bold rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-1">
+                  <button onClick={() => bulkAction("ASSIGN")} disabled={bulkLoading} className="h-7 px-3 border border-[#D8D2C7] text-[#211F1D] text-[11px] font-bold rounded-lg hover:bg-[#FBF7F0] transition-colors flex items-center gap-1">
                     <UserPlus className="h-3 w-3" /> Assign
                   </button>
-                  <button onClick={() => setSelected(new Set())} className="h-7 w-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-50">
+                  <button onClick={() => setSelected(new Set())} className="h-7 w-7 flex items-center justify-center border border-[#E2DCD2] rounded-lg text-[#A8A196] hover:text-[#57534E] hover:bg-[#EFE9DF]">
                     <X className="h-3.5 w-3.5" />
                   </button>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <div className="ml-auto flex items-center gap-2 text-xs text-slate-500">
+            <div className="ml-auto flex items-center gap-2 text-xs text-[#78716A]">
               <span>{total} request{total !== 1 ? "s" : ""}</span>
             </div>
           </div>
@@ -341,11 +341,11 @@ export default function VerificationCenterPage() {
           {/* ── Filter Panel ── */}
           <AnimatePresence>
             {showFilters && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-white border-b border-slate-100">
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-[#FBF7F0] border-b border-[#E2DCD2]">
                 <div className="px-8 py-3 flex flex-wrap items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Stage</label>
-                    <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value)} className="h-7 text-xs border border-slate-200 rounded-lg px-2 focus:outline-none focus:border-primary bg-white">
+                    <label className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide">Stage</label>
+                    <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value)} className="h-7 text-xs border border-[#E2DCD2] rounded-lg px-2 focus:outline-none focus:border-[#FF5A36] bg-[#FBF7F0]">
                       <option value="ALL">All Stages</option>
                       {Object.entries(STAGE_LABELS).map(([k, v]) => (
                         <option key={k} value={k}>{v.label}</option>
@@ -353,14 +353,14 @@ export default function VerificationCenterPage() {
                     </select>
                   </div>
                   <div className="flex items-center gap-2">
-                    <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Priority</label>
-                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="h-7 text-xs border border-slate-200 rounded-lg px-2 focus:outline-none focus:border-primary bg-white">
+                    <label className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide">Priority</label>
+                    <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)} className="h-7 text-xs border border-[#E2DCD2] rounded-lg px-2 focus:outline-none focus:border-[#FF5A36] bg-[#FBF7F0]">
                       <option value="ALL">All Priorities</option>
                       {Object.keys(PRIORITY_STYLES).map((k) => <option key={k} value={k}>{k}</option>)}
                     </select>
                   </div>
                   {(stageFilter !== "ALL" || priorityFilter !== "ALL") && (
-                    <button onClick={() => { setStageFilter("ALL"); setPriorityFilter("ALL"); }} className="text-xs text-primary hover:underline">Clear filters</button>
+                    <button onClick={() => { setStageFilter("ALL"); setPriorityFilter("ALL"); }} className="text-xs text-[#FF5A36] hover:underline">Clear filters</button>
                   )}
                 </div>
               </motion.div>
@@ -371,10 +371,10 @@ export default function VerificationCenterPage() {
           <div className="flex-1 overflow-auto">
             {loading ? (
               <div className="flex items-center justify-center h-48">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <Loader2 className="h-6 w-6 animate-spin text-[#FF5A36]" />
               </div>
             ) : requests.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-48 text-slate-400">
+              <div className="flex flex-col items-center justify-center h-48 text-[#A8A196]">
                 <ShieldCheck className="h-10 w-10 mb-2" />
                 <p className="text-sm font-medium">No requests found</p>
                 <p className="text-xs mt-0.5">Try adjusting your filters</p>
@@ -382,10 +382,10 @@ export default function VerificationCenterPage() {
             ) : (
               <table className="w-full min-w-[900px] text-xs">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
+                  <tr className="bg-[#FBF7F0] border-b border-[#E2DCD2]">
                     <th className="w-8 py-3 pl-8 text-left">
-                      <button onClick={toggleAll} className="text-slate-400 hover:text-slate-600">
-                        {allSelected ? <CheckSquare className="h-4 w-4 text-primary" /> : <Square className="h-4 w-4" />}
+                      <button onClick={toggleAll} className="text-[#A8A196] hover:text-[#57534E]">
+                        {allSelected ? <CheckSquare className="h-4 w-4 text-[#FF5A36]" /> : <Square className="h-4 w-4" />}
                       </button>
                     </th>
                     {[
@@ -398,14 +398,14 @@ export default function VerificationCenterPage() {
                       { key: "assignedOfficer", label: "Assigned To" },
                       { key: "submittedAt", label: "Submitted" },
                     ].map((col) => (
-                      <th key={col.key} className="py-3 px-3 text-left font-semibold text-[10px] text-slate-500 uppercase tracking-wide cursor-pointer hover:text-slate-700 select-none" onClick={() => toggleSort(col.key)}>
+                      <th key={col.key} className="py-3 px-3 text-left font-semibold text-[10px] text-[#78716A] uppercase tracking-wide cursor-pointer hover:text-[#211F1D] select-none" onClick={() => toggleSort(col.key)}>
                         <span className="flex items-center gap-1">
                           {col.label}
                           {sortBy === col.key && (sortDir === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />)}
                         </span>
                       </th>
                     ))}
-                    <th className="py-3 px-3 text-left font-semibold text-[10px] text-slate-500 uppercase tracking-wide">Actions</th>
+                    <th className="py-3 px-3 text-left font-semibold text-[10px] text-[#78716A] uppercase tracking-wide">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -416,25 +416,25 @@ export default function VerificationCenterPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: i * 0.02 }}
-                        className={`border-b border-slate-100 hover:bg-blue-50/30 transition-colors ${selected.has(req.id) ? "bg-blue-50/50" : "bg-white"}`}
+                        className={`border-b border-[#E2DCD2] hover:bg-[#FFF0ED]/30 transition-colors ${selected.has(req.id) ? "bg-[#FFF0ED]/50" : "bg-[#FBF7F0]"}`}
                       >
                         <td className="py-3 pl-8">
-                          <button onClick={() => toggleOne(req.id)} className="text-slate-400 hover:text-slate-600">
-                            {selected.has(req.id) ? <CheckSquare className="h-4 w-4 text-primary" /> : <Square className="h-4 w-4" />}
+                          <button onClick={() => toggleOne(req.id)} className="text-[#A8A196] hover:text-[#57534E]">
+                            {selected.has(req.id) ? <CheckSquare className="h-4 w-4 text-[#FF5A36]" /> : <Square className="h-4 w-4" />}
                           </button>
                         </td>
                         <td className="py-3 px-3">
-                          <div className="font-semibold text-slate-800 truncate max-w-[180px]">{req.orgName}</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5 truncate">{req.email}</div>
+                          <div className="font-semibold text-[#211F1D] truncate max-w-[180px]">{req.orgName}</div>
+                          <div className="text-[10px] text-[#A8A196] mt-0.5 truncate">{req.email}</div>
                           <div className="flex items-center gap-1 mt-0.5">
-                            <span className="text-[10px] text-slate-400">{req.city}, {req.state}</span>
-                            {req.fraudFlag && <span className="px-1 py-0.5 bg-red-100 text-red-600 text-[9px] font-bold rounded">FRAUD FLAG</span>}
-                            {req.duplicateFlag && <span className="px-1 py-0.5 bg-orange-100 text-orange-600 text-[9px] font-bold rounded">DUPLICATE</span>}
+                            <span className="text-[10px] text-[#A8A196]">{req.city}, {req.state}</span>
+                            {req.fraudFlag && <span className="px-1 py-0.5 bg-red-100 text-[#C0392B] text-[10px] font-bold rounded">FRAUD FLAG</span>}
+                            {req.duplicateFlag && <span className="px-1 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded">DUPLICATE</span>}
                           </div>
                         </td>
                         <td className="py-3 px-3">
-                          <span className="text-[10px] text-slate-600 font-medium">{req.type}</span>
-                          <div className="text-[10px] text-slate-400 mt-0.5">{req.domain}</div>
+                          <span className="text-[10px] text-[#57534E] font-medium">{req.type}</span>
+                          <div className="text-[10px] text-[#A8A196] mt-0.5">{req.domain}</div>
                         </td>
                         <td className="py-3 px-3"><StageBadge stage={req.stage} /></td>
                         <td className="py-3 px-3"><PriorityBadge priority={req.priority} /></td>
@@ -444,22 +444,22 @@ export default function VerificationCenterPage() {
                         </td>
                         <td className="py-3 px-3">
                           {req.assignedOfficer ? (
-                            <span className="text-[10px] text-slate-700 font-medium">{req.assignedOfficer}</span>
+                            <span className="text-[10px] text-[#211F1D] font-medium">{req.assignedOfficer}</span>
                           ) : (
-                            <span className="text-[10px] text-slate-400 italic">Unassigned</span>
+                            <span className="text-[10px] text-[#A8A196] italic">Unassigned</span>
                           )}
                         </td>
-                        <td className="py-3 px-3 text-[10px] text-slate-500">{formatDate(req.submittedAt)}</td>
+                        <td className="py-3 px-3 text-[10px] text-[#78716A]">{formatDate(req.submittedAt)}</td>
                         <td className="py-3 px-3">
                           <div className="flex items-center gap-1">
                             <Link href={`/admin/verification-center/${req.id}`}>
-                              <button className="h-7 px-2.5 inline-flex items-center gap-1 bg-primary text-white rounded-lg text-[10px] font-bold hover:bg-blue-700 transition-colors">
+                              <button className="h-7 px-2.5 inline-flex items-center gap-1 bg-[#FF5A36] text-white rounded-lg text-[10px] font-bold hover:bg-[#E04826] transition-colors">
                                 <Eye className="h-3 w-3" /> Review
                               </button>
                             </Link>
                             <button
                               onClick={() => setAssignModal(req.id)}
-                              className="h-7 w-7 inline-flex items-center justify-center border border-slate-200 text-slate-500 rounded-lg hover:bg-slate-50 transition-colors"
+                              className="h-7 w-7 inline-flex items-center justify-center border border-[#E2DCD2] text-[#78716A] rounded-lg hover:bg-[#FBF7F0] transition-colors"
                             >
                               <UserPlus className="h-3 w-3" />
                             </button>
@@ -475,18 +475,18 @@ export default function VerificationCenterPage() {
 
           {/* ── Pagination ── */}
           {total > LIMIT && (
-            <div className="bg-white border-t border-slate-200 px-8 py-3 flex items-center justify-between">
-              <span className="text-xs text-slate-500">Showing {Math.min((page - 1) * LIMIT + 1, total)}–{Math.min(page * LIMIT, total)} of {total}</span>
+            <div className="bg-[#FBF7F0] border-t border-[#E2DCD2] px-8 py-3 flex items-center justify-between">
+              <span className="text-xs text-[#78716A]">Showing {Math.min((page - 1) * LIMIT + 1, total)}–{Math.min(page * LIMIT, total)} of {total}</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="h-7 w-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 disabled:opacity-40">
+                <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="h-7 w-7 flex items-center justify-center border border-[#E2DCD2] rounded-lg text-[#78716A] hover:bg-[#FBF7F0] disabled:opacity-40">
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </button>
                 {Array.from({ length: Math.ceil(total / LIMIT) }).map((_, i) => (
-                  <button key={i} onClick={() => setPage(i + 1)} className={`h-7 w-7 flex items-center justify-center border rounded-lg text-xs font-medium transition-colors ${page === i + 1 ? "border-primary bg-primary text-white" : "border-slate-200 text-slate-500 hover:bg-slate-50"}`}>
+                  <button key={i} onClick={() => setPage(i + 1)} className={`h-7 w-7 flex items-center justify-center border rounded-lg text-xs font-medium transition-colors ${page === i + 1 ? "border-[#FF5A36] bg-[#FF5A36] text-white" : "border-[#E2DCD2] text-[#78716A] hover:bg-[#EFE9DF]"}`}>
                     {i + 1}
                   </button>
                 ))}
-                <button onClick={() => setPage((p) => Math.min(Math.ceil(total / LIMIT), p + 1))} disabled={page >= Math.ceil(total / LIMIT)} className="h-7 w-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 disabled:opacity-40">
+                <button onClick={() => setPage((p) => Math.min(Math.ceil(total / LIMIT), p + 1))} disabled={page >= Math.ceil(total / LIMIT)} className="h-7 w-7 flex items-center justify-center border border-[#E2DCD2] rounded-lg text-[#78716A] hover:bg-[#FBF7F0] disabled:opacity-40">
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -495,38 +495,38 @@ export default function VerificationCenterPage() {
         </div>
 
         {/* ── Right Stats Panel ── */}
-        <aside className="w-64 border-l border-slate-200 bg-white flex-shrink-0 overflow-auto">
-          <div className="p-4 border-b border-slate-100">
-            <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wide">Approval Statistics</h3>
+        <aside className="w-64 border-l border-[#E2DCD2] bg-[#FBF7F0] flex-shrink-0 overflow-auto">
+          <div className="p-4 border-b border-[#E2DCD2]">
+            <h3 className="text-[11px] font-bold text-[#211F1D] uppercase tracking-wide">Approval Statistics</h3>
           </div>
           {stats && (
             <div className="p-4 space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] text-slate-500">Approval Rate</span>
-                  <span className="text-sm font-bold text-green-600">{stats.approvalRate}%</span>
+                  <span className="text-[10px] text-[#78716A]">Approval Rate</span>
+                  <span className="text-sm font-bold text-[#2F6B4F]">{stats.approvalRate}%</span>
                 </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500 rounded-full" style={{ width: `${stats.approvalRate}%` }} />
+                <div className="h-2 bg-[#EFE9DF] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#E8F2EC]0 rounded-full" style={{ width: `${stats.approvalRate}%` }} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-green-50 border border-green-100 rounded-xl p-2.5 text-center">
-                  <div className="text-lg font-extrabold text-green-600">{stats.todayApproved}</div>
-                  <div className="text-[9px] text-green-500 font-medium">Approved Today</div>
+                <div className="bg-[#E8F2EC] border border-green-100 rounded-xl p-2.5 text-center">
+                  <div className="text-lg font-extrabold text-[#2F6B4F]">{stats.todayApproved}</div>
+                  <div className="text-[10px] text-green-500 font-medium">Approved Today</div>
                 </div>
-                <div className="bg-red-50 border border-red-100 rounded-xl p-2.5 text-center">
+                <div className="bg-[#FEE2E2] border border-red-100 rounded-xl p-2.5 text-center">
                   <div className="text-lg font-extrabold text-red-500">{stats.todayRejected}</div>
-                  <div className="text-[9px] text-red-400 font-medium">Rejected Today</div>
+                  <div className="text-[10px] text-red-400 font-medium">Rejected Today</div>
                 </div>
               </div>
-              <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 text-center">
-                <div className="text-xl font-extrabold text-slate-700">{stats.avgProcessingDays}d</div>
-                <div className="text-[9px] text-slate-500 font-medium">Avg. Processing Time</div>
+              <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-2.5 text-center">
+                <div className="text-xl font-extrabold text-[#211F1D]">{stats.avgProcessingDays}d</div>
+                <div className="text-[10px] text-[#78716A] font-medium">Avg. Processing Time</div>
               </div>
 
               <div>
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-2">Pipeline Stage Breakdown</p>
+                <p className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide mb-2">Pipeline Stage Breakdown</p>
                 <div className="space-y-1.5">
                   {Object.entries(stats.byStage).map(([stage, count]) => {
                     const s = STAGE_LABELS[stage];
@@ -535,10 +535,10 @@ export default function VerificationCenterPage() {
                     return (
                       <div key={stage}>
                         <div className="flex items-center justify-between mb-0.5">
-                          <span className="text-[9px] text-slate-500 truncate max-w-[130px]">{s.label}</span>
-                          <span className="text-[10px] font-bold text-slate-700">{count}</span>
+                          <span className="text-[10px] text-[#78716A] truncate max-w-[130px]">{s.label}</span>
+                          <span className="text-[10px] font-bold text-[#211F1D]">{count}</span>
                         </div>
-                        <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-[#EFE9DF] rounded-full overflow-hidden">
                           <div className={`h-full rounded-full ${s.bg.replace("bg-", "bg-").replace("-50", "-400")}`} style={{ width: `${(count / maxCount) * 100}%` }} />
                         </div>
                       </div>
@@ -548,16 +548,16 @@ export default function VerificationCenterPage() {
               </div>
 
               <div>
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-2">Verification Officers</p>
+                <p className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide mb-2">Verification Officers</p>
                 {OFFICERS.map((officer) => (
                   <div key={officer} className="flex items-center justify-between py-1.5 border-b border-slate-50 last:border-0">
                     <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary">
+                      <div className="h-6 w-6 rounded-full bg-[#FF5A36]/10 flex items-center justify-center text-[10px] font-bold text-[#FF5A36]">
                         {officer.split(" ").map(n => n[0]).join("")}
                       </div>
-                      <span className="text-[10px] text-slate-700">{officer}</span>
+                      <span className="text-[10px] text-[#211F1D]">{officer}</span>
                     </div>
-                    <span className="text-[10px] font-semibold text-slate-500">
+                    <span className="text-[10px] font-semibold text-[#78716A]">
                       {Math.floor(Math.random() * 4) + 1} active
                     </span>
                   </div>
@@ -572,8 +572,8 @@ export default function VerificationCenterPage() {
       <AnimatePresence>
         {assignModal && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setAssignModal(null)}>
-            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-white rounded-2xl shadow-2xl p-6 w-80" onClick={(e) => e.stopPropagation()}>
-              <h3 className="text-sm font-bold text-slate-800 mb-4">Assign Verification Officer</h3>
+            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-80" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-sm font-bold text-[#211F1D] mb-4">Assign Verification Officer</h3>
               <div className="space-y-2">
                 {OFFICERS.map((officer) => (
                   <button key={officer} onClick={async () => {
@@ -584,15 +584,15 @@ export default function VerificationCenterPage() {
                     });
                     setAssignModal(null);
                     fetchRequests();
-                  }} className="w-full flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-primary hover:bg-blue-50 transition-all">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                  }} className="w-full flex items-center gap-3 p-3 rounded-xl border border-[#E2DCD2] hover:border-[#FF5A36] hover:bg-[#FFF0ED] transition-all">
+                    <div className="h-8 w-8 rounded-full bg-[#FF5A36]/10 flex items-center justify-center text-xs font-bold text-[#FF5A36]">
                       {officer.split(" ").map(n => n[0]).join("")}
                     </div>
-                    <span className="text-sm font-medium text-slate-700">{officer}</span>
+                    <span className="text-sm font-medium text-[#211F1D]">{officer}</span>
                   </button>
                 ))}
               </div>
-              <button onClick={() => setAssignModal(null)} className="mt-4 w-full h-8 text-xs text-slate-500 border border-slate-200 rounded-xl hover:bg-slate-50">Cancel</button>
+              <button onClick={() => setAssignModal(null)} className="mt-4 w-full h-8 text-xs text-[#78716A] border border-[#E2DCD2] rounded-xl hover:bg-[#EFE9DF]">Cancel</button>
             </motion.div>
           </motion.div>
         )}

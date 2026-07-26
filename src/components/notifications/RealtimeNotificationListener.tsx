@@ -51,24 +51,24 @@ export function RealtimeNotificationListener({ userId }: { userId?: string }) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-            className="pointer-events-auto flex items-start gap-3 p-4 rounded-xl bg-slate-900/95 backdrop-blur-md text-white shadow-2xl border border-slate-800"
+            className="pointer-events-auto flex items-start gap-3 p-4 rounded-xl bg-[#0F0E0C]/95 backdrop-blur-md text-white shadow-2xl border border-slate-800"
           >
-            <div className="p-2 rounded-lg bg-primary/20 text-primary shrink-0 mt-0.5">
+            <div className="p-2 rounded-lg bg-[#FF5A36]/20 text-[#FF5A36] shrink-0 mt-0.5">
               {toast.category === "CRITICAL" ? (
                 <AlertCircle className="w-5 h-5 text-red-400" />
               ) : toast.category === "SUCCESS" ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <CheckCircle2 className="w-5 h-5 text-[#2F6B4F]/400" />
               ) : (
-                <Bell className="w-5 h-5 text-primary" />
+                <Bell className="w-5 h-5 text-[#FF5A36]" />
               )}
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="text-sm font-semibold text-white tracking-tight">{toast.title}</h4>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">{toast.message}</p>
+              <p className="text-xs text-[#D8D2C7] mt-1 leading-relaxed">{toast.message}</p>
             </div>
             <button
               onClick={() => dismissToast(toast.id)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors"
+              className="text-[#A8A196] hover:text-white p-1 rounded-lg transition-colors"
             >
               <X className="w-4 h-4" />
             </button>

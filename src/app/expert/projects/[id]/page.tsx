@@ -153,22 +153,22 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
   return (
     <div className="p-8 space-y-6">
       {/* Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+      <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-4">
         <div className="flex items-center gap-3">
-          <Link href="/expert/projects" className="h-8 w-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-50">
+          <Link href="/expert/projects" className="h-8 w-8 rounded-lg border border-[#E2DCD2] flex items-center justify-center text-[#78716A] hover:text-[#211F1D] hover:bg-[#FBF7F0]">
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">{project.role}</span>
-              <h1 className="text-base font-bold text-slate-900">{project.name}</h1>
+              <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36]">{project.role}</span>
+              <h1 className="text-base font-bold text-[#211F1D]">{project.name}</h1>
             </div>
-            <p className="text-xs text-slate-500 font-semibold">{project.industryPartner} · {formatCurrency(project.budget)}</p>
+            <p className="text-xs text-[#78716A] font-semibold">{project.industryPartner} · {formatCurrency(project.budget)}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <button onClick={fetchProject} className="h-8 w-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700">
+          <button onClick={fetchProject} className="h-8 w-8 rounded-lg border border-[#E2DCD2] flex items-center justify-center text-[#78716A] hover:text-[#211F1D]">
             <RefreshCw className="h-3.5 w-3.5" />
           </button>
           <button onClick={() => setDelModalOpen(true)} className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
@@ -178,19 +178,19 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
       </div>
 
       {/* Progress & Scope Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">
+      <div className="bg-white border border-[#E2DCD2] rounded-2xl p-6 space-y-4 shadow-sm">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-800">Overall Project Completion</span>
+          <span className="text-xs font-bold text-[#211F1D]">Overall Project Completion</span>
           <span className="text-sm font-extrabold text-primary">{project.progress}%</span>
         </div>
-        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-[#EFE9DF] rounded-full overflow-hidden">
           <div className="h-full bg-primary rounded-full" style={{ width: `${project.progress}%` }} />
         </div>
-        <p className="text-xs text-slate-600 font-medium leading-relaxed">{project.scopeDefinition}</p>
+        <p className="text-xs text-[#57534E] font-medium leading-relaxed">{project.scopeDefinition}</p>
       </div>
 
       {/* Workspace Tabs */}
-      <div className="flex items-center gap-0 border-b border-slate-200 -mb-2.5">
+      <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "milestones", label: `Milestones (${project.milestones.length})`, icon: Layers },
           { key: "tasks", label: `WBS Tasks (${project.tasks.length})`, icon: CheckCircle2 },
@@ -204,7 +204,7 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all -mb-[2px] ${
-                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-[#78716A] hover:text-[#211F1D]"
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {t.label}
@@ -214,22 +214,22 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
       </div>
 
       {/* Workspace Content */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 min-h-[360px]">
+      <div className="bg-white border border-[#E2DCD2] rounded-2xl p-6 min-h-[360px]">
         {/* MILESTONES TAB */}
         {activeTab === "milestones" && (
           <div className="space-y-3 text-xs">
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Project Milestone Lifecycle</h3>
+            <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Project Milestone Lifecycle</h3>
             <div className="space-y-3">
               {project.milestones.map(m => (
-                <div key={m.id} className="border border-slate-100 rounded-xl p-4 flex items-center justify-between bg-slate-50">
+                <div key={m.id} className="border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between bg-[#FBF7F0]">
                   <div className="space-y-1">
-                    <p className="font-bold text-slate-800">{m.title}</p>
-                    <p className="text-[9px] text-slate-400 font-semibold">Due: {new Date(m.dueDate).toLocaleDateString("en-IN")}</p>
+                    <p className="font-bold text-[#211F1D]">{m.title}</p>
+                    <p className="text-[9px] text-[#A8A196] font-semibold">Due: {new Date(m.dueDate).toLocaleDateString("en-IN")}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="font-extrabold text-slate-700">{formatCurrency(m.amount)}</span>
+                    <span className="font-extrabold text-[#211F1D]">{formatCurrency(m.amount)}</span>
                     <span className={`text-[8px] font-bold px-2 py-0.5 rounded ${
-                      m.status === "COMPLETED" ? "bg-green-50 text-green-700" : m.status === "IN_PROGRESS" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-600"
+                      m.status === "COMPLETED" ? "bg-[#E8F2EC] text-green-700" : m.status === "IN_PROGRESS" ? "bg-[#FEF3C7] text-[#B45309]" : "bg-[#EFE9DF] text-[#57534E]"
                     }`}>{m.status}</span>
                   </div>
                 </div>
@@ -241,22 +241,22 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
         {/* WBS TASKS TAB */}
         {activeTab === "tasks" && (
           <div className="space-y-3 text-xs">
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Work Breakdown Structure (WBS) Tasks</h3>
+            <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Work Breakdown Structure (WBS) Tasks</h3>
             <div className="space-y-2">
               {project.tasks.map(task => (
-                <div key={task.id} className="border border-slate-100 rounded-xl p-3.5 flex items-center justify-between bg-slate-50">
+                <div key={task.id} className="border border-[#E2DCD2] rounded-xl p-3.5 flex items-center justify-between bg-[#FBF7F0]">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleToggleTaskStatus(task.id, task.status)}
                       className={`h-5 w-5 rounded border flex items-center justify-center transition-colors ${
-                        task.status === "DONE" ? "bg-green-500 text-white border-green-500" : "border-slate-300 hover:border-primary bg-white"
+                        task.status === "DONE" ? "bg-[#E8F2EC]0 text-white border-green-500" : "border-slate-300 hover:border-primary bg-white"
                       }`}
                     >
                       {task.status === "DONE" && <Check className="h-3.5 w-3.5" />}
                     </button>
                     <div>
-                      <p className={`font-bold ${task.status === "DONE" ? "line-through text-slate-400" : "text-slate-800"}`}>{task.title}</p>
-                      <p className="text-[9px] text-slate-400 font-semibold">Assigned to: {task.assignee}</p>
+                      <p className={`font-bold ${task.status === "DONE" ? "line-through text-[#A8A196]" : "text-[#211F1D]"}`}>{task.title}</p>
+                      <p className="text-[9px] text-[#A8A196] font-semibold">Assigned to: {task.assignee}</p>
                     </div>
                   </div>
 
@@ -270,8 +270,8 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
         {/* DELIVERABLES TAB */}
         {activeTab === "deliverables" && (
           <div className="space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Submitted Deliverables & Test Reports</h3>
+            <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
+              <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Submitted Deliverables & Test Reports</h3>
               <button onClick={() => setDelModalOpen(true)} className="h-7 px-3 bg-primary text-white rounded-lg font-bold text-[10px] hover:bg-primary-hover flex items-center gap-1">
                 <Upload className="h-3 w-3" /> Upload Deliverable
               </button>
@@ -279,20 +279,20 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
 
             <div className="space-y-3">
               {project.deliverables.map(del => (
-                <div key={del.id} className="border border-slate-100 rounded-xl p-4 flex items-center justify-between bg-slate-50">
+                <div key={del.id} className="border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between bg-[#FBF7F0]">
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-blue-50 text-primary flex items-center justify-center font-bold">
-                      <FileText className="h-4.5 w-4.5" />
+                    <div className="h-9 w-9 rounded-xl bg-[#FFF0ED] text-primary flex items-center justify-center font-bold">
+                      <FileText className="h-[1.125rem] w-[1.125rem]" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800">{del.title}</p>
-                      <p className="text-[9px] text-slate-400 font-semibold">Submitted by {del.submittedBy} on {new Date(del.submittedAt).toLocaleDateString("en-IN")}</p>
+                      <p className="font-bold text-[#211F1D]">{del.title}</p>
+                      <p className="text-[9px] text-[#A8A196] font-semibold">Submitted by {del.submittedBy} on {new Date(del.submittedAt).toLocaleDateString("en-IN")}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-green-50 text-green-700">{del.status}</span>
-                    <a href={del.fileUrl} target="_blank" rel="noopener noreferrer" className="h-7 px-2.5 border border-slate-200 text-slate-600 rounded-lg font-bold text-[9px] hover:bg-slate-100 flex items-center gap-1">
+                    <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-[#E8F2EC] text-green-700">{del.status}</span>
+                    <a href={del.fileUrl} target="_blank" rel="noopener noreferrer" className="h-7 px-2.5 border border-[#E2DCD2] text-[#57534E] rounded-lg font-bold text-[9px] hover:bg-[#EFE9DF] flex items-center gap-1">
                       Download
                     </a>
                   </div>
@@ -305,15 +305,15 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
         {/* STUDENT MENTEES TAB */}
         {activeTab === "students" && (
           <div className="space-y-3 text-xs">
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Assigned Student Interns</h3>
+            <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Assigned Student Interns</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {project.studentMentees.map(m => (
-                <div key={m.id} className="border border-slate-100 rounded-xl p-4 bg-slate-50 space-y-2">
+                <div key={m.id} className="border border-[#E2DCD2] rounded-xl p-4 bg-[#FBF7F0] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-800 text-sm">{m.name}</span>
+                    <span className="font-bold text-[#211F1D] text-sm">{m.name}</span>
                     <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">{m.role}</span>
                   </div>
-                  <div className="flex justify-between text-[9px] text-slate-400 font-semibold">
+                  <div className="flex justify-between text-[9px] text-[#A8A196] font-semibold">
                     <span>{m.tasksAssigned} Tasks Assigned</span>
                     <span>{m.progress}% Completed</span>
                   </div>
@@ -326,15 +326,15 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
         {/* RISKS TAB */}
         {activeTab === "risks" && (
           <div className="space-y-3 text-xs">
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Project Risk Register</h3>
+            <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Project Risk Register</h3>
             <div className="space-y-3">
               {project.risks.map(r => (
-                <div key={r.id} className="border border-amber-100 rounded-xl p-4 bg-amber-50/40 space-y-1.5">
+                <div key={r.id} className="border border-amber-100 rounded-xl p-4 bg-[#FEF3C7]/40 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <p className="font-bold text-slate-800">{r.title}</p>
+                    <p className="font-bold text-[#211F1D]">{r.title}</p>
                     <span className="text-[8px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">Impact: {r.impact}</span>
                   </div>
-                  <p className="text-[10px] text-slate-600 font-medium">Mitigation: {r.mitigation}</p>
+                  <p className="text-[10px] text-[#57534E] font-medium">Mitigation: {r.mitigation}</p>
                 </div>
               ))}
             </div>
@@ -353,33 +353,33 @@ export default function ExpertProjectWorkspacePage({ params }: { params: Promise
               className="bg-white rounded-2xl shadow-2xl p-6 w-[480px] max-w-full mx-4"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
+                <h3 className="text-sm font-bold text-[#211F1D] flex items-center gap-1.5">
                   <Upload className="h-4 w-4 text-primary" /> Submit Deliverable Report
                 </h3>
-                <button onClick={() => setDelModalOpen(false)}><X className="h-4 w-4 text-slate-400 hover:text-slate-600" /></button>
+                <button onClick={() => setDelModalOpen(false)}><X className="h-4 w-4 text-[#A8A196] hover:text-[#57534E]" /></button>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Deliverable Title *</label>
+                  <label className="text-[9px] font-bold text-[#78716A] uppercase block mb-1">Deliverable Title *</label>
                   <input value={delTitle} onChange={e => setDelTitle(e.target.value)} placeholder="e.g. Sprint 2 Test Results Report"
-                    className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                    className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-primary text-xs" />
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Document URL</label>
+                  <label className="text-[9px] font-bold text-[#78716A] uppercase block mb-1">Document URL</label>
                   <input value={delUrl} onChange={e => setDelUrl(e.target.value)} placeholder="https://storage.anvesha.in/deliverables/..."
-                    className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                    className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-primary text-xs" />
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Summary / Reviewer Notes</label>
+                  <label className="text-[9px] font-bold text-[#78716A] uppercase block mb-1">Summary / Reviewer Notes</label>
                   <textarea value={delDesc} onChange={e => setDelDesc(e.target.value)} rows={3} placeholder="Highlights of technical findings..."
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs resize-none" />
+                    className="w-full p-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-primary text-xs resize-none" />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-4 mt-4">
-                <button onClick={() => setDelModalOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-4 mt-4">
+                <button onClick={() => setDelModalOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-xs font-semibold hover:bg-[#FBF7F0]">Cancel</button>
                 <button onClick={handleSubmitDeliverable} disabled={submitting || !delTitle.trim()}
                   className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
                   {submitting && <Loader2 className="h-3 w-3 animate-spin" />} Submit Deliverable

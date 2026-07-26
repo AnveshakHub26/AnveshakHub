@@ -130,7 +130,7 @@ export default function StudentOpportunitiesPage() {
               placeholder="Search by topic, skill, or company..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#78716A] focus:outline-none focus:border-[#FF5A36]"
+              className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36]"
             />
           </div>
 
@@ -141,7 +141,7 @@ export default function StudentOpportunitiesPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`text-xs font-semibold px-4 py-2 rounded-lg transition-all min-h-[44px] shrink-0 ${
                   activeTab === tab
-                    ? "bg-[#FF5A36] text-white shadow-sm"
+                    ? "bg-[#FF5A36] text-white shadow-[var(--shadow-sm)]"
                     : "bg-[#EFE9DF] text-[#57534E] hover:bg-[#E6DFD4] border border-[#E2DCD2]"
                 }`}
               >
@@ -176,7 +176,7 @@ export default function StudentOpportunitiesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {opportunities.map((opp) => (
-              <div key={opp.id} className="card-warm p-6 bg-[#EFE9DF] flex flex-col justify-between space-y-4">
+              <div key={opp.id} className="card-flat p-6 flex flex-col justify-between space-y-4">
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -191,7 +191,7 @@ export default function StudentOpportunitiesPage() {
                     <button
                       onClick={() => handleToggleWatchlist(opp.id, opp.isSaved)}
                       className={`p-2 rounded-lg border transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center ${
-                        opp.isSaved ? "bg-[#FFF0ED] text-[#FF5A36] border-[#FF5A36]/30" : "bg-[#FBF7F0] text-[#78716A] border-[#E2DCD2]"
+                        opp.isSaved ? "bg-[#FFF0ED] text-[#FF5A36] border-[#FFCFC4]" : "bg-[#FBF7F0] text-[#78716A] border-[#E2DCD2]"
                       }`}
                     >
                       <Bookmark className="h-4 w-4" />
@@ -216,7 +216,7 @@ export default function StudentOpportunitiesPage() {
                   <span className="text-[11px] text-[#78716A]">Deadline: {opp.deadline}</span>
 
                   {opp.hasApplied ? (
-                    <span className="text-xs font-semibold text-[#2F6B4F] bg-[#E8F2EC] px-3 py-1.5 rounded-lg border border-[#2F6B4F]/20">
+                    <span className="text-xs font-semibold text-[#2F6B4F] bg-[#E8F2EC] px-3 py-1.5 rounded-lg border border-[#BBD9C8]">
                       Applied ({opp.applicationStatus || "In Review"})
                     </span>
                   ) : (
@@ -245,7 +245,7 @@ export default function StudentOpportunitiesPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 text-left"
+              className="card-flat rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 text-left"
             >
               <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
                 <h3 className="font-heading text-lg font-extrabold text-[#211F1D]">Apply to {applyModal.title}</h3>
@@ -265,7 +265,7 @@ export default function StudentOpportunitiesPage() {
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
                   placeholder="Explain your relevant coursework, lab skills, or project experience..."
-                  className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg p-3 text-xs text-[#211F1D] placeholder-[#78716A] focus:outline-none focus:border-[#FF5A36]"
+                  className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg p-3 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36]"
                 />
               </div>
 

@@ -51,51 +51,58 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-slate-950 text-white border-b border-slate-800 relative">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="py-24 bg-[#FBF7F0] text-[#57534E] border-b border-[#E2DCD2] relative font-sans">
+      {/* Background Subtle Gradient Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#FF5A36]/5 blur-[160px] pointer-events-none rounded-full" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+        
+        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-400">
-            End-to-End Workflow Architecture
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FF5A36]">
+            END-TO-END WORKFLOW ARCHITECTURE
           </span>
-          <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl tracking-tight">
+          <h2 className="mt-3 text-3xl font-extrabold text-[#211F1D] sm:text-4xl tracking-tight font-heading">
             How AnveshakHub Governance Works
           </h2>
-          <p className="mt-4 text-base text-slate-400 leading-relaxed">
+          <p className="mt-4 text-base text-[#57534E] leading-relaxed font-medium">
             A 6-step structured pipeline designed to protect IP, enforce SLAs, and accelerate applied R&D.
           </p>
         </div>
 
+        {/* 6 Step Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {steps.map((item, index) => {
             const Icon = item.icon;
             return (
               <motion.div
                 key={item.step}
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.08 }}
-                className="bg-slate-900/80 border border-slate-800 rounded-2xl p-8 shadow-xl hover:border-blue-500/40 hover:shadow-blue-500/10 transition-all duration-300 relative group"
+                transition={{ duration: 0.35, delay: index * 0.06 }}
+                className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-8 shadow-sm hover:border-[#FF5A36]/60 hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 relative group text-left cursor-default"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <div className="h-12 w-12 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform">
+                  <div className="h-12 w-12 rounded-xl bg-[#FFF0ED] border border-[#FFCFC4] flex items-center justify-center text-[#FF5A36] group-hover:scale-110 group-hover:rotate-3 transition-transform">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <span className="text-xs font-mono font-bold text-slate-500 px-3 py-1 bg-slate-950 rounded-full border border-slate-800">
+                  <span className="text-xs font-mono font-bold text-[#FF5A36] px-3 py-1 bg-[#FFF0ED] rounded-full border border-[#FFCFC4]">
                     STAGE 0{item.step}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                <h3 className="text-lg font-bold text-[#211F1D] mb-2 group-hover:text-[#FF5A36] transition-colors font-heading text-left">
                   {item.title}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-[#57534E] leading-relaxed text-left font-medium">
                   {item.description}
                 </p>
               </motion.div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

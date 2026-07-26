@@ -70,21 +70,21 @@ export default function ExpertNotificationsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Notification Center</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Real-time alerts for project approvals, video calls, mentee submissions & honorarium payouts</p>
+          <h1 className="text-xl font-bold text-[#211F1D]">Notification Center</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Real-time alerts for project approvals, video calls, mentee submissions & honorarium payouts</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={fetchNotifications} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+          <button onClick={fetchNotifications} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
             <RefreshCw className="h-3.5 w-3.5" /> Refresh
           </button>
-          <button onClick={handleMarkAllRead} className="h-8 px-3 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
+          <button onClick={handleMarkAllRead} className="h-8 px-3 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826]">
             <Check className="h-3.5 w-3.5" /> Mark All as Read
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-3 flex items-center gap-1.5">
+      <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-3 flex items-center gap-1.5">
         {[
           { key: "ALL", label: "All Alerts" },
           { key: "PROJECT", label: "Projects" },
@@ -96,7 +96,7 @@ export default function ExpertNotificationsPage() {
             key={cat.key}
             onClick={() => setCategoryFilter(cat.key)}
             className={`h-7 px-3 text-[10px] font-bold rounded-lg border transition-all ${
-              categoryFilter === cat.key ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-600 border-slate-200"
+              categoryFilter === cat.key ? "bg-[#FF5A36] text-white border-[#FF5A36]" : "bg-[#FBF7F0] text-[#57534E] border-[#E2DCD2]"
             }`}
           >
             {cat.label}
@@ -107,12 +107,12 @@ export default function ExpertNotificationsPage() {
       {/* Notifications List */}
       {loading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
         </div>
       ) : notifications.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-          <Bell className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-xs font-bold text-slate-800">No Notifications</p>
+        <div className="card-flat rounded-2xl p-12 text-center">
+          <Bell className="h-10 w-10 text-[#D8D2C7] mx-auto mb-3" />
+          <p className="text-xs font-bold text-[#211F1D]">No Notifications</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -123,27 +123,27 @@ export default function ExpertNotificationsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04 }}
               className={`border rounded-2xl p-4 flex items-start justify-between gap-4 transition-all ${
-                n.read ? "bg-white border-slate-200" : "bg-blue-50/40 border-blue-200 shadow-sm"
+                n.read ? "bg-[#FBF7F0] border-[#E2DCD2]" : "bg-[#FFF0ED]/40 border-[#FFCFC4] shadow-[var(--shadow-sm)]"
               }`}
             >
               <div className="flex items-start gap-3">
                 <div className={`h-9 w-9 rounded-xl flex items-center justify-center font-bold shrink-0 ${
-                  !n.read ? "bg-primary text-white" : "bg-slate-100 text-slate-500"
+                  !n.read ? "bg-[#FF5A36] text-white" : "bg-[#EFE9DF] text-[#78716A]"
                 }`}>
-                  <Bell className="h-4.5 w-4.5" />
+                  <Bell className="h-[1.125rem] w-[1.125rem]" />
                 </div>
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 uppercase">{n.category}</span>
-                    <h3 className="text-xs font-bold text-slate-800">{n.title}</h3>
+                    <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-[#EFE9DF] text-[#211F1D] uppercase">{n.category}</span>
+                    <h3 className="text-xs font-bold text-[#211F1D]">{n.title}</h3>
                   </div>
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed">{n.message}</p>
-                  <p className="text-[9px] text-slate-400 font-semibold pt-1">{new Date(n.createdAt).toLocaleString("en-IN")}</p>
+                  <p className="text-xs text-[#57534E] font-medium leading-relaxed">{n.message}</p>
+                  <p className="text-[10px] text-[#A8A196] font-semibold pt-1">{new Date(n.createdAt).toLocaleString("en-IN")}</p>
                 </div>
               </div>
 
               {!n.read && (
-                <button onClick={() => handleMarkRead(n.id)} className="h-7 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[9px] font-bold shrink-0">
+                <button onClick={() => handleMarkRead(n.id)} className="h-7 px-2.5 bg-[#EFE9DF] hover:bg-[#D8D2C7] text-[#57534E] rounded-lg text-[10px] font-bold shrink-0">
                   Mark Read
                 </button>
               )}

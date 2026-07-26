@@ -106,17 +106,17 @@ export default function OpportunitiesPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Industry Opportunities & RFPs</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Discover research problem statements, submit Expression of Interest (EOI) proposals & engage with industry partners</p>
+          <h1 className="text-xl font-bold text-[#211F1D]">Industry Opportunities & RFPs</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Discover research problem statements, submit Expression of Interest (EOI) proposals & engage with industry partners</p>
         </div>
-        <button onClick={fetchOpportunities} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+        <button onClick={fetchOpportunities} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
       </div>
 
       {/* Tabs & Search Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
-        <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+      <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 space-y-3">
+        <div className="flex items-center gap-2 border-b border-[#E2DCD2] pb-3">
           {[
             { key: "ALL", label: "All Opportunities" },
             { key: "RECOMMENDED", label: "Recommended for You" },
@@ -127,7 +127,7 @@ export default function OpportunitiesPage() {
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`h-8 px-3.5 text-xs font-bold rounded-lg border transition-all ${
-                activeTab === t.key ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                activeTab === t.key ? "bg-[#FF5A36] text-white border-[#FF5A36]" : "bg-[#FBF7F0] text-[#57534E] border-[#E2DCD2] hover:bg-[#E6DFD4]"
               }`}
             >
               {t.label}
@@ -136,12 +136,12 @@ export default function OpportunitiesPage() {
         </div>
 
         <div className="relative max-w-lg">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search problem statements, domain or industry partner..."
-            className="pl-9 pr-3 h-8 w-full text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary"
+            className="pl-9 pr-3 h-8 w-full text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36]"
           />
         </div>
       </div>
@@ -149,13 +149,13 @@ export default function OpportunitiesPage() {
       {/* Opportunities List */}
       {loading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
         </div>
       ) : opportunities.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-          <Award className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-xs font-bold text-slate-800">No Opportunities Found</p>
-          <p className="text-[10px] text-slate-400 mt-1">Try switching tabs or adjusting search criteria.</p>
+        <div className="card-flat rounded-2xl p-12 text-center">
+          <Award className="h-10 w-10 text-[#D8D2C7] mx-auto mb-3" />
+          <p className="text-xs font-bold text-[#211F1D]">No Opportunities Found</p>
+          <p className="text-[10px] text-[#A8A196] mt-1">Try switching tabs or adjusting search criteria.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -165,29 +165,29 @@ export default function OpportunitiesPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 hover:shadow-md transition-all group"
+              className="card-flat rounded-2xl p-6 space-y-4 hover:shadow-md transition-all group"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-extrabold px-2 py-0.5 rounded bg-primary-light text-primary border border-primary-border">
+                    <span className="text-[8px] font-extrabold px-2 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36] border border-[#FF5A36]-border">
                       {opp.domain}
                     </span>
                     {opp.isRecommended && (
-                      <span className="text-[8px] font-extrabold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                      <span className="text-[8px] font-extrabold px-2 py-0.5 rounded bg-[#FEF3C7] text-[#B45309] border border-amber-200">
                         ★ Recommended ({opp.eligibilityScore}% Match)
                       </span>
                     )}
                   </div>
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">{opp.title}</h3>
-                  <p className="text-xs text-slate-500 font-semibold">{opp.industryName}</p>
+                  <h3 className="text-sm font-bold text-[#211F1D] group-hover:text-[#FF5A36] transition-colors">{opp.title}</h3>
+                  <p className="text-xs text-[#78716A] font-semibold">{opp.industryName}</p>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => handleToggleWatchlist(opp.id, opp.isSaved)}
                     className={`h-8 w-8 rounded-lg border flex items-center justify-center transition-colors ${
-                      opp.isSaved ? "bg-amber-50 text-amber-600 border-amber-200" : "border-slate-200 text-slate-400 hover:text-slate-600"
+                      opp.isSaved ? "bg-[#FEF3C7] text-amber-600 border-amber-200" : "border-[#E2DCD2] text-[#A8A196] hover:text-[#57534E]"
                     }`}
                     title={opp.isSaved ? "Saved in Watchlist" : "Save to Watchlist"}
                   >
@@ -196,7 +196,7 @@ export default function OpportunitiesPage() {
 
                   <Link
                     href={`/expert/opportunities/${opp.id}`}
-                    className="h-8 px-3 border border-slate-200 hover:border-primary text-slate-600 hover:text-primary rounded-lg text-xs font-bold flex items-center gap-1 transition-colors"
+                    className="h-8 px-3 border border-[#E2DCD2] hover:border-[#FF5A36] text-[#57534E] hover:text-[#FF5A36] rounded-lg text-xs font-bold flex items-center gap-1 transition-colors"
                   >
                     Details <ChevronRight className="h-3.5 w-3.5" />
                   </Link>
@@ -207,24 +207,24 @@ export default function OpportunitiesPage() {
                         setProposalModal(opp);
                         setProposedBudget(opp.budget.toString());
                       }}
-                      className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5"
+                      className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5"
                     >
                       <Send className="h-3 w-3" /> Submit EOI
                     </button>
                   ) : (
-                    <span className="h-8 px-3 bg-green-50 text-green-700 border border-green-200 rounded-lg text-xs font-bold flex items-center gap-1">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-green-600" /> {opp.applicationStatus || "Applied"}
+                    <span className="h-8 px-3 bg-[#E8F2EC] text-[#2F6B4F] border border-green-200 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-[#2F6B4F]" /> {opp.applicationStatus || "Applied"}
                     </span>
                   )}
                 </div>
               </div>
 
-              <p className="text-xs text-slate-600 font-medium leading-relaxed">{opp.description}</p>
+              <p className="text-xs text-[#57534E] font-medium leading-relaxed">{opp.description}</p>
 
               {/* Stats Footer */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+              <div className="pt-3 border-t border-[#E2DCD2] flex items-center justify-between text-xs font-semibold text-[#78716A]">
                 <div className="flex items-center gap-4">
-                  <span className="text-slate-900 font-extrabold">{formatCurrency(opp.budget)} Grants/Budget</span>
+                  <span className="text-[#211F1D] font-extrabold">{formatCurrency(opp.budget)} Grants/Budget</span>
                   <span>·</span>
                   <span>{opp.durationWeeks} Weeks Estimated</span>
                   <span>·</span>
@@ -232,7 +232,7 @@ export default function OpportunitiesPage() {
                 </div>
                 <div className="flex gap-1">
                   {opp.requirements.map((req, i) => (
-                    <span key={i} className="text-[8px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-semibold">{req}</span>
+                    <span key={i} className="text-[8px] bg-[#EFE9DF] text-[#57534E] px-1.5 py-0.5 rounded font-semibold">{req}</span>
                   ))}
                 </div>
               </div>
@@ -249,55 +249,55 @@ export default function OpportunitiesPage() {
               initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl shadow-2xl p-6 w-[520px] max-w-full mx-4"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[520px] max-w-full mx-4"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-start border-b border-slate-100 pb-3 mb-4">
+              <div className="flex justify-between items-start border-b border-[#E2DCD2] pb-3 mb-4">
                 <div>
-                  <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-primary-light text-primary uppercase">{proposalModal.domain}</span>
-                  <h3 className="text-sm font-bold text-slate-800 mt-1">Submit Expression of Interest (EOI)</h3>
+                  <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36] uppercase">{proposalModal.domain}</span>
+                  <h3 className="text-sm font-bold text-[#211F1D] mt-1">Submit Expression of Interest (EOI)</h3>
                 </div>
-                <button onClick={() => setProposalModal(null)}><X className="h-4 w-4 text-slate-400 hover:text-slate-600" /></button>
+                <button onClick={() => setProposalModal(null)}><X className="h-4 w-4 text-[#A8A196] hover:text-[#57534E]" /></button>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Proposed R&D Budget (INR) *</label>
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Proposed R&D Budget (INR) *</label>
                     <input
                       type="number"
                       value={proposedBudget}
                       onChange={e => setProposedBudget(e.target.value)}
-                      className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-bold"
+                      className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-bold"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Duration (Weeks)</label>
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Duration (Weeks)</label>
                     <input
                       type="number"
                       value={durationWeeks}
                       onChange={e => setDurationWeeks(e.target.value)}
-                      className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-bold"
+                      className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-bold"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Technical Approach & Proposal Summary *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Technical Approach & Proposal Summary *</label>
                   <textarea
                     value={proposalText}
                     onChange={e => setProposalText(e.target.value)}
                     rows={5}
                     placeholder="Outline your research methodology, expected deliverables, SIMULINK/ROS2 architecture, and student intern involvement..."
-                    className="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:border-primary text-xs leading-relaxed resize-none"
+                    className="w-full p-3 border border-[#E2DCD2] rounded-xl focus:outline-none focus:border-[#FF5A36] text-xs leading-relaxed resize-none"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-4 mt-4">
-                <button onClick={() => setProposalModal(null)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-4 mt-4">
+                <button onClick={() => setProposalModal(null)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-xs font-semibold hover:bg-[#EFE9DF]">Cancel</button>
                 <button onClick={handleSubmitProposal} disabled={submitting || !proposalText.trim()}
-                  className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                  className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                   {submitting && <Loader2 className="h-3 w-3 animate-spin" />} Submit EOI Proposal
                 </button>
               </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MessageSquare, ShieldCheck, Quote, Building2, GraduationCap, Award } from "lucide-react";
+import { ChevronDown, Quote, Building2, GraduationCap, Award } from "lucide-react";
 
 interface FAQItem {
   question: string;
@@ -52,26 +52,26 @@ const verifiedLeadership = [
 ];
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <section className="py-24 bg-slate-900 text-white border-b border-slate-800 relative">
+    <section id="faq" className="py-24 bg-[#FBF7F0] text-[#57534E] border-b border-[#E2DCD2] relative font-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Verified Ecosystem Leadership Section */}
         <div className="mb-24">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-[#FFF0ED] text-[#FF5A36] border border-[#FFCFC4] mb-4">
               <Award className="h-3.5 w-3.5" /> Verified Industry & Academic Feedback
             </span>
-            <h2 className="text-3xl font-black text-white sm:text-4xl tracking-tight">
+            <h2 className="text-3xl font-extrabold text-[#211F1D] sm:text-4xl tracking-tight font-heading">
               Trusted by Leading Research Institutions
             </h2>
-            <p className="mt-4 text-base text-slate-400 leading-relaxed">
+            <p className="mt-4 text-base text-[#57534E] leading-relaxed font-medium">
               Read how enterprise sponsors and academic leads collaborate under structured legal NDAs.
             </p>
           </div>
@@ -82,26 +82,25 @@ export default function FAQ() {
               return (
                 <div 
                   key={idx} 
-                  className="bg-slate-950/80 border border-slate-800 rounded-2xl p-8 shadow-xl flex flex-col justify-between relative hover:border-blue-500/40 transition-all duration-300 group"
+                  className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl p-8 shadow-sm flex flex-col justify-between relative hover:border-[#FF5A36]/60 hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 group text-left cursor-default"
                 >
-                  <div className="absolute top-6 right-6 text-slate-800 group-hover:text-blue-500/20 transition-colors">
+                  <div className="absolute top-6 right-6 text-[#D8D2C7] group-hover:text-[#FF5A36]/20 transition-colors">
                     <Quote className="h-10 w-10 fill-current" />
                   </div>
                   <div className="relative z-10">
-                    <p className="text-sm leading-relaxed text-slate-300 italic">
+                    <p className="text-sm leading-relaxed text-[#211F1D] font-semibold italic">
                       "{t.quote}"
                     </p>
                   </div>
-                  <div className="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-between">
+                  <div className="mt-8 pt-6 border-t border-[#E2DCD2] flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">{t.author}</p>
-                      <p className="text-xs font-medium text-slate-400 mt-0.5">{t.role}</p>
-                      <p className="text-[11px] text-slate-500">{t.organization}</p>
+                      <p className="text-sm font-bold text-[#211F1D] group-hover:text-[#FF5A36] transition-colors font-heading">{t.author}</p>
+                      <p className="text-xs font-semibold text-[#57534E] mt-0.5">{t.role}</p>
+                      <p className="text-[11px] font-bold text-[#FF5A36] mt-0.5">{t.organization}</p>
                     </div>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-3 py-1 text-[11px] font-bold text-blue-400 border border-blue-500/20 shrink-0">
-                      <Icon className="h-3 w-3" />
-                      {t.type}
-                    </span>
+                    <div className="h-10 w-10 rounded-xl bg-[#FFF0ED] border border-[#FFCFC4] flex items-center justify-center text-[#FF5A36] shrink-0">
+                      <Icon className="h-5 w-5" />
+                    </div>
                   </div>
                 </div>
               );
@@ -109,50 +108,54 @@ export default function FAQ() {
           </div>
         </div>
 
-        {/* FAQ Section */}
+        {/* FAQ Accordion Section */}
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-400">
-              Knowledge Base
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FF5A36]">
+              FREQUENTLY ASKED QUESTIONS
             </span>
-            <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl tracking-tight">
-              Frequently Asked Questions
+            <h2 className="mt-3 text-3xl font-extrabold text-[#211F1D] sm:text-4xl tracking-tight font-heading">
+              Platform & Governance Details
             </h2>
+            <p className="mt-4 text-base text-[#57534E] leading-relaxed font-medium">
+              Everything you need to know about corporate NDA isolation, feasibility reviews, and stipend management.
+            </p>
           </div>
 
-          <div className="space-y-4">
-            {faqs.map((faq, index) => {
-              const isOpen = openIndex === index;
+          <div className="space-y-4 text-left">
+            {faqs.map((faq, idx) => {
+              const isOpen = openIndex === idx;
               return (
                 <div
-                  key={index}
-                  className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden transition-all duration-200"
+                  key={idx}
+                  className="bg-[#EFE9DF] border border-[#E2DCD2] rounded-2xl overflow-hidden shadow-sm transition-all"
                 >
                   <button
-                    onClick={() => toggleFAQ(index)}
-                    className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 focus:outline-none hover:bg-slate-900/60 transition-colors"
+                    onClick={() => toggleFAQ(idx)}
+                    className="w-full p-6 flex items-center justify-between text-left focus:outline-none cursor-pointer"
                   >
-                    <span className="text-sm font-bold text-slate-100 flex items-center gap-3">
-                      <MessageSquare className="h-4 w-4 text-blue-400 shrink-0" />
+                    <span className="text-sm font-bold text-[#211F1D] font-heading pr-4">
                       {faq.question}
                     </span>
-                    <ChevronDown
-                      className={`h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0 ${
-                        isOpen ? "transform rotate-180 text-blue-400" : ""
-                      }`}
-                    />
+                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center bg-[#FBF7F0] border border-[#E2DCD2] text-[#FF5A36] shrink-0 transition-transform duration-200 ${
+                      isOpen ? "rotate-180 bg-[#FFF0ED]" : ""
+                    }`}>
+                      <ChevronDown className="h-4 w-4" />
+                    </div>
                   </button>
 
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25 }}
                       >
-                        <div className="px-6 pb-5 pt-1 text-xs text-slate-400 leading-relaxed border-t border-slate-900">
-                          {faq.answer}
+                        <div className="px-6 pb-6 pt-0 border-t border-[#E2DCD2]/60 mt-1">
+                          <p className="text-xs text-[#57534E] leading-relaxed pt-4 font-medium">
+                            {faq.answer}
+                          </p>
                         </div>
                       </motion.div>
                     )}

@@ -59,23 +59,23 @@ export default function ExpertProjectsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Expert Assigned R&D Projects</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Manage research execution, WBS task assignments, student intern guidance & deliverable sign-offs</p>
+          <h1 className="text-xl font-bold text-[#211F1D]">Expert Assigned R&D Projects</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Manage research execution, WBS task assignments, student intern guidance & deliverable sign-offs</p>
         </div>
-        <button onClick={fetchProjects} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+        <button onClick={fetchProjects} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4">
+      <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search projects by name or industry partner..."
-            className="pl-9 pr-3 h-8 w-full text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary"
+            className="pl-9 pr-3 h-8 w-full text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36]"
           />
         </div>
         <div className="flex items-center gap-1.5">
@@ -84,7 +84,7 @@ export default function ExpertProjectsPage() {
               key={s}
               onClick={() => setStatusFilter(s)}
               className={`h-7 px-3 text-[10px] font-bold rounded-lg border transition-all ${
-                statusFilter === s ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-600 border-slate-200"
+                statusFilter === s ? "bg-[#FF5A36] text-white border-[#FF5A36]" : "bg-[#FBF7F0] text-[#57534E] border-[#E2DCD2]"
               }`}
             >
               {s.replace("_", " ")}
@@ -96,13 +96,13 @@ export default function ExpertProjectsPage() {
       {/* Projects Grid */}
       {loading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
         </div>
       ) : projects.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-          <Briefcase className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-xs font-bold text-slate-800">No Assigned Projects Found</p>
-          <p className="text-[10px] text-slate-400 mt-1">Engage with industry opportunities to start R&D projects.</p>
+        <div className="bg-[#EFE9DF] rounded-2xl p-12 text-center">
+          <Briefcase className="h-10 w-10 text-[#D8D2C7] mx-auto mb-3" />
+          <p className="text-xs font-bold text-[#211F1D]">No Assigned Projects Found</p>
+          <p className="text-[10px] text-[#A8A196] mt-1">Engage with industry opportunities to start R&D projects.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -112,41 +112,41 @@ export default function ExpertProjectsPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 hover:shadow-md transition-all group"
+              className="bg-[#EFE9DF] rounded-2xl p-6 space-y-4 hover:shadow-md transition-all group"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">{p.role}</span>
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors mt-1">{p.name}</h3>
-                  <p className="text-xs text-slate-500 font-semibold">{p.industryPartner}</p>
+                  <span className="text-[8px] font-extrabold px-1.5 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36]">{p.role}</span>
+                  <h3 className="text-sm font-bold text-[#211F1D] group-hover:text-[#FF5A36] transition-colors mt-1">{p.name}</h3>
+                  <p className="text-xs text-[#78716A] font-semibold">{p.industryPartner}</p>
                 </div>
-                <span className="text-xs font-extrabold text-slate-800">{p.progress}%</span>
+                <span className="text-xs font-extrabold text-[#211F1D]">{p.progress}%</span>
               </div>
 
-              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-primary rounded-full" style={{ width: `${p.progress}%` }} />
+              <div className="h-1.5 bg-[#EFE9DF] rounded-full overflow-hidden">
+                <div className="h-full bg-[#FF5A36] rounded-full" style={{ width: `${p.progress}%` }} />
               </div>
 
-              <div className="grid grid-cols-3 gap-2 bg-slate-50 border border-slate-100 rounded-xl p-3 text-center text-xs">
+              <div className="grid grid-cols-3 gap-2 bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-3 text-center text-xs">
                 <div>
-                  <span className="text-[8px] text-slate-400 font-bold uppercase block">Milestones</span>
-                  <span className="font-extrabold text-slate-800">{p.completedMilestonesCount} / {p.milestonesCount}</span>
+                  <span className="text-[8px] text-[#A8A196] font-bold uppercase block">Milestones</span>
+                  <span className="font-extrabold text-[#211F1D]">{p.completedMilestonesCount} / {p.milestonesCount}</span>
                 </div>
                 <div>
-                  <span className="text-[8px] text-slate-400 font-bold uppercase block">Tasks</span>
-                  <span className="font-extrabold text-slate-800">{p.completedTasksCount} / {p.tasksCount}</span>
+                  <span className="text-[8px] text-[#A8A196] font-bold uppercase block">Tasks</span>
+                  <span className="font-extrabold text-[#211F1D]">{p.completedTasksCount} / {p.tasksCount}</span>
                 </div>
                 <div>
-                  <span className="text-[8px] text-slate-400 font-bold uppercase block">Mentees</span>
-                  <span className="font-extrabold text-slate-800">{p.studentMenteesCount} Interns</span>
+                  <span className="text-[8px] text-[#A8A196] font-bold uppercase block">Mentees</span>
+                  <span className="font-extrabold text-[#211F1D]">{p.studentMenteesCount} Interns</span>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[9px] text-slate-400 font-semibold">{formatCurrency(p.budget)} Budget</span>
+              <div className="pt-2 border-t border-[#E2DCD2] flex items-center justify-between">
+                <span className="text-[10px] text-[#A8A196] font-semibold">{formatCurrency(p.budget)} Budget</span>
                 <Link
                   href={`/expert/projects/${p.id}`}
-                  className="h-8 px-3 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1 transition-colors"
+                  className="h-8 px-3 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] flex items-center gap-1 transition-colors"
                 >
                   Manage Project <ChevronRight className="h-3.5 w-3.5" />
                 </Link>

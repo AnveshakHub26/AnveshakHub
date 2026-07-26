@@ -20,7 +20,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-950 text-white font-sans antialiased">
+    <div className="flex flex-col min-h-screen font-sans antialiased text-[#211F1D]" style={{ backgroundColor: "#FBF7F0" }}>
       {/* Top sticky navigation */}
       <Navigation />
 
@@ -31,19 +31,19 @@ export default function Home() {
         {/* Trusted Organizations strip */}
         <TrustedOrgs />
 
-        {/* How AnveshakHub Works stepper cards */}
+        {/* How AnveshakHub Governance Works */}
         <HowItWorks />
 
-        {/* Stakeholder Ecosystem diagram */}
+        {/* Stakeholder Ecosystem Topology */}
         <Ecosystem />
 
-        {/* Platform Features grid cards */}
+        {/* Platform Core Features */}
         <Features />
 
-        {/* Why Choose & Success Metrics animated counters */}
+        {/* Metrics & Enterprise Security */}
         <SuccessMetrics />
 
-        {/* FAQ accordion & Ecosystem Leadership */}
+        {/* Verified Feedback & FAQ */}
         <FAQ />
       </main>
 

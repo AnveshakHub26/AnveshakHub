@@ -40,9 +40,9 @@ interface SecuritySettings {
 
 const ROLE_BADGES: Record<string, { label: string; bg: string; text: string }> = {
   ORG_ADMIN:          { label: "Org Admin",          bg: "bg-purple-50", text: "text-purple-700" },
-  PROJECT_MANAGER:    { label: "Project Manager",    bg: "bg-blue-50",   text: "text-blue-700" },
-  FINANCE_CONTROLLER: { label: "Finance Controller", bg: "bg-green-50",  text: "text-green-700" },
-  LEGAL_OFFICER:      { label: "Legal Officer",      bg: "bg-amber-50",  text: "text-amber-700" }
+  PROJECT_MANAGER:    { label: "Project Manager",    bg: "bg-[#FFF0ED]",   text: "text-[#FF5A36]" },
+  FINANCE_CONTROLLER: { label: "Finance Controller", bg: "bg-[#E8F2EC]",  text: "text-[#2F6B4F]" },
+  LEGAL_OFFICER:      { label: "Legal Officer",      bg: "bg-[#FEF3C7]",  text: "text-[#B45309]" }
 };
 
 export default function OrganizationSettingsPage() {
@@ -133,7 +133,7 @@ export default function OrganizationSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
       </div>
     );
   }
@@ -143,16 +143,16 @@ export default function OrganizationSettingsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Organization Settings & Security</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Manage company profile, RBAC team permissions, MFA/SSO rules & platform configurations</p>
+          <h1 className="text-xl font-bold text-[#211F1D]">Organization Settings & Security</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Manage company profile, RBAC team permissions, MFA/SSO rules & platform configurations</p>
         </div>
-        <button onClick={fetchSettings} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+        <button onClick={fetchSettings} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-0 border-b border-slate-200 -mb-2.5">
+      <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "profile", label: "Organization Profile", icon: Building2 },
           { key: "team", label: `Team & RBAC Roles (${team.length})`, icon: Users },
@@ -164,7 +164,7 @@ export default function OrganizationSettingsPage() {
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all -mb-[2px] ${
-                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === t.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {t.label}
@@ -174,53 +174,53 @@ export default function OrganizationSettingsPage() {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 min-h-[360px]">
+      <div className="card-flat rounded-2xl p-6 min-h-[360px]">
         {/* PROFILE TAB */}
         {activeTab === "profile" && profile && (
           <div className="space-y-6 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Company Branding & Contact Info</h3>
+            <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
+              <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Company Branding & Contact Info</h3>
               <button onClick={handleSaveProfile} disabled={saving}
-                className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                 {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3.5 w-3.5" />} Save Changes
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Company Name</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Company Name</label>
                 <input value={profile.companyName} onChange={e => setProfile({ ...profile, companyName: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-bold" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-bold" />
               </div>
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Industry Domain</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Industry Domain</label>
                 <input value={profile.industryDomain} onChange={e => setProfile({ ...profile, industryDomain: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-bold" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-bold" />
               </div>
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Corporate Identification Number (CIN)</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Corporate Identification Number (CIN)</label>
                 <input value={profile.cin} onChange={e => setProfile({ ...profile, cin: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-mono" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-mono" />
               </div>
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">GSTIN Number</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">GSTIN Number</label>
                 <input value={profile.gstin} onChange={e => setProfile({ ...profile, gstin: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-mono" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-mono" />
               </div>
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Official Contact Email</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Official Contact Email</label>
                 <input value={profile.contactEmail} onChange={e => setProfile({ ...profile, contactEmail: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
               </div>
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Phone Number</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Phone Number</label>
                 <input value={profile.contactPhone} onChange={e => setProfile({ ...profile, contactPhone: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
               </div>
               <div className="md:col-span-2">
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Registered Address</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Registered Address</label>
                 <input value={profile.address} onChange={e => setProfile({ ...profile, address: e.target.value })}
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
               </div>
             </div>
           </div>
@@ -229,10 +229,10 @@ export default function OrganizationSettingsPage() {
         {/* TEAM TAB */}
         {activeTab === "team" && (
           <div className="space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Team Members & RBAC Permissions</h3>
+            <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
+              <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Team Members & RBAC Permissions</h3>
               <button onClick={() => setInviteModalOpen(true)}
-                className="h-8 px-3 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                className="h-8 px-3 bg-[#FF5A36] text-white rounded-lg font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                 <UserPlus className="h-3.5 w-3.5" /> Invite Member
               </button>
             </div>
@@ -241,14 +241,14 @@ export default function OrganizationSettingsPage() {
               {team.map(member => {
                 const role = ROLE_BADGES[member.role] || ROLE_BADGES.PROJECT_MANAGER;
                 return (
-                  <div key={member.id} className="border border-slate-100 rounded-xl p-4 flex items-center justify-between">
+                  <div key={member.id} className="border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-primary-light text-primary font-bold flex items-center justify-center text-xs">
+                      <div className="h-8 w-8 rounded-lg bg-[#FFF0ED] text-[#FF5A36] font-bold flex items-center justify-center text-xs">
                         {member.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
                       </div>
                       <div>
-                        <p className="font-bold text-slate-800">{member.name}</p>
-                        <p className="text-[9px] text-slate-400 font-semibold">{member.email}</p>
+                        <p className="font-bold text-[#211F1D]">{member.name}</p>
+                        <p className="text-[10px] text-[#A8A196] font-semibold">{member.email}</p>
                       </div>
                     </div>
 
@@ -257,7 +257,7 @@ export default function OrganizationSettingsPage() {
                         {role.label}
                       </span>
                       <span className={`text-[8px] font-bold px-2 py-0.5 rounded ${
-                        member.status === "ACTIVE" ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"
+                        member.status === "ACTIVE" ? "bg-[#E8F2EC] text-[#2F6B4F]" : "bg-[#FEF3C7] text-[#B45309]"
                       }`}>
                         {member.status}
                       </span>
@@ -272,29 +272,29 @@ export default function OrganizationSettingsPage() {
         {/* SECURITY TAB */}
         {activeTab === "security" && security && (
           <div className="space-y-6 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Authentication & Access Enforcement</h3>
+            <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
+              <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Authentication & Access Enforcement</h3>
               <button onClick={handleSaveSecurity} disabled={saving}
-                className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                 {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3.5 w-3.5" />} Save Rules
               </button>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between border border-slate-100 rounded-xl p-4 bg-slate-50">
+              <div className="flex items-center justify-between border border-[#E2DCD2] rounded-xl p-4 bg-[#FBF7F0]">
                 <div>
-                  <p className="font-bold text-slate-800">Require Multi-Factor Authentication (MFA)</p>
-                  <p className="text-[9px] text-slate-400 font-semibold mt-0.5">Enforce authenticator app (TOTP) or SMS OTP for all team logins</p>
+                  <p className="font-bold text-[#211F1D]">Require Multi-Factor Authentication (MFA)</p>
+                  <p className="text-[10px] text-[#A8A196] font-semibold mt-0.5">Enforce authenticator app (TOTP) or SMS OTP for all team logins</p>
                 </div>
                 <input type="checkbox" checked={security.mfaRequired}
                   onChange={e => setSecurity({ ...security, mfaRequired: e.target.checked })}
                   className="h-4 w-4 accent-primary cursor-pointer" />
               </div>
 
-              <div className="flex items-center justify-between border border-slate-100 rounded-xl p-4 bg-slate-50">
+              <div className="flex items-center justify-between border border-[#E2DCD2] rounded-xl p-4 bg-[#FBF7F0]">
                 <div>
-                  <p className="font-bold text-slate-800">Enterprise Single Sign-On (SSO)</p>
-                  <p className="text-[9px] text-slate-400 font-semibold mt-0.5">Allow SAML 2.0 / OAuth2 authentication via Azure AD or Google Workspace</p>
+                  <p className="font-bold text-[#211F1D]">Enterprise Single Sign-On (SSO)</p>
+                  <p className="text-[10px] text-[#A8A196] font-semibold mt-0.5">Allow SAML 2.0 / OAuth2 authentication via Azure AD or Google Workspace</p>
                 </div>
                 <input type="checkbox" checked={security.ssoEnabled}
                   onChange={e => setSecurity({ ...security, ssoEnabled: e.target.checked })}
@@ -302,11 +302,11 @@ export default function OrganizationSettingsPage() {
               </div>
 
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">IP Whitelist (comma separated)</label>
+                <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">IP Whitelist (comma separated)</label>
                 <input value={security.ipWhitelist.join(", ")}
                   onChange={e => setSecurity({ ...security, ipWhitelist: e.target.value.split(",").map(i => i.trim()) })}
                   placeholder="103.28.180.12, 182.72.15.98"
-                  className="w-full h-8 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs font-mono" />
+                  className="w-full h-8 px-3 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs font-mono" />
               </div>
             </div>
           </div>
@@ -321,26 +321,26 @@ export default function OrganizationSettingsPage() {
               initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl shadow-2xl p-6 w-[420px] max-w-full mx-4"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[420px] max-w-full mx-4"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                  <UserPlus className="h-4 w-4 text-primary" /> Invite Team Member
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
+                <h3 className="text-sm font-bold text-[#211F1D] flex items-center gap-1.5">
+                  <UserPlus className="h-4 w-4 text-[#FF5A36]" /> Invite Team Member
                 </h3>
-                <button onClick={() => setInviteModalOpen(false)}><X className="h-4 w-4 text-slate-400 hover:text-slate-600" /></button>
+                <button onClick={() => setInviteModalOpen(false)}><X className="h-4 w-4 text-[#A8A196] hover:text-[#57534E]" /></button>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Corporate Email *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Corporate Email *</label>
                   <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="colleague@solarispower.in"
-                    className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                    className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Assigned RBAC Role</label>
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Assigned RBAC Role</label>
                   <select value={inviteRole} onChange={e => setInviteRole(e.target.value)}
-                    className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary text-xs font-bold">
+                    className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36] text-xs font-bold">
                     <option value="PROJECT_MANAGER">Project Manager</option>
                     <option value="FINANCE_CONTROLLER">Finance Controller</option>
                     <option value="LEGAL_OFFICER">Legal Officer</option>
@@ -349,10 +349,10 @@ export default function OrganizationSettingsPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-4 mt-4">
-                <button onClick={() => setInviteModalOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-4 mt-4">
+                <button onClick={() => setInviteModalOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-xs font-semibold hover:bg-[#EFE9DF]">Cancel</button>
                 <button onClick={handleInvite} disabled={inviting || !inviteEmail}
-                  className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                  className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                   {inviting && <Loader2 className="h-3 w-3 animate-spin" />} Send Invite
                 </button>
               </div>

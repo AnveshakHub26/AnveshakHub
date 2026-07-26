@@ -71,12 +71,12 @@ function OtpInput({
           aria-label={`Digit ${idx + 1} of 6`}
           className={[
             "w-12 h-14 text-center text-xl font-black rounded-xl border-2 transition-all outline-none select-none focus:ring-4",
-            disabled ? "opacity-50 cursor-not-allowed bg-slate-50" : "bg-white cursor-text",
+            disabled ? "opacity-50 cursor-not-allowed bg-[#FBF7F0]" : "bg-[#FBF7F0] cursor-text",
             hasError
-              ? "border-red-300 bg-red-50/50 text-red-700 focus:border-red-500 focus:ring-red-500/20"
+              ? "border-red-300 bg-[#FEE2E2]/50 text-[#C0392B] focus:border-red-500 focus:ring-red-500/20"
               : digit
-              ? "border-primary bg-blue-50/40 text-primary focus:border-primary focus:ring-primary/20"
-              : "border-slate-200 text-slate-800 focus:border-primary focus:ring-primary/20"
+              ? "border-[#FF5A36] bg-[#FFF0ED]/40 text-[#FF5A36] focus:border-[#FF5A36] focus:ring-[#FF5A36]/20"
+              : "border-[#E2DCD2] text-[#211F1D] focus:border-[#FF5A36] focus:ring-[#FF5A36]/20"
           ].join(" ")}
         />
       ))}
@@ -93,21 +93,21 @@ function RecoveryCodeInput({
   const [show, setShow] = useState(false);
   return (
     <div>
-      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+      <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">
         Recovery Code
       </label>
       <div className="relative">
-        <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+        <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A8A196] pointer-events-none" />
         <input
           type={show ? "text" : "password"}
           value={value}
           onChange={e => onChange(e.target.value.toUpperCase())}
           placeholder="XXXX-XXXX-XXXX-XXXX"
           disabled={disabled}
-          className="w-full h-11 pl-10 pr-10 rounded-xl border border-slate-200 text-sm font-mono font-bold placeholder-slate-400 outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/20 text-slate-800 tracking-wider bg-white"
+          className="w-full h-11 pl-10 pr-10 rounded-xl border border-[#E2DCD2] text-sm font-mono font-bold placeholder-[#A8A196] outline-none transition-all focus:border-[#FF5A36] focus:ring-4 focus:ring-[#FF5A36]/20 text-[#211F1D] tracking-wider bg-[#FBF7F0]"
         />
         <button type="button" tabIndex={-1} onClick={() => setShow(s => !s)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A8A196] hover:text-[#57534E] transition-colors">
           {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </button>
       </div>
@@ -115,7 +115,7 @@ function RecoveryCodeInput({
         type="button"
         onClick={onSubmit}
         disabled={disabled || value.length < 16}
-        className="mt-3 w-full h-11 flex items-center justify-center gap-2 bg-secondary hover:bg-slate-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors"
+        className="mt-3 w-full h-11 flex items-center justify-center gap-2 bg-[#1C1917] hover:bg-[#292524] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors"
       >
         <KeyRound className="h-4 w-4" /> Use Recovery Code
       </button>
@@ -182,19 +182,19 @@ export default function TwoFactorPage() {
   const isDisabled = pageState === "verifying" || pageState === "success";
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ backgroundColor: "var(--bg-app)" }}>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_60%,transparent_100%)] opacity-30 pointer-events-none" />
-      <div className="absolute -top-40 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 right-0 w-[400px] h-[400px] bg-[#FF5A36]/5 rounded-full blur-3xl pointer-events-none" />
 
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 py-3 px-6 sm:px-10 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2DCD2]/80 py-3 px-6 sm:px-10 flex items-center justify-between">
         <BrandLogo size="sm" />
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-            <Lock className="h-3 w-3 text-emerald-600" />
-            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Secured</span>
+          <div className="hidden sm:flex items-center gap-1.5 bg-[#E8F2EC] border border-[#BBD9C8] px-2.5 py-1 rounded-full">
+            <Lock className="h-3 w-3 text-[#2F6B4F]" />
+            <span className="text-[10px] font-bold text-[#2F6B4F] uppercase tracking-widest">Secured</span>
           </div>
           <a href="mailto:support@anveshakhub.com"
-            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors">
+            className="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-[#E2DCD2] text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors">
             <HelpCircle className="h-4 w-4" /> Help
           </a>
         </div>
@@ -202,23 +202,23 @@ export default function TwoFactorPage() {
 
       <main className="flex-grow flex items-center justify-center px-4 sm:px-6 py-12 relative z-10">
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="w-full max-w-md">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden">
+          <div className="card-flat rounded-2xl shadow-lg overflow-hidden">
 
             {/* Card Header */}
-            <div className="px-8 pt-8 pb-6 border-b border-slate-100">
-              <Link href="/auth/login" className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-500 hover:text-primary transition-colors mb-5">
+            <div className="px-8 pt-8 pb-6 border-b border-[#E2DCD2]">
+              <Link href="/auth/login" className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#78716A] hover:text-[#FF5A36] transition-colors mb-5">
                 <ArrowLeft className="h-3.5 w-3.5" /> Back to Login
               </Link>
               <div className="flex items-center gap-3 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                  <ShieldCheck className="h-5 w-5 text-primary" />
+                <div className="h-10 w-10 rounded-xl bg-[#FFF0ED] border border-blue-100 flex items-center justify-center">
+                  <ShieldCheck className="h-5 w-5 text-[#FF5A36]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Step 2 of 2 — Security</p>
-                  <h1 className="text-lg font-black text-secondary tracking-tight">Two-Factor Authentication</h1>
+                  <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest">Step 2 of 2 — Security</p>
+                  <h1 className="text-lg font-black text-[#211F1D] tracking-tight">Two-Factor Authentication</h1>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-[#78716A] leading-relaxed">
                 Your account requires additional verification. Choose your preferred method below.
               </p>
             </div>
@@ -230,14 +230,14 @@ export default function TwoFactorPage() {
                     className="text-center py-4">
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
                       transition={{ type: "spring", stiffness: 200, damping: 13 }}
-                      className="h-16 w-16 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center mx-auto mb-5">
-                      <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                      className="h-16 w-16 rounded-full bg-[#E8F2EC] border-2 border-[#BBD9C8] flex items-center justify-center mx-auto mb-5">
+                      <CheckCircle2 className="h-8 w-8 text-[#2F6B4F]" />
                     </motion.div>
-                    <h2 className="text-sm font-extrabold text-secondary mb-2">Identity Verified</h2>
-                    <p className="text-xs text-slate-500 leading-relaxed mb-4">Two-factor authentication passed. Redirecting to your dashboard…</p>
+                    <h2 className="text-sm font-extrabold text-[#211F1D] mb-2">Identity Verified</h2>
+                    <p className="text-xs text-[#78716A] leading-relaxed mb-4">Two-factor authentication passed. Redirecting to your dashboard…</p>
                     <div className="flex items-center justify-center gap-2">
-                      <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
-                      <span className="text-[10px] font-bold text-primary">Loading workspace…</span>
+                      <Loader2 className="h-3.5 w-3.5 text-[#FF5A36] animate-spin" />
+                      <span className="text-[10px] font-bold text-[#FF5A36]">Loading workspace…</span>
                     </div>
                   </motion.div>
                 ) : (
@@ -252,8 +252,8 @@ export default function TwoFactorPage() {
                             className={[
                               "flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 text-xs font-bold transition-all",
                               method === m
-                                ? "border-primary bg-blue-50 text-primary"
-                                : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50"
+                                ? "border-[#FF5A36] bg-[#FFF0ED] text-[#FF5A36]"
+                                : "border-[#E2DCD2] bg-[#FBF7F0] text-[#78716A] hover:border-[#D8D2C7] hover:bg-[#EFE9DF]"
                             ].join(" ")}
                           >
                             {m === "authenticator" ? <Smartphone className="h-5 w-5" /> : <Mail className="h-5 w-5" />}
@@ -267,11 +267,11 @@ export default function TwoFactorPage() {
                     <AnimatePresence>
                       {pageState === "error" && (
                         <motion.div initial={{ opacity: 0, y: -6, height: 0 }} animate={{ opacity: 1, y: 0, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                          <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-                            <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                          <div className="flex items-start gap-2.5 bg-[#FEE2E2] border border-[#FECACA] rounded-xl px-4 py-3">
+                            <AlertCircle className="h-4 w-4 text-[#C0392B] shrink-0 mt-0.5" />
                             <div>
                               <p className="text-xs font-bold text-red-800">Verification Failed</p>
-                              <p className="text-[10px] text-red-700 mt-0.5">The code you entered is incorrect or has expired. Please try again.</p>
+                              <p className="text-[10px] text-[#C0392B] mt-0.5">The code you entered is incorrect or has expired. Please try again.</p>
                             </div>
                           </div>
                         </motion.div>
@@ -280,8 +280,8 @@ export default function TwoFactorPage() {
 
                     {/* Method instruction */}
                     {!useRecovery && (
-                      <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
-                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                      <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-4 py-3">
+                        <p className="text-[11px] text-[#57534E] leading-relaxed">
                           {method === "authenticator"
                             ? "Open your authenticator app (Google Authenticator, Authy, etc.) and enter the 6-digit code shown for AnveshakHub."
                             : "A 6-digit verification code has been sent to your registered organization email address."}
@@ -297,7 +297,7 @@ export default function TwoFactorPage() {
                       />
                     ) : (
                       <div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center mb-4">
+                        <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest text-center mb-4">
                           Enter 6-Digit Code
                         </p>
                         <motion.div key={shakeKey} variants={shakeVariants}
@@ -309,7 +309,7 @@ export default function TwoFactorPage() {
                         {/* Verify */}
                         <button type="button" onClick={handleVerify}
                           disabled={isDisabled || otp.join("").length !== 6}
-                          className="mt-5 w-full h-12 flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-all focus:outline-none focus:ring-4 focus:ring-primary/30">
+                          className="mt-5 w-full h-12 flex items-center justify-center gap-2 bg-[#FF5A36] hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-all focus:outline-none focus:ring-4 focus:ring-[#FF5A36]/30">
                           {pageState === "verifying"
                             ? <><Loader2 className="h-4 w-4 animate-spin" /> Verifying…</>
                             : <><ShieldCheck className="h-4 w-4" /> Verify Identity</>}
@@ -319,13 +319,13 @@ export default function TwoFactorPage() {
                         {method === "email" && (
                           <div className="mt-4 flex items-center justify-center gap-2">
                             {cooldown > 0 ? (
-                              <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-medium">
+                              <div className="flex items-center gap-1.5 text-[10px] text-[#78716A] font-medium">
                                 <Clock className="h-3.5 w-3.5" />
-                                Resend in <span className="font-black text-primary tabular-nums">{cooldown}s</span>
+                                Resend in <span className="font-black text-[#FF5A36] tabular-nums">{cooldown}s</span>
                               </div>
                             ) : (
                               <button type="button" onClick={handleResend}
-                                className="flex items-center gap-1.5 text-xs font-bold text-primary hover:underline transition-colors">
+                                className="flex items-center gap-1.5 text-xs font-bold text-[#FF5A36] hover:underline transition-colors">
                                 <RefreshCw className="h-3.5 w-3.5" /> Resend Code
                               </button>
                             )}
@@ -337,25 +337,25 @@ export default function TwoFactorPage() {
                     {/* Remember device */}
                     <label className="flex items-center gap-2 cursor-pointer" onClick={() => setRememberDevice(r => !r)}>
                       <div role="checkbox" aria-checked={rememberDevice}
-                        className={`h-4 w-4 rounded border-2 flex items-center justify-center transition-colors shrink-0 ${rememberDevice ? "bg-primary border-primary" : "border-slate-300 bg-white"}`}>
+                        className={`h-4 w-4 rounded border-2 flex items-center justify-center transition-colors shrink-0 ${rememberDevice ? "bg-[#FF5A36] border-[#FF5A36]" : "border-[#D8D2C7] bg-[#FBF7F0]"}`}>
                         {rememberDevice && <CheckCircle2 className="h-3 w-3 text-white" />}
                       </div>
-                      <span className="text-xs text-slate-600 font-medium select-none">
+                      <span className="text-xs text-[#57534E] font-medium select-none">
                         Trust this device for 30 days
                       </span>
                     </label>
 
                     {/* Toggle recovery / use 2FA */}
                     <button type="button" onClick={() => { setUseRecovery(r => !r); setHasError(false); setPageState("idle"); setOtp(Array(6).fill("")); }}
-                      className="w-full text-xs font-bold text-slate-500 hover:text-primary transition-colors flex items-center justify-center gap-1.5">
+                      className="w-full text-xs font-bold text-[#78716A] hover:text-[#FF5A36] transition-colors flex items-center justify-center gap-1.5">
                       <KeyRound className="h-3.5 w-3.5" />
                       {useRecovery ? "Use authenticator code instead" : "Use a recovery code instead"}
                     </button>
 
                     {/* Future methods — collapsed */}
-                    <div className="border-t border-slate-100 pt-4">
+                    <div className="border-t border-[#E2DCD2] pt-4">
                       <button type="button" onClick={() => setShowFutureMethods(s => !s)}
-                        className="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 hover:text-slate-600 transition-colors">
+                        className="w-full flex items-center justify-between text-[10px] font-bold text-[#A8A196] hover:text-[#57534E] transition-colors">
                         <span>Other Verification Methods</span>
                         {showFutureMethods ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                       </button>
@@ -368,12 +368,12 @@ export default function TwoFactorPage() {
                               { icon: ShieldCheck, label: "Enterprise SSO / Identity Provider", tag: "Coming Soon" },
                               { icon: Smartphone, label: "Passkey (Biometric Authentication)", tag: "Future" }
                             ].map(({ icon: Icon, label, tag }) => (
-                              <div key={label} className="flex items-center justify-between px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl opacity-60 cursor-not-allowed">
+                              <div key={label} className="flex items-center justify-between px-3 py-2.5 bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl opacity-60 cursor-not-allowed">
                                 <div className="flex items-center gap-2">
-                                  <Icon className="h-3.5 w-3.5 text-slate-400" />
-                                  <span className="text-[10px] font-bold text-slate-500">{label}</span>
+                                  <Icon className="h-3.5 w-3.5 text-[#A8A196]" />
+                                  <span className="text-[10px] font-bold text-[#78716A]">{label}</span>
                                 </div>
-                                <span className="text-[9px] font-bold text-slate-400 bg-slate-200 border border-slate-300 px-1.5 py-0.5 rounded-full">{tag}</span>
+                                <span className="text-[10px] font-bold text-[#A8A196] bg-[#D8D2C7] border border-[#D8D2C7] px-1.5 py-0.5 rounded-full">{tag}</span>
                               </div>
                             ))}
                           </motion.div>
@@ -385,23 +385,23 @@ export default function TwoFactorPage() {
               </AnimatePresence>
             </div>
 
-            <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+            <div className="px-8 py-4 bg-[#FBF7F0] border-t border-[#E2DCD2] flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Lock className="h-3 w-3 text-slate-400" />
-                <span className="text-[10px] text-slate-400 font-medium">Session is end-to-end encrypted</span>
+                <Lock className="h-3 w-3 text-[#A8A196]" />
+                <span className="text-[10px] text-[#A8A196] font-medium">Session is end-to-end encrypted</span>
               </div>
-              <Link href="/auth/login" className="text-[10px] font-bold text-slate-500 hover:text-primary transition-colors flex items-center gap-1">
+              <Link href="/auth/login" className="text-[10px] font-bold text-[#78716A] hover:text-[#FF5A36] transition-colors flex items-center gap-1">
                 <ArrowLeft className="h-3 w-3" /> Back to Login
               </Link>
             </div>
           </div>
 
           {/* Demo hint */}
-          <div className="mt-4 flex items-start gap-2 bg-blue-50/60 border border-blue-100 rounded-xl px-4 py-3">
-            <AlertCircle className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-            <p className="text-[10px] text-slate-500 leading-relaxed">
-              <span className="font-bold text-primary">Demo: </span>
-              Enter <code className="bg-white border border-blue-100 px-1 rounded font-mono text-primary">123456</code> to verify. Any other code shows error state.
+          <div className="mt-4 flex items-start gap-2 bg-[#FFF0ED]/60 border border-blue-100 rounded-xl px-4 py-3">
+            <AlertCircle className="h-3.5 w-3.5 text-[#FF5A36] shrink-0 mt-0.5" />
+            <p className="text-[10px] text-[#78716A] leading-relaxed">
+              <span className="font-bold text-[#FF5A36]">Demo: </span>
+              Enter <code className="bg-[#FBF7F0] border border-blue-100 px-1 rounded font-mono text-[#FF5A36]">123456</code> to verify. Any other code shows error state.
             </p>
           </div>
         </motion.div>

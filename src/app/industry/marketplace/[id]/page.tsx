@@ -61,9 +61,9 @@ interface ExpertDetail {
 }
 
 const MESSAGE_TYPE_STYLES: Record<string, string> = {
-  GENERAL:  "bg-slate-50 border-slate-100",
-  QUESTION: "bg-blue-50 border-blue-100",
-  FEEDBACK: "bg-green-50 border-green-100",
+  GENERAL:  "bg-[#FBF7F0] border-[#E2DCD2]",
+  QUESTION: "bg-[#FFF0ED] border-blue-100",
+  FEEDBACK: "bg-[#E8F2EC] border-green-100",
   PROPOSAL: "bg-purple-50 border-purple-100"
 };
 
@@ -128,28 +128,28 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
   return (
     <div className="p-8 space-y-6">
       {/* Back & Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+      <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-4">
         <div className="flex items-center gap-3">
-          <Link href="/industry/marketplace" className="h-8 w-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
+          <Link href="/industry/marketplace" className="h-8 w-8 rounded-lg border border-[#E2DCD2] flex items-center justify-center text-[#78716A] hover:text-[#211F1D] hover:bg-[#FBF7F0] transition-colors">
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">{expert.institution}</span>
-              <span className="text-slate-300">·</span>
-              <span className="text-[9px] font-semibold text-slate-400">{expert.department}</span>
+              <span className="text-[9px] font-bold text-[#A8A196] uppercase tracking-wide">{expert.institution}</span>
+              <span className="text-[#C4BCB0]">·</span>
+              <span className="text-[9px] font-semibold text-[#A8A196]">{expert.department}</span>
             </div>
-            <h1 className="text-sm font-bold text-slate-900 mt-0.5">{expert.name}</h1>
+            <h1 className="text-sm font-bold text-[#211F1D] mt-0.5">{expert.name}</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {expert.linkedinUrl && (
             <a href={expert.linkedinUrl} target="_blank" rel="noopener noreferrer"
-               className="h-8 px-3 border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50 flex items-center gap-1.5">
-              <Link2 className="h-3.5 w-3.5 text-blue-600" /> LinkedIn
+               className="h-8 px-3 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-bold hover:bg-[#FBF7F0] flex items-center gap-1.5">
+              <Link2 className="h-3.5 w-3.5 text-[#FF5A36]" /> LinkedIn
             </a>
           )}
-          <button onClick={fetchExpert} className="h-8 w-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700">
+          <button onClick={fetchExpert} className="h-8 w-8 rounded-lg border border-[#E2DCD2] flex items-center justify-center text-[#78716A] hover:text-[#211F1D]">
             <RefreshCw className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -162,9 +162,9 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
             {expert.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-extrabold text-slate-900">{expert.name}</h2>
-            <p className="text-xs text-slate-600 font-semibold">{expert.designation}</p>
-            <p className="text-xs text-slate-400 font-semibold">{expert.institution} · {expert.department}</p>
+            <h2 className="text-base font-extrabold text-[#211F1D]">{expert.name}</h2>
+            <p className="text-xs text-[#57534E] font-semibold">{expert.designation}</p>
+            <p className="text-xs text-[#A8A196] font-semibold">{expert.institution} · {expert.department}</p>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {expert.domains.map((d, i) => (
                 <span key={i} className="text-[8px] bg-primary-light text-primary-text border border-primary-border px-2 py-0.5 rounded font-bold">{d}</span>
@@ -178,10 +178,10 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
               { label: "H-Index", value: expert.hIndex, sub: `${expert.citations} citations` },
               { label: "Projects", value: expert.completedProjectsCount, sub: "Completed" }
             ].map(stat => (
-              <div key={stat.label} className="bg-white border border-slate-200 rounded-xl p-2.5">
+              <div key={stat.label} className="bg-white border border-[#E2DCD2] rounded-xl p-2.5">
                 <div className="text-sm font-extrabold text-primary">{stat.value}</div>
-                <div className="text-[8px] text-slate-500 font-bold">{stat.label}</div>
-                <div className="text-[8px] text-slate-400 font-semibold">{stat.sub}</div>
+                <div className="text-[8px] text-[#78716A] font-bold">{stat.label}</div>
+                <div className="text-[8px] text-[#A8A196] font-semibold">{stat.sub}</div>
               </div>
             ))}
           </div>
@@ -189,7 +189,7 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-0 border-b border-slate-200 -mb-2.5">
+      <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "profile", label: "Profile & Credentials", icon: User },
           { key: "discussions", label: `Collaboration Thread (${expert.discussions.length})`, icon: MessageSquare },
@@ -202,7 +202,7 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all -mb-[2px] ${
-                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-[#78716A] hover:text-[#211F1D]"
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {t.label}
@@ -212,7 +212,7 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       {/* Workspace Content */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 min-h-[300px]">
+      <div className="bg-white border border-[#E2DCD2] rounded-2xl p-6 min-h-[300px]">
         <AnimatePresence mode="wait">
 
           {/* PROFILE */}
@@ -220,45 +220,45 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
             <motion.div key="profile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
               <div className="lg:col-span-2 space-y-5">
                 <div>
-                  <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Biography</h3>
-                  <p className="text-slate-700 font-semibold leading-relaxed">{expert.bio}</p>
+                  <h3 className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide mb-1">Biography</h3>
+                  <p className="text-[#211F1D] font-semibold leading-relaxed">{expert.bio}</p>
                 </div>
                 <div>
-                  <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Skills & Technologies</h3>
+                  <h3 className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide mb-2">Skills & Technologies</h3>
                   <div className="flex flex-wrap gap-1.5">
                     {expert.skills.map((s, i) => (
-                      <span key={i} className="text-[9px] bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-semibold">{s}</span>
+                      <span key={i} className="text-[9px] bg-[#EFE9DF] text-[#211F1D] px-2.5 py-1 rounded-lg font-semibold">{s}</span>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Key Publications</h3>
+                  <h3 className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wide mb-2">Key Publications</h3>
                   <div className="space-y-2">
                     {expert.publications_list?.map((pub, i) => (
-                      <div key={i} className="border border-slate-100 rounded-xl p-3 space-y-0.5">
-                        <p className="font-bold text-slate-800">{pub.title}</p>
+                      <div key={i} className="border border-[#E2DCD2] rounded-xl p-3 space-y-0.5">
+                        <p className="font-bold text-[#211F1D]">{pub.title}</p>
                         <p className="text-[9px] text-primary font-bold">{pub.journal}</p>
-                        <p className="text-[8px] text-slate-400 font-semibold">{pub.year}</p>
+                        <p className="text-[8px] text-[#A8A196] font-semibold">{pub.year}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Certifications</h3>
+                <div className="card-flat rounded-2xl p-4 space-y-3">
+                  <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Certifications</h3>
                   {expert.certifications?.map((cert, i) => (
                     <div key={i} className="flex items-start gap-2">
                       <Award className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-bold text-slate-800">{cert.title}</p>
-                        <p className="text-[9px] text-slate-400 font-semibold">{cert.issuer} · {cert.year}</p>
+                        <p className="font-bold text-[#211F1D]">{cert.title}</p>
+                        <p className="text-[9px] text-[#A8A196] font-semibold">{cert.issuer} · {cert.year}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Academic Links</h3>
+                <div className="card-flat rounded-2xl p-4 space-y-2">
+                  <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Academic Links</h3>
                   {expert.googleScholar && (
                     <a href={expert.googleScholar} target="_blank" rel="noopener noreferrer"
                        className="flex items-center gap-2 text-primary hover:underline font-semibold">
@@ -266,7 +266,7 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
                     </a>
                   )}
                   {expert.orcid && (
-                    <p className="flex items-center gap-2 text-slate-500 font-semibold">
+                    <p className="flex items-center gap-2 text-[#78716A] font-semibold">
                       <Globe className="h-3.5 w-3.5" /> ORCID: {expert.orcid}
                     </p>
                   )}
@@ -280,28 +280,28 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
             <motion.div key="discussions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 text-xs">
               <div className="space-y-3 max-h-[320px] overflow-y-auto">
                 {expert.discussions.length === 0 ? (
-                  <p className="text-[10px] text-slate-400 text-center py-8">No messages yet. Start the collaboration thread.</p>
+                  <p className="text-[10px] text-[#A8A196] text-center py-8">No messages yet. Start the collaboration thread.</p>
                 ) : expert.discussions.map(d => (
                   <div key={d.id} className={`border rounded-xl p-3.5 space-y-1.5 ${MESSAGE_TYPE_STYLES[d.messageType] || MESSAGE_TYPE_STYLES.GENERAL}`}>
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-700 flex items-center gap-1">
-                        <User className="h-3 w-3 text-slate-400" /> {d.authorName}
+                      <span className="font-bold text-[#211F1D] flex items-center gap-1">
+                        <User className="h-3 w-3 text-[#A8A196]" /> {d.authorName}
                       </span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[8px] text-slate-400 font-semibold">{d.messageType}</span>
-                        <span className="text-[8px] text-slate-400 font-semibold">{new Date(d.createdAt).toLocaleString("en-IN")}</span>
+                        <span className="text-[8px] text-[#A8A196] font-semibold">{d.messageType}</span>
+                        <span className="text-[8px] text-[#A8A196] font-semibold">{new Date(d.createdAt).toLocaleString("en-IN")}</span>
                       </div>
                     </div>
-                    <p className="text-slate-700 font-semibold leading-relaxed">{d.content}</p>
+                    <p className="text-[#211F1D] font-semibold leading-relaxed">{d.content}</p>
                   </div>
                 ))}
               </div>
-              <div className="border-t border-slate-100 pt-4 space-y-2">
+              <div className="border-t border-[#E2DCD2] pt-4 space-y-2">
                 <div className="flex gap-2 items-center">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase">Type:</label>
+                  <label className="text-[9px] font-bold text-[#78716A] uppercase">Type:</label>
                   {["GENERAL", "QUESTION", "PROPOSAL"].map(t => (
                     <button key={t} onClick={() => setMessageType(t)}
-                      className={`h-6 px-2 rounded text-[9px] font-bold border ${messageType === t ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-500 border-slate-200"}`}>
+                      className={`h-6 px-2 rounded text-[9px] font-bold border ${messageType === t ? "bg-primary text-white border-primary" : "bg-[#FBF7F0] text-[#78716A] border-[#E2DCD2]"}`}>
                       {t}
                     </button>
                   ))}
@@ -311,7 +311,7 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
                     value={newMessage}
                     onChange={e => setNewMessage(e.target.value)}
                     placeholder="Write your message, question or proposal..."
-                    className="flex-1 h-9 px-3 border border-slate-200 rounded-lg text-xs"
+                    className="flex-1 h-9 px-3 border border-[#E2DCD2] rounded-lg text-xs"
                     onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                   />
                   <button onClick={handleSendMessage} disabled={sending || !newMessage.trim()}
@@ -327,23 +327,23 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
           {activeTab === "projects" && (
             <motion.div key="projects" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 text-xs">
               {expert.assignedProjects.length === 0 ? (
-                <p className="text-[10px] text-slate-400 text-center py-8">No projects currently linked with this expert.</p>
+                <p className="text-[10px] text-[#A8A196] text-center py-8">No projects currently linked with this expert.</p>
               ) : expert.assignedProjects.map(p => (
-                <div key={p.id} className="border border-slate-200 rounded-xl p-4 flex items-center justify-between">
+                <div key={p.id} className="border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 bg-primary-light rounded-lg flex items-center justify-center">
                       <Briefcase className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800">{p.name}</p>
+                      <p className="font-bold text-[#211F1D]">{p.name}</p>
                       <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${
-                        p.status === "IN_PROGRESS" ? "bg-blue-50 text-blue-700 border-blue-200" :
-                        p.status === "COMPLETED" ? "bg-green-50 text-green-700 border-green-200" :
-                        "bg-amber-50 text-amber-700 border-amber-200"
+                        p.status === "IN_PROGRESS" ? "bg-[#FFF0ED] text-[#FF5A36] border-[#FFCFC4]" :
+                        p.status === "COMPLETED" ? "bg-[#E8F2EC] text-green-700 border-green-200" :
+                        "bg-[#FEF3C7] text-[#B45309] border-amber-200"
                       }`}>{p.status.replace("_", " ")}</span>
                     </div>
                   </div>
-                  <Link href={`/industry/projects/${p.id}`} className="h-7 px-3 bg-slate-50 border border-slate-200 hover:border-primary rounded-lg text-[10px] font-bold text-slate-600 hover:text-primary flex items-center gap-1 transition-colors">
+                  <Link href={`/industry/projects/${p.id}`} className="h-7 px-3 bg-[#FBF7F0] border border-[#E2DCD2] hover:border-primary rounded-lg text-[10px] font-bold text-[#57534E] hover:text-primary flex items-center gap-1 transition-colors">
                     View Project <ChevronRight className="h-3 w-3" />
                   </Link>
                 </div>
@@ -355,19 +355,19 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
           {activeTab === "reviews" && (
             <motion.div key="reviews" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 text-xs">
               {expert.reviews.length === 0 ? (
-                <p className="text-[10px] text-slate-400 text-center py-8">No reviews yet.</p>
+                <p className="text-[10px] text-[#A8A196] text-center py-8">No reviews yet.</p>
               ) : expert.reviews.map(r => (
-                <div key={r.id} className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
+                <div key={r.id} className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-700">{r.reviewer}</span>
+                    <span className="font-bold text-[#211F1D]">{r.reviewer}</span>
                     <div className="flex items-center gap-1">
                       {Array.from({ length: r.rating }).map((_, i) => (
                         <Star key={i} className="h-3 w-3 text-amber-400 fill-amber-400" />
                       ))}
-                      <span className="text-[8px] text-slate-400 font-semibold ml-1">{new Date(r.createdAt).toLocaleDateString("en-IN")}</span>
+                      <span className="text-[8px] text-[#A8A196] font-semibold ml-1">{new Date(r.createdAt).toLocaleDateString("en-IN")}</span>
                     </div>
                   </div>
-                  <p className="text-slate-600 font-semibold leading-relaxed">{r.comment}</p>
+                  <p className="text-[#57534E] font-semibold leading-relaxed">{r.comment}</p>
                 </div>
               ))}
             </motion.div>

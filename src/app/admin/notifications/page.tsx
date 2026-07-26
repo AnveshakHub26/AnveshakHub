@@ -115,19 +115,19 @@ export default function NotificationsHubConsole() {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full bg-[#FBF7F0]">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-slate-200 px-8 py-5">
+      <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Notifications & Communication Center</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Broadcast platform announcements, manage automated email dispatches, and audit delivery telemetry</p>
+            <h1 className="text-xl font-bold text-[#211F1D]">Notifications & Communication Center</h1>
+            <p className="text-xs text-[#78716A] mt-0.5">Broadcast platform announcements, manage automated email dispatches, and audit delivery telemetry</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={fetchNotifications} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-655 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+            <button onClick={fetchNotifications} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-slate-655 rounded-lg text-xs font-medium hover:bg-[#FBF7F0] transition-colors">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
-            <button onClick={() => setCreateOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors">
+            <button onClick={() => setCreateOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] transition-colors">
               <Plus className="h-3.5 w-3.5" /> Broadcast Announcement
             </button>
           </div>
@@ -137,20 +137,20 @@ export default function NotificationsHubConsole() {
         {stats && (
           <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { label: "Total Dispatched", value: stats.totalDispatched.toLocaleString("en-IN"), icon: Send, bg: "bg-blue-50", color: "text-primary" },
-              { label: "Delivery Success Rate", value: stats.deliverySuccessRate, icon: CheckCircle2, bg: "bg-green-50", color: "text-green-600" },
-              { label: "Audience Read Rate", value: stats.readRate, icon: Eye, bg: "bg-indigo-50", color: "text-indigo-600" },
-              { label: "Active Scheduled Reminders", value: stats.activeScheduled, icon: Clock, bg: "bg-amber-50", color: "text-amber-600" }
+              { label: "Total Dispatched", value: stats.totalDispatched.toLocaleString("en-IN"), icon: Send, bg: "bg-[#FFF0ED]", color: "text-[#FF5A36]" },
+              { label: "Delivery Success Rate", value: stats.deliverySuccessRate, icon: CheckCircle2, bg: "bg-[#E8F2EC]", color: "text-[#2F6B4F]" },
+              { label: "Audience Read Rate", value: stats.readRate, icon: Eye, bg: "bg-[#FF5A36]/50", color: "text-[#FF5A36]/600" },
+              { label: "Active Scheduled Reminders", value: stats.activeScheduled, icon: Clock, bg: "bg-[#FEF3C7]", color: "text-amber-600" }
             ].map((stat) => {
               const Icon = stat.icon;
               return (
-                <div key={stat.label} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
+                <div key={stat.label} className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 flex items-center gap-3">
                   <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${stat.bg}`}>
-                    <Icon className={`h-4.5 w-4.5 ${stat.color}`} />
+                    <Icon className={`h-[1.125rem] w-[1.125rem] ${stat.color}`} />
                   </div>
                   <div>
-                    <div className="text-base font-extrabold text-slate-800">{stat.value}</div>
-                    <div className="text-[10px] text-slate-500 font-medium">{stat.label}</div>
+                    <div className="text-base font-extrabold text-[#211F1D]">{stat.value}</div>
+                    <div className="text-[10px] text-[#78716A] font-medium">{stat.label}</div>
                   </div>
                 </div>
               );
@@ -159,14 +159,14 @@ export default function NotificationsHubConsole() {
         )}
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-0 mt-5 border-t border-slate-100 pt-0 -mb-5">
+        <div className="flex items-center gap-0 mt-5 border-t border-[#E2DCD2] pt-0 -mb-5">
           {[
             { key: "broadcasts", label: "Broadcast History", count: broadcasts.length },
             { key: "templates", label: "Message Templates", count: templates.length },
             { key: "scheduled", label: "Scheduled Queue", count: stats?.activeScheduled || 0 }
           ].map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
-              {tab.label} {tab.count !== null && <span className="text-[9px] px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded-full font-bold">{tab.count}</span>}
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"}`}>
+              {tab.label} {tab.count !== null && <span className="text-[10px] px-1.5 py-0.2 bg-[#EFE9DF] text-[#78716A] rounded-full font-bold">{tab.count}</span>}
             </button>
           ))}
         </div>
@@ -174,20 +174,20 @@ export default function NotificationsHubConsole() {
 
       {/* ── Toolbar ── */}
       {activeTab === "broadcasts" && (
-        <div className="bg-white border-b border-slate-100 px-8 py-3 flex items-center gap-3 flex-wrap">
+        <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-3 flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search announcements, audiences, content…"
-              className="w-full pl-9 pr-3 h-8 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 bg-white"
+              className="w-full pl-9 pr-3 h-8 text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36]/20 bg-[#FBF7F0]"
             />
           </div>
 
           <div className="flex items-center gap-2 text-xs">
-            <label className="font-semibold text-slate-500 uppercase tracking-wide text-[10px]">Channel</label>
-            <select value={channelFilter} onChange={(e) => setChannelFilter(e.target.value)} className="h-8 border border-slate-200 rounded-lg px-2 bg-white focus:outline-none">
+            <label className="font-semibold text-[#78716A] uppercase tracking-wide text-[10px]">Channel</label>
+            <select value={channelFilter} onChange={(e) => setChannelFilter(e.target.value)} className="h-8 border border-[#E2DCD2] rounded-lg px-2 bg-[#FBF7F0] focus:outline-none">
               <option value="ALL">All Channels</option>
               <option value="IN_APP">In-App Only</option>
               <option value="EMAIL">Email</option>
@@ -201,7 +201,7 @@ export default function NotificationsHubConsole() {
       <div className="flex-1 overflow-auto p-8">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
           </div>
         ) : (
           <AnimatePresence mode="wait">
@@ -213,29 +213,29 @@ export default function NotificationsHubConsole() {
                   <motion.div
                     key={b.id}
                     whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
-                    className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-3 transition-all"
+                    className="card-flat rounded-2xl p-5 flex flex-col gap-3 transition-all"
                   >
                     <div className="flex justify-between items-start">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{b.id}</span>
-                      <span className={`text-[9px] px-2 py-0.5 rounded font-bold border ${b.status === "SENT" ? "bg-green-50 text-green-700 border-green-150" : "bg-amber-50 text-amber-700 border-amber-150"}`}>
+                      <span className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wider">{b.id}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded font-bold border ${b.status === "SENT" ? "bg-[#E8F2EC] text-[#2F6B4F] border-green-150" : "bg-[#FEF3C7] text-[#B45309] border-amber-150"}`}>
                         {b.status}
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="text-xs font-bold text-slate-800 leading-snug">{b.title}</h3>
-                      <p className="text-[9px] text-slate-450 font-semibold mt-0.5">Audience: {b.targetAudience} · Channel: {b.channel}</p>
+                      <h3 className="text-xs font-bold text-[#211F1D] leading-snug">{b.title}</h3>
+                      <p className="text-[10px] text-[#78716A] font-semibold mt-0.5">Audience: {b.targetAudience} · Channel: {b.channel}</p>
                     </div>
 
-                    <p className="text-[10px] text-slate-600 line-clamp-2 leading-relaxed">"{b.message}"</p>
+                    <p className="text-[10px] text-[#57534E] line-clamp-2 leading-relaxed">"{b.message}"</p>
 
-                    <div className="flex justify-between items-center text-[10px] text-slate-500 pt-2.5 border-t border-slate-50">
+                    <div className="flex justify-between items-center text-[10px] text-[#78716A] pt-2.5 border-t border-slate-50">
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase block font-semibold leading-none">Recipients</span>
-                        <span className="font-bold text-slate-700">{b.recipientsCount} ({Math.round((b.readCount / (b.recipientsCount || 1)) * 100)}% Read)</span>
+                        <span className="text-[10px] text-[#A8A196] uppercase block font-semibold leading-none">Recipients</span>
+                        <span className="font-bold text-[#211F1D]">{b.recipientsCount} ({Math.round((b.readCount / (b.recipientsCount || 1)) * 100)}% Read)</span>
                       </div>
                       
-                      <span className="text-[9px] text-slate-400 font-semibold">
+                      <span className="text-[10px] text-[#A8A196] font-semibold">
                         {b.sentAt ? new Date(b.sentAt).toLocaleString("en-IN") : "Scheduled"}
                       </span>
                     </div>
@@ -246,16 +246,16 @@ export default function NotificationsHubConsole() {
 
             {/* ──── TEMPLATES TAB ──── */}
             {activeTab === "templates" && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><Mail className="h-4.5 w-4.5 text-primary" /> System Notification Templates</h3>
+              <div className="card-flat rounded-2xl p-5 space-y-4">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><Mail className="h-[1.125rem] w-[1.125rem] text-[#FF5A36]" /> System Notification Templates</h3>
                 <div className="space-y-3">
                   {templates.map((t) => (
-                    <div key={t.id} className="border border-slate-100 rounded-xl p-4 space-y-2 text-xs">
+                    <div key={t.id} className="border border-[#E2DCD2] rounded-xl p-4 space-y-2 text-xs">
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-slate-800">{t.name}</span>
-                        <span className="text-[9px] bg-blue-50 text-primary border border-blue-150 rounded px-2 py-0.5 font-bold">{t.channel}</span>
+                        <span className="font-bold text-[#211F1D]">{t.name}</span>
+                        <span className="text-[10px] bg-[#FFF0ED] text-[#FF5A36] border border-blue-150 rounded px-2 py-0.5 font-bold">{t.channel}</span>
                       </div>
-                      <p className="text-[10px] text-slate-500 font-mono bg-slate-50 p-2 rounded">"{t.body}"</p>
+                      <p className="text-[10px] text-[#78716A] font-mono bg-[#FBF7F0] p-2 rounded">"{t.body}"</p>
                     </div>
                   ))}
                 </div>
@@ -264,9 +264,9 @@ export default function NotificationsHubConsole() {
 
             {/* ──── SCHEDULED QUEUE TAB ──── */}
             {activeTab === "scheduled" && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><Clock className="h-4.5 w-4.5 text-amber-500" /> Active Scheduled Queue</h3>
-                <p className="text-xs text-slate-500 font-medium">Messages in the scheduled queue will automatically dispatch via RabbitMQ notification events when triggered.</p>
+              <div className="card-flat rounded-2xl p-5 space-y-4">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><Clock className="h-[1.125rem] w-[1.125rem] text-amber-500" /> Active Scheduled Queue</h3>
+                <p className="text-xs text-[#78716A] font-medium">Messages in the scheduled queue will automatically dispatch via RabbitMQ notification events when triggered.</p>
               </div>
             )}
 
@@ -278,27 +278,27 @@ export default function NotificationsHubConsole() {
       <AnimatePresence>
         {createOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setCreateOpen(false)}>
-            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-white rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
                 <h3 className="text-sm font-bold text-slate-855">Broadcast System Notification</h3>
-                <button onClick={() => setCreateOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="h-4 w-4" /></button>
+                <button onClick={() => setCreateOpen(false)} className="text-[#A8A196] hover:text-[#57534E]"><X className="h-4 w-4" /></button>
               </div>
 
               <div className="space-y-3.5 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Announcement Title *</label>
-                  <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Q3 Grant Application Portal Open" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Announcement Title *</label>
+                  <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Q3 Grant Application Portal Open" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                 </div>
 
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Message Content *</label>
-                  <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3} placeholder="Write announcement text…" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Message Content *</label>
+                  <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={3} placeholder="Write announcement text…" className="w-full p-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Target Audience *</label>
-                    <select value={targetAudience} onChange={(e) => setTargetAudience(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white">
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Target Audience *</label>
+                    <select value={targetAudience} onChange={(e) => setTargetAudience(e.target.value)} className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]">
                       <option value="ALL_USERS">All Platform Users</option>
                       <option value="INDUSTRIES">Industry Partners Only</option>
                       <option value="EXPERTS">Subject Experts Only</option>
@@ -307,8 +307,8 @@ export default function NotificationsHubConsole() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Channel *</label>
-                    <select value={channel} onChange={(e) => setChannel(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white">
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Channel *</label>
+                    <select value={channel} onChange={(e) => setChannel(e.target.value)} className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]">
                       <option value="ALL">All Channels (In-App + Email)</option>
                       <option value="IN_APP">In-App Banner Only</option>
                       <option value="EMAIL">Email Dispatch Only</option>
@@ -317,16 +317,16 @@ export default function NotificationsHubConsole() {
                 </div>
 
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Schedule Dispatched Time (Optional)</label>
-                  <input type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Schedule Dispatched Time (Optional)</label>
+                  <input type="datetime-local" value={scheduledAt} onChange={(e) => setScheduledAt(e.target.value)} className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
-                <button onClick={handleCreateBroadcast} disabled={createLoading} className="h-8 px-4 bg-primary text-white rounded-lg font-bold flex items-center gap-1 hover:bg-blue-700">
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-3.5 mt-4">
+                <button onClick={handleCreateBroadcast} disabled={createLoading} className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold flex items-center gap-1 hover:bg-[#E04826]">
                   {createLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null} Dispatch Broadcast
                 </button>
-                <button onClick={() => setCreateOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg font-semibold hover:bg-slate-50">Cancel</button>
+                <button onClick={() => setCreateOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg font-semibold hover:bg-[#EFE9DF]">Cancel</button>
               </div>
             </motion.div>
           </motion.div>

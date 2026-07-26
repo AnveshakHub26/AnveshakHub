@@ -41,7 +41,7 @@ function EnterprisePanel() {
         <BrandLogo size="md" />
 
         <div className="my-auto space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF0ED] text-[#FF5A36] text-xs font-semibold border border-[#FF5A36]/30">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF0ED] text-[#FF5A36] text-xs font-semibold border border-[#FFCFC4]">
             <ShieldCheck className="h-3.5 w-3.5" />
             Verified R&D Platform
           </div>
@@ -150,7 +150,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             {loginError && (
-              <div className="p-4 bg-[#FFF0ED] border border-[#FF5A36]/30 rounded-xl text-xs space-y-1">
+              <div className="p-4 bg-[#FFF0ED] border border-[#FFCFC4] rounded-xl text-xs space-y-1">
                 <p className="font-bold text-[#FF5A36]">{errorMessages[loginError].title}</p>
                 <p className="text-[#57534E]">{errorMessages[loginError].message}</p>
               </div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
                   onChange={(e) => { setEmail(e.target.value); setEmailError(null); }}
                   onBlur={() => validateEmail(email)}
                   placeholder="name@university.edu or name@company.com"
-                  className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#78716A] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                  className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg pl-10 pr-4 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
                 />
               </div>
               {emailError && <p className="text-[11px] font-medium text-[#FF5A36] mt-1">{emailError}</p>}
@@ -186,7 +186,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg pl-10 pr-10 py-2.5 text-xs text-[#211F1D] placeholder-[#78716A] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
+                  className="w-full bg-[#EFE9DF] border border-[#E2DCD2] rounded-lg pl-10 pr-10 py-2.5 text-xs text-[#211F1D] placeholder-[#A8A196] focus:outline-none focus:border-[#FF5A36] min-h-[44px]"
                 />
                 <button
                   type="button"

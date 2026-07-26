@@ -124,19 +124,19 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
   return (
     <div className="p-8 space-y-6">
       {/* Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+      <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-4">
         <div className="flex items-center gap-3">
-          <Link href="/expert/meetings" className="h-8 w-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-50">
+          <Link href="/expert/meetings" className="h-8 w-8 rounded-lg border border-[#E2DCD2] flex items-center justify-center text-[#78716A] hover:text-[#211F1D] hover:bg-[#FBF7F0]">
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <h1 className="text-base font-bold text-slate-900">{mtg.title}</h1>
-            <p className="text-xs text-slate-500 font-semibold">{mtg.orgName} · {mtg.projectName || "General R&D Sync"}</p>
+            <h1 className="text-base font-bold text-[#211F1D]">{mtg.title}</h1>
+            <p className="text-xs text-[#78716A] font-semibold">{mtg.orgName} · {mtg.projectName || "General R&D Sync"}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <button onClick={fetchWorkspace} className="h-8 w-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700">
+          <button onClick={fetchWorkspace} className="h-8 w-8 rounded-lg border border-[#E2DCD2] flex items-center justify-center text-[#78716A] hover:text-[#211F1D]">
             <RefreshCw className="h-3.5 w-3.5" />
           </button>
           <a
@@ -151,7 +151,7 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-0 border-b border-slate-200 -mb-2.5">
+      <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "mom", label: "Minutes of Meeting (MoM)", icon: FileText },
           { key: "actions", label: `Action Items (${mtg.actionItems.length})`, icon: CheckCircle2 },
@@ -164,7 +164,7 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all -mb-[2px] ${
-                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-[#78716A] hover:text-[#211F1D]"
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {t.label}
@@ -174,12 +174,12 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 min-h-[360px]">
+      <div className="bg-white border border-[#E2DCD2] rounded-2xl p-6 min-h-[360px]">
         {/* MOM EDITOR TAB */}
         {activeTab === "mom" && (
           <div className="space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Minutes of Meeting (MoM) Editor</h3>
+            <div className="flex items-center justify-between border-b border-[#E2DCD2] pb-3">
+              <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Minutes of Meeting (MoM) Editor</h3>
               <button onClick={handleSaveMom} disabled={savingMom}
                 className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-primary-hover flex items-center gap-1.5">
                 {savingMom ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3.5 w-3.5" />} Save MoM Notes
@@ -191,7 +191,7 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
               onChange={e => setMomNotes(e.target.value)}
               rows={10}
               placeholder="Record key technical decisions, hardware test observations, deliverable deadlines discussed during the call..."
-              className="w-full p-4 border border-slate-200 rounded-xl focus:outline-none focus:border-primary text-xs leading-relaxed font-sans"
+              className="w-full p-4 border border-[#E2DCD2] rounded-xl focus:outline-none focus:border-primary text-xs leading-relaxed font-sans"
             />
           </div>
         )}
@@ -199,22 +199,22 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
         {/* ACTION ITEMS TAB */}
         {activeTab === "actions" && (
           <div className="space-y-4 text-xs">
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Follow-up Action Checklist</h3>
+            <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Follow-up Action Checklist</h3>
             <div className="space-y-2">
               {mtg.actionItems.map(act => (
-                <div key={act.id} className="border border-slate-100 rounded-xl p-3.5 flex items-center justify-between bg-slate-50">
+                <div key={act.id} className="border border-[#E2DCD2] rounded-xl p-3.5 flex items-center justify-between bg-[#FBF7F0]">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleToggleActionItem(act.id, act.status)}
                       className={`h-5 w-5 rounded border flex items-center justify-center ${
-                        act.status === "DONE" ? "bg-green-500 text-white border-green-500" : "border-slate-300 bg-white"
+                        act.status === "DONE" ? "bg-[#E8F2EC]0 text-white border-green-500" : "border-slate-300 bg-white"
                       }`}
                     >
                       {act.status === "DONE" && <Check className="h-3.5 w-3.5" />}
                     </button>
                     <div>
-                      <span className={`font-bold ${act.status === "DONE" ? "line-through text-slate-400" : "text-slate-800"}`}>{act.title}</span>
-                      <p className="text-[9px] text-slate-400 font-semibold">Assignee: {act.assignee} · Due: {act.dueDate}</p>
+                      <span className={`font-bold ${act.status === "DONE" ? "line-through text-[#A8A196]" : "text-[#211F1D]"}`}>{act.title}</span>
+                      <p className="text-[9px] text-[#A8A196] font-semibold">Assignee: {act.assignee} · Due: {act.dueDate}</p>
                     </div>
                   </div>
                 </div>
@@ -222,11 +222,11 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
             </div>
 
             {/* Add Action Item */}
-            <div className="flex gap-2 max-w-lg border-t border-slate-100 pt-3">
+            <div className="flex gap-2 max-w-lg border-t border-[#E2DCD2] pt-3">
               <input value={newActionTitle} onChange={e => setNewActionTitle(e.target.value)} placeholder="Add new action item task..."
-                className="h-8 px-3 border border-slate-200 rounded-lg flex-1 text-xs" />
+                className="h-8 px-3 border border-[#E2DCD2] rounded-lg flex-1 text-xs" />
               <input value={newActionAssignee} onChange={e => setNewActionAssignee(e.target.value)} placeholder="Assignee..."
-                className="h-8 px-3 border border-slate-200 rounded-lg w-32 text-xs" />
+                className="h-8 px-3 border border-[#E2DCD2] rounded-lg w-32 text-xs" />
               <button onClick={handleAddActionItem} className="h-8 px-3 bg-primary text-white rounded-lg font-bold text-xs hover:bg-primary-hover">Add</button>
             </div>
           </div>
@@ -235,12 +235,12 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
         {/* PARTICIPANTS TAB */}
         {activeTab === "participants" && (
           <div className="space-y-3 text-xs">
-            <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[10px]">Session Participants Roster</h3>
+            <h3 className="font-bold text-[#211F1D] uppercase tracking-wide text-[10px]">Session Participants Roster</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {mtg.participants.map((p, i) => (
-                <div key={i} className="border border-slate-100 rounded-xl p-3 bg-slate-50 flex items-center justify-between">
-                  <span className="font-bold text-slate-800">{p.name}</span>
-                  <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-blue-50 text-blue-700">{p.role}</span>
+                <div key={i} className="border border-[#E2DCD2] rounded-xl p-3 bg-[#FBF7F0] flex items-center justify-between">
+                  <span className="font-bold text-[#211F1D]">{p.name}</span>
+                  <span className="text-[9px] font-extrabold px-2 py-0.5 rounded bg-[#FFF0ED] text-[#FF5A36]">{p.role}</span>
                 </div>
               ))}
             </div>

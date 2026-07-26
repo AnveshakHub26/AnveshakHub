@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Settings, Shield, Lock, Bell, Eye, Save, Loader2,
-  CheckCircle2, Globe, Moon, Sun
+  CheckCircle2, Globe, Moon, Sun, User, Phone, Mail, Key
 } from "lucide-react";
 
 interface StudentSettings {
@@ -16,10 +16,32 @@ interface StudentSettings {
   defaultCurrency: string;
 }
 
+function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
+  return (
+    <label className="flex items-center justify-between gap-4 cursor-pointer group">
+      <div className="flex-1">
+        <p className="text-sm font-semibold" style={{ color: "var(--text-heading)" }}>{label}</p>
+      </div>
+      <div className="relative shrink-0" style={{ width: "2.5rem", height: "1.375rem" }}>
+        <input type="checkbox" checked={checked} onChange={onChange} className="sr-only" aria-label={label} />
+        <div
+          className="absolute inset-0 rounded-full transition-colors duration-200"
+          style={{ backgroundColor: checked ? "var(--brand)" : "var(--border-muted)" }}
+        />
+        <div
+          className="absolute top-0.5 left-0.5 h-[1.0625rem] w-[1.0625rem] bg-[#FBF7F0] rounded-full shadow transition-transform duration-200"
+          style={{ transform: checked ? "translateX(1.125rem)" : "translateX(0)" }}
+        />
+      </div>
+    </label>
+  );
+}
+
 export default function StudentSettingsPage() {
   const [settings, setSettings] = useState<StudentSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const fetchSettings = useCallback(async () => {
     setLoading(true);
@@ -34,25 +56,24 @@ export default function StudentSettingsPage() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchSettings();
-  }, [fetchSettings]);
+  useEffect(() => { fetchSettings(); }, [fetchSettings]);
 
-  const handleToggleSetting = (key: keyof StudentSettings) => {
+  const toggle = (key: keyof StudentSettings) => {
     if (!settings) return;
     setSettings({ ...settings, [key]: !settings[key] });
   };
 
-  const handleSaveSettings = async () => {
+  const handleSave = async () => {
     if (!settings) return;
     setSaving(true);
     try {
       await fetch("/api/student/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settings)
+        body: JSON.stringify(settings),
       });
-      await fetchSettings();
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
     } catch (e) {
       console.error(e);
     } finally {
@@ -62,95 +83,141 @@ export default function StudentSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center min-h-[60vh]" style={{ backgroundColor: "var(--bg-app)" }}>
+        <div className="flex flex-col items-center gap-3">
+          <div className="spinner" />
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading account settings…</p>
+        </div>
       </div>
     );
   }
 
   if (!settings) return null;
 
+  const SECTIONS = [
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: Bell,
+      items: [
+        { key: "emailAlerts", label: "Email Alerts", desc: "Receive application updates, meeting invites, and milestone alerts via email." },
+        { key: "smsAlerts", label: "SMS Alerts", desc: "Get urgent application status changes via SMS." },
+      ],
+    },
+    {
+      id: "security",
+      label: "Security",
+      icon: Shield,
+      items: [
+        { key: "mfaEnabled", label: "Two-Factor Authentication (2FA)", desc: "Protect your account with an authenticator app or SMS OTP." },
+      ],
+    },
+    {
+      id: "privacy",
+      label: "Privacy",
+      icon: Eye,
+      items: [
+        { key: "privacyMode", label: "Private Profile", desc: "Hide your profile from industry search results. Recruiters won't see you." },
+      ],
+    },
+  ];
+
   return (
-    <div className="p-8 space-y-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">Student Account Settings</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Manage security, two-factor authentication (2FA), directory privacy, and alert preferences</p>
-        </div>
-        <button onClick={handleSaveSettings} disabled={saving}
-          className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
-          {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3.5 w-3.5" />} Save Preferences
-        </button>
-      </div>
-
-      <div className="space-y-6">
-        {/* Security & Authentication */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
-            <Shield className="h-4 w-4 text-primary" /> Security & 2FA Architecture
-          </h3>
-
-          <div className="space-y-3 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <p className="font-bold text-slate-800">Two-Factor Authentication (2FA)</p>
-                <p className="text-[10px] text-slate-400 font-semibold">Require TOTP authenticator code on student portal login</p>
-              </div>
-              <button
-                onClick={() => handleToggleSetting("mfaEnabled")}
-                className={`h-6 w-11 rounded-full p-0.5 transition-colors ${settings.mfaEnabled ? "bg-primary" : "bg-slate-300"}`}
-              >
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform ${settings.mfaEnabled ? "translate-x-5" : "translate-x-0"}`} />
-              </button>
+    <div className="min-h-screen" style={{ backgroundColor: "var(--bg-app)" }}>
+      {/* Page Header */}
+      <div className="page-header">
+        <div className="page-content py-8">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--brand)" }}>
+                Account Preferences
+              </span>
+              <h1 className="text-2xl font-extrabold mt-1" style={{ color: "var(--text-heading)", fontFamily: "var(--font-heading)" }}>
+                Settings
+              </h1>
+              <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+                Manage your security, privacy, and alert preferences.
+              </p>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
-              <div>
-                <p className="font-bold text-slate-800">Directory Privacy Mode</p>
-                <p className="text-[10px] text-slate-400 font-semibold">Hide phone & personal email from non-mentoring experts</p>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="btn-primary btn-sm"
+            >
+              {saving
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving…</>
+                : saved
+                ? <><CheckCircle2 className="h-4 w-4" /> Saved!</>
+                : <><Save className="h-4 w-4" /> Save Changes</>}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="page-content py-8 max-w-2xl space-y-6">
+        {SECTIONS.map((section) => {
+          const Icon = section.icon;
+          return (
+            <div key={section.id} className="card-flat rounded-2xl overflow-hidden">
+              <div className="px-6 py-4 border-b flex items-center gap-2" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-elevated)" }}>
+                <Icon className="h-4 w-4" style={{ color: "var(--brand)" }} />
+                <h2 className="text-sm font-bold" style={{ color: "var(--text-heading)" }}>{section.label}</h2>
               </div>
-              <button
-                onClick={() => handleToggleSetting("privacyMode")}
-                className={`h-6 w-11 rounded-full p-0.5 transition-colors ${settings.privacyMode ? "bg-primary" : "bg-slate-300"}`}
+              <div className="divide-y divide-[#E2DCD2]">
+                {section.items.map((item) => (
+                  <div key={item.key} className="px-6 py-4">
+                    <Toggle
+                      checked={settings[item.key as keyof StudentSettings] as boolean}
+                      onChange={() => toggle(item.key as keyof StudentSettings)}
+                      label={item.label}
+                    />
+                    <p className="text-xs mt-1 ml-0" style={{ color: "var(--text-muted)" }}>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Appearance */}
+        <div className="card-flat rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b flex items-center gap-2" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-elevated)" }}>
+            <Globe className="h-4 w-4" style={{ color: "var(--brand)" }} />
+            <h2 className="text-sm font-bold" style={{ color: "var(--text-heading)" }}>Display</h2>
+          </div>
+          <div className="px-6 py-5 space-y-4">
+            <div>
+              <label className="form-label">Preferred Theme</label>
+              <select
+                className="input-field"
+                value={settings.theme}
+                onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
               >
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform ${settings.privacyMode ? "translate-x-5" : "translate-x-0"}`} />
-              </button>
+                <option value="light">Light</option>
+                <option value="system">System Default</option>
+              </select>
+              <p className="form-hint">Dark mode coming soon.</p>
             </div>
           </div>
         </div>
 
-        {/* Notifications & Communication */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
-            <Bell className="h-4 w-4 text-primary" /> Notification Channels
-          </h3>
-
-          <div className="space-y-3 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        {/* Danger Zone */}
+        <div className="card-flat rounded-2xl overflow-hidden" style={{ border: "1px solid var(--danger-border)" }}>
+          <div className="px-6 py-4 border-b flex items-center gap-2" style={{ borderColor: "var(--danger-border)", backgroundColor: "var(--danger-subtle)" }}>
+            <Lock className="h-4 w-4" style={{ color: "var(--danger)" }} />
+            <h2 className="text-sm font-bold" style={{ color: "var(--danger)" }}>Danger Zone</h2>
+          </div>
+          <div className="px-6 py-5 space-y-4">
+            <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="font-bold text-slate-800">Email Notifications</p>
-                <p className="text-[10px] text-slate-400 font-semibold">Receive emails for internship approvals & video meeting invites</p>
+                <p className="text-sm font-semibold" style={{ color: "var(--text-heading)" }}>Delete Account</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+                  Permanently delete your account and all associated data. This cannot be undone.
+                </p>
               </div>
-              <button
-                onClick={() => handleToggleSetting("emailAlerts")}
-                className={`h-6 w-11 rounded-full p-0.5 transition-colors ${settings.emailAlerts ? "bg-primary" : "bg-slate-300"}`}
-              >
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform ${settings.emailAlerts ? "translate-x-5" : "translate-x-0"}`} />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between pt-1">
-              <div>
-                <p className="font-bold text-slate-800">SMS Alerts</p>
-                <p className="text-[10px] text-slate-400 font-semibold">Receive SMS reminders 15 minutes prior to scheduled review calls</p>
-              </div>
-              <button
-                onClick={() => handleToggleSetting("smsAlerts")}
-                className={`h-6 w-11 rounded-full p-0.5 transition-colors ${settings.smsAlerts ? "bg-primary" : "bg-slate-300"}`}
-              >
-                <div className={`h-5 w-5 rounded-full bg-white transition-transform ${settings.smsAlerts ? "translate-x-5" : "translate-x-0"}`} />
-              </button>
+              <button className="btn-danger btn-sm shrink-0">Delete Account</button>
             </div>
           </div>
         </div>

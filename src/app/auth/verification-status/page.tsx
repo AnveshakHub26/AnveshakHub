@@ -169,13 +169,13 @@ const fadeUp: Variants = {
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 const badgeConfig: Record<BadgeVariant, { label: string; icon: typeof CheckCircle2; classes: string }> = {
-  pending:         { label: "Pending",         icon: Hourglass,     classes: "bg-slate-100 text-slate-600 border-slate-200" },
-  in_progress:     { label: "In Progress",     icon: Loader2,       classes: "bg-blue-50 text-primary border-blue-200" },
-  action_required: { label: "Action Required", icon: AlertTriangle, classes: "bg-amber-50 text-amber-700 border-amber-200" },
-  under_review:    { label: "Under Review",    icon: Search,        classes: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  approved:        { label: "Approved",        icon: BadgeCheck,    classes: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  rejected:        { label: "Rejected",        icon: XCircle,       classes: "bg-red-50 text-red-700 border-red-200" },
-  on_hold:         { label: "On Hold",         icon: PauseCircle,   classes: "bg-orange-50 text-orange-700 border-orange-200" }
+  pending:         { label: "Pending",         icon: Hourglass,     classes: "bg-[#EFE9DF] text-[#57534E] border-[#E2DCD2]" },
+  in_progress:     { label: "In Progress",     icon: Loader2,       classes: "bg-[#FFF0ED] text-[#FF5A36] border-[#FFCFC4]" },
+  action_required: { label: "Action Required", icon: AlertTriangle, classes: "bg-[#FEF3C7] text-[#B45309] border-amber-200" },
+  under_review:    { label: "Under Review",    icon: Search,        classes: "bg-[#FF5A36]/50 text-[#FF5A36]/700 border-indigo-200" },
+  approved:        { label: "Approved",        icon: BadgeCheck,    classes: "bg-[#E8F2EC] text-[#2F6B4F] border-[#BBD9C8]" },
+  rejected:        { label: "Rejected",        icon: XCircle,       classes: "bg-[#FEE2E2] text-[#C0392B] border-[#FECACA]" },
+  on_hold:         { label: "On Hold",         icon: PauseCircle,   classes: "bg-[#FFF4ED] text-[#C2410C] border-orange-200" }
 };
 
 function StatusBadge({ variant, size = "sm" }: { variant: BadgeVariant; size?: "xs" | "sm" }) {
@@ -185,7 +185,7 @@ function StatusBadge({ variant, size = "sm" }: { variant: BadgeVariant; size?: "
   return (
     <span className={[
       "inline-flex items-center gap-1 rounded-full border font-bold",
-      size === "xs" ? "px-1.5 py-0.5 text-[9px]" : "px-2 py-0.5 text-[10px]",
+      size === "xs" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-[10px]",
       cfg.classes
     ].join(" ")}>
       <Icon className={["h-2.5 w-2.5", isSpinning ? "animate-spin" : ""].join(" ")} />
@@ -197,12 +197,12 @@ function StatusBadge({ variant, size = "sm" }: { variant: BadgeVariant; size?: "
 // ─── Priority Badge ───────────────────────────────────────────────────────────
 function PriorityBadge({ priority }: { priority: "high" | "medium" | "low" }) {
   const map = {
-    high:   "bg-red-50 text-red-700 border-red-200",
-    medium: "bg-amber-50 text-amber-700 border-amber-200",
-    low:    "bg-slate-100 text-slate-500 border-slate-200"
+    high:   "bg-[#FEE2E2] text-[#C0392B] border-[#FECACA]",
+    medium: "bg-[#FEF3C7] text-[#B45309] border-amber-200",
+    low:    "bg-[#EFE9DF] text-[#78716A] border-[#E2DCD2]"
   };
   return (
-    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-wider ${map[priority]}`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full border text-[10px] font-black uppercase tracking-wider ${map[priority]}`}>
       {priority}
     </span>
   );
@@ -216,10 +216,10 @@ function TimelineStage({ stage, custom }: { stage: TimelineStage; custom: number
         <div className={[
           "h-9 w-9 rounded-xl flex items-center justify-center shrink-0 border-2 transition-all",
           stage.status === "completed"       ? "bg-emerald-600 border-emerald-600 text-white" :
-          stage.status === "in_progress"     ? "bg-primary border-primary text-white ring-4 ring-primary/15" :
-          stage.status === "action_required" ? "bg-amber-500 border-amber-500 text-white ring-4 ring-amber-500/20" :
+          stage.status === "in_progress"     ? "bg-[#FF5A36] border-[#FF5A36] text-white ring-4 ring-[#FF5A36]/15" :
+          stage.status === "action_required" ? "bg-[#FEF3C7]0 border-amber-500 text-white ring-4 ring-amber-500/20" :
           stage.status === "on_hold"         ? "bg-orange-400 border-orange-400 text-white" :
-                                               "bg-white border-slate-200 text-slate-400"
+                                               "bg-[#FBF7F0] border-[#E2DCD2] text-[#A8A196]"
         ].join(" ")}>
           {stage.status === "completed"       ? <CheckCircle2 className="h-4 w-4" /> :
            stage.status === "in_progress"     ? <Loader2 className="h-4 w-4 animate-spin" /> :
@@ -230,7 +230,7 @@ function TimelineStage({ stage, custom }: { stage: TimelineStage; custom: number
         {stage.id < 9 && (
           <div className={[
             "w-0.5 rounded-full mt-1",
-            stage.status === "completed" ? "bg-emerald-200" :
+            stage.status === "completed" ? "bg-[#BBD9C8]" :
             stage.status === "in_progress" ? "bg-blue-200" : "bg-slate-150"
           ].join(" ")} style={{ minHeight: 28 }} />
         )}
@@ -240,26 +240,26 @@ function TimelineStage({ stage, custom }: { stage: TimelineStage; custom: number
         <div className="flex flex-wrap items-center gap-2 mb-1">
           <span className={[
             "text-xs font-extrabold",
-            stage.status === "completed"       ? "text-emerald-800" :
-            stage.status === "in_progress"     ? "text-primary" :
-            stage.status === "action_required" ? "text-amber-700" :
-                                                 "text-slate-500"
+            stage.status === "completed"       ? "text-[#2F6B4F]/800" :
+            stage.status === "in_progress"     ? "text-[#FF5A36]" :
+            stage.status === "action_required" ? "text-[#B45309]" :
+                                                 "text-[#78716A]"
           ].join(" ")}>{stage.label}</span>
           {stage.status === "completed"       && <StatusBadge variant="approved" size="xs" />}
           {stage.status === "in_progress"     && <StatusBadge variant="in_progress" size="xs" />}
           {stage.status === "action_required" && <StatusBadge variant="action_required" size="xs" />}
           {stage.status === "on_hold"         && <StatusBadge variant="on_hold" size="xs" />}
         </div>
-        <p className="text-[11px] text-slate-500 leading-relaxed mb-1.5">{stage.description}</p>
+        <p className="text-[11px] text-[#78716A] leading-relaxed mb-1.5">{stage.description}</p>
         <div className="flex flex-wrap gap-3">
           <div className="flex items-center gap-1">
-            <Clock className="h-3 w-3 text-slate-400" />
-            <span className="text-[10px] text-slate-400 font-medium">{stage.estimatedCompletion}</span>
+            <Clock className="h-3 w-3 text-[#A8A196]" />
+            <span className="text-[10px] text-[#A8A196] font-medium">{stage.estimatedCompletion}</span>
           </div>
           {stage.lastUpdated && (
             <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3 text-slate-400" />
-              <span className="text-[10px] text-slate-400 font-medium">Updated: {stage.lastUpdated}</span>
+              <Calendar className="h-3 w-3 text-[#A8A196]" />
+              <span className="text-[10px] text-[#A8A196] font-medium">Updated: {stage.lastUpdated}</span>
             </div>
           )}
         </div>
@@ -271,23 +271,23 @@ function TimelineStage({ stage, custom }: { stage: TimelineStage; custom: number
 // ─── History Event ────────────────────────────────────────────────────────────
 function HistoryEventRow({ event, custom }: { event: HistoryEvent; custom: number }) {
   const dotColor =
-    event.status === "completed"   ? "bg-emerald-500" :
-    event.status === "in_progress" ? "bg-primary" :
-    event.status === "action_required" ? "bg-amber-500" : "bg-slate-300";
+    event.status === "completed"   ? "bg-[#E8F2EC]0" :
+    event.status === "in_progress" ? "bg-[#FF5A36]" :
+    event.status === "action_required" ? "bg-[#FEF3C7]0" : `bg-[#C4BCB0]`;
 
   return (
     <motion.div custom={custom} variants={fadeUp} initial="hidden" animate="visible"
-      className="flex gap-3 py-3 border-b border-slate-100 last:border-0"
+      className="flex gap-3 py-3 border-b border-[#E2DCD2] last:border-0"
     >
       <div className="flex flex-col items-center pt-1.5">
         <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${dotColor}`} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <p className="text-xs font-bold text-slate-700">{event.event}</p>
-          <span className="text-[9px] text-slate-400 font-medium whitespace-nowrap shrink-0">{event.timestamp}</span>
+          <p className="text-xs font-bold text-[#211F1D]">{event.event}</p>
+          <span className="text-[10px] text-[#A8A196] font-medium whitespace-nowrap shrink-0">{event.timestamp}</span>
         </div>
-        <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">{event.description}</p>
+        <p className="text-[10px] text-[#78716A] mt-0.5 leading-relaxed">{event.description}</p>
       </div>
     </motion.div>
   );
@@ -302,10 +302,10 @@ function NotificationCard({
   onRead: (id: string) => void;
 }) {
   const typeConfig = {
-    info:    { icon: Info,          bg: "bg-blue-50",   border: "border-blue-100",   dot: "bg-primary" },
-    success: { icon: CheckCircle2,  bg: "bg-emerald-50",border: "border-emerald-100",dot: "bg-emerald-500" },
-    warning: { icon: AlertTriangle, bg: "bg-amber-50",  border: "border-amber-100",  dot: "bg-amber-500" },
-    action:  { icon: AlertTriangle, bg: "bg-amber-50",  border: "border-amber-200",  dot: "bg-amber-500" }
+    info:    { icon: Info,          bg: "bg-[#FFF0ED]",   border: "border-blue-100",   dot: "bg-[#FF5A36]" },
+    success: { icon: CheckCircle2,  bg: "bg-[#E8F2EC]",border: "border-emerald-100",dot: "bg-[#E8F2EC]0" },
+    warning: { icon: AlertTriangle, bg: "bg-[#FEF3C7]",  border: "border-amber-100",  dot: "bg-[#FEF3C7]0" },
+    action:  { icon: AlertTriangle, bg: "bg-[#FEF3C7]",  border: "border-amber-200",  dot: "bg-[#FEF3C7]0" }
   };
   const cfg = typeConfig[notif.type];
   const Icon = cfg.icon;
@@ -314,21 +314,21 @@ function NotificationCard({
     <div
       onClick={() => onRead(notif.id)}
       className={[
-        "flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all hover:shadow-sm",
+        "flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all hover:shadow-[var(--shadow-sm)]",
         cfg.bg, cfg.border,
         !notif.read ? "ring-1 ring-offset-0" : "opacity-75"
       ].join(" ")}
     >
-      <div className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 bg-white border ${cfg.border}`}>
+      <div className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 bg-[#FBF7F0] border ${cfg.border}`}>
         <Icon className="h-3.5 w-3.5 text-current" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <p className="text-[11px] font-bold text-slate-800 leading-snug">{notif.title}</p>
+          <p className="text-[11px] font-bold text-[#211F1D] leading-snug">{notif.title}</p>
           {!notif.read && <span className={`h-2 w-2 rounded-full shrink-0 mt-1 ${cfg.dot}`} />}
         </div>
-        <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">{notif.message}</p>
-        <p className="text-[9px] text-slate-400 mt-1 font-medium">{notif.timestamp}</p>
+        <p className="text-[10px] text-[#78716A] mt-0.5 leading-relaxed">{notif.message}</p>
+        <p className="text-[10px] text-[#A8A196] mt-1 font-medium">{notif.timestamp}</p>
       </div>
     </div>
   );
@@ -339,15 +339,15 @@ function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
     <motion.div custom={index} variants={fadeUp} initial="hidden" animate="visible"
-      className="border border-slate-200 rounded-xl overflow-hidden"
+      className="border border-[#E2DCD2] rounded-xl overflow-hidden"
     >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left bg-white hover:bg-slate-50 transition-colors group"
+        className="w-full flex items-center justify-between px-5 py-4 text-left bg-[#FBF7F0] hover:bg-[#FBF7F0] transition-colors group"
         aria-expanded={open}
       >
-        <span className="text-xs font-bold text-secondary group-hover:text-primary transition-colors pr-4">{q}</span>
-        {open ? <ChevronUp className="h-4 w-4 text-slate-400 shrink-0" /> : <ChevronDown className="h-4 w-4 text-slate-400 shrink-0" />}
+        <span className="text-xs font-bold text-[#211F1D] group-hover:text-[#FF5A36] transition-colors pr-4">{q}</span>
+        {open ? <ChevronUp className="h-4 w-4 text-[#A8A196] shrink-0" /> : <ChevronDown className="h-4 w-4 text-[#A8A196] shrink-0" />}
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -358,8 +358,8 @@ function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
             transition={{ duration: 0.22, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-4 pt-1 border-t border-slate-100 bg-slate-50/50">
-              <p className="text-xs text-slate-600 leading-relaxed">{a}</p>
+            <div className="px-5 pb-4 pt-1 border-t border-[#E2DCD2] bg-[#FBF7F0]">
+              <p className="text-xs text-[#57534E] leading-relaxed">{a}</p>
             </div>
           </motion.div>
         )}
@@ -398,20 +398,20 @@ function SupportModal({ open, onClose, regId }: { open: boolean; onClose: () => 
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+            className="bg-[#FBF7F0] rounded-2xl shadow-2xl border border-[#E2DCD2] overflow-hidden"
           >
-            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+            <div className="px-6 py-5 border-b border-[#E2DCD2] flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                  <MessageSquare className="h-4 w-4 text-primary" />
+                <div className="h-9 w-9 rounded-xl bg-[#FFF0ED] border border-blue-100 flex items-center justify-center">
+                  <MessageSquare className="h-4 w-4 text-[#FF5A36]" />
                 </div>
                 <div>
-                  <Dialog.Title className="text-sm font-extrabold text-secondary">Contact Verification Team</Dialog.Title>
-                  <p id="support-desc" className="text-[10px] text-slate-400 mt-0.5">Enterprise Verification Support Desk</p>
+                  <Dialog.Title className="text-sm font-extrabold text-[#211F1D]">Contact Verification Team</Dialog.Title>
+                  <p id="support-desc" className="text-[10px] text-[#A8A196] mt-0.5">Enterprise Verification Support Desk</p>
                 </div>
               </div>
               <Dialog.Close asChild>
-                <button className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors" aria-label="Close">
+                <button className="h-8 w-8 flex items-center justify-center rounded-lg text-[#A8A196] hover:text-[#57534E] hover:bg-[#EFE9DF] transition-colors" aria-label="Close">
                   <X className="h-4 w-4" />
                 </button>
               </Dialog.Close>
@@ -422,25 +422,25 @@ function SupportModal({ open, onClose, regId }: { open: boolean; onClose: () => 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Full Name <span className="text-red-500">*</span></label>
+                      <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Full Name <span className="text-red-500">*</span></label>
                       <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Your name"
-                        className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs font-medium placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all" />
+                        className="w-full h-9 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all" />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Organization <span className="text-red-500">*</span></label>
+                      <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Organization <span className="text-red-500">*</span></label>
                       <input required value={form.organization} onChange={e => setForm(f => ({ ...f, organization: e.target.value }))} placeholder="Organization name"
-                        className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs font-medium placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all" />
+                        className="w-full h-9 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Registration ID</label>
+                    <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Registration ID</label>
                     <input value={form.registrationId} readOnly
-                      className="w-full h-9 px-3 rounded-lg border border-slate-100 bg-slate-50 text-xs font-mono font-bold text-slate-600 outline-none cursor-default" />
+                      className="w-full h-9 px-3 rounded-lg border border-[#E2DCD2] bg-[#FBF7F0] text-xs font-mono font-bold text-[#57534E] outline-none cursor-default" />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Subject <span className="text-red-500">*</span></label>
+                    <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Subject <span className="text-red-500">*</span></label>
                     <select required value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
-                      className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs font-medium outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all bg-white">
+                      className="w-full h-9 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all bg-[#FBF7F0]">
                       <option value="">Select a subject…</option>
                       <option>Verification Status Enquiry</option>
                       <option>Document Re-upload Request</option>
@@ -451,32 +451,32 @@ function SupportModal({ open, onClose, regId }: { open: boolean; onClose: () => 
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Message <span className="text-red-500">*</span></label>
+                    <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Message <span className="text-red-500">*</span></label>
                     <textarea required rows={4} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                       placeholder="Describe your query in detail. Include any relevant information…"
-                      className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-xs font-medium placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all resize-none" />
+                      className="w-full px-3 py-2.5 rounded-lg border border-[#E2DCD2] text-xs font-medium placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all resize-none" />
                   </div>
                   <div className="flex gap-3 justify-end pt-1">
                     <Dialog.Close asChild>
-                      <button type="button" className="h-9 px-4 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>
+                      <button type="button" className="h-9 px-4 border border-[#E2DCD2] rounded-lg text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] transition-colors">Cancel</button>
                     </Dialog.Close>
                     <button type="submit" disabled={sending}
-                      className="h-9 px-5 bg-primary hover:bg-blue-700 disabled:opacity-60 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2">
+                      className="h-9 px-5 bg-[#FF5A36] hover:bg-[#E04826] disabled:opacity-60 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2">
                       {sending ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Sending…</> : <><Send className="h-3.5 w-3.5" /> Send Message</>}
                     </button>
                   </div>
                 </form>
               ) : (
                 <div className="text-center py-8">
-                  <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-emerald-50 border-2 border-emerald-100 mb-4">
-                    <CheckCircle2 className="h-7 w-7 text-emerald-600" />
+                  <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-[#E8F2EC] border-2 border-emerald-100 mb-4">
+                    <CheckCircle2 className="h-7 w-7 text-[#2F6B4F]" />
                   </div>
-                  <h3 className="text-sm font-extrabold text-secondary">Message Sent</h3>
-                  <p className="text-xs text-slate-500 mt-2 max-w-xs mx-auto leading-relaxed">
+                  <h3 className="text-sm font-extrabold text-[#211F1D]">Message Sent</h3>
+                  <p className="text-xs text-[#78716A] mt-2 max-w-xs mx-auto leading-relaxed">
                     Our verification team has received your message and will respond within 1–2 business hours.
                   </p>
                   <Dialog.Close asChild>
-                    <button className="mt-5 h-9 px-5 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors">Done</button>
+                    <button className="mt-5 h-9 px-5 bg-[#FF5A36] hover:bg-[#E04826] text-white rounded-lg text-xs font-bold transition-colors">Done</button>
                   </Dialog.Close>
                 </div>
               )}
@@ -585,44 +585,44 @@ export default function VerificationStatusPage() {
   const pendingActionsToShow = mockPendingActions.filter(a => !uploadedActions.has(a.id));
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 relative overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[#FBF7F0] relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_30%,#000_60%,transparent_100%)] opacity-20 pointer-events-none" />
-      <div className="absolute -top-32 -right-32 w-[450px] h-[450px] bg-primary/4 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 -right-32 w-[450px] h-[450px] bg-[#FF5A36]/4 rounded-full blur-3xl pointer-events-none" />
 
       {/* ── Header ── */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 py-3 px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-50 bg-[#FBF7F0]/90 backdrop-blur-md border-b border-[#E2DCD2]/80 py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <BrandLogo size="sm" />
-            <div className="hidden md:flex items-center gap-1.5 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">
-              <Hash className="h-3 w-3 text-slate-500" />
-              <span className="text-[10px] font-black text-slate-600 font-mono tracking-wider">{reg.registrationId}</span>
+            <div className="hidden md:flex items-center gap-1.5 bg-[#EFE9DF] border border-[#E2DCD2] px-3 py-1.5 rounded-lg">
+              <Hash className="h-3 w-3 text-[#78716A]" />
+              <span className="text-[10px] font-black text-[#57534E] font-mono tracking-wider">{reg.registrationId}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {/* Notifications bell */}
             <button
               onClick={markAllRead}
-              className="relative h-9 w-9 inline-flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors"
+              className="relative h-9 w-9 inline-flex items-center justify-center rounded-lg border border-[#E2DCD2] text-[#78716A] hover:bg-[#FBF7F0] hover:text-[#211F1D] transition-colors"
               aria-label={`${unreadCount} unread notifications`}
             >
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#FEE2E2]0 text-white text-[10px] font-black rounded-full flex items-center justify-center">
                   {unreadCount}
                 </span>
               )}
             </button>
             <button
               onClick={() => setShowSupportModal(true)}
-              className="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
+              className="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg border border-[#E2DCD2] text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors"
             >
               <HelpCircle className="h-4 w-4" /> Help
             </button>
             <Link
               href="/auth/login"
-              className="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-blue-700 transition-colors"
+              className="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg bg-[#FF5A36] text-white text-xs font-bold hover:bg-[#E04826] transition-colors"
             >
               <LogIn className="h-4 w-4" /> Login
             </Link>
@@ -638,17 +638,17 @@ export default function VerificationStatusPage() {
           <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="mb-7">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <h1 className="text-xl font-black text-secondary tracking-tight">Registration Verification Status</h1>
-                <p className="text-xs text-slate-500 mt-1">
+                <h1 className="text-xl font-black text-[#211F1D] tracking-tight">Registration Verification Status</h1>
+                <p className="text-xs text-[#78716A] mt-1">
                   Track the progress of your organization verification with AnveshakHub.
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="text-[10px] text-slate-400 font-medium">Last updated: {lastRefreshed}</span>
+                <span className="text-[10px] text-[#A8A196] font-medium">Last updated: {lastRefreshed}</span>
                 <button
                   onClick={handleRefresh}
                   disabled={isRefreshing}
-                  className="h-9 px-3.5 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors shadow-sm disabled:opacity-60"
+                  className="h-9 px-3.5 inline-flex items-center gap-1.5 rounded-lg border border-[#E2DCD2] bg-[#FBF7F0] text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors shadow-[var(--shadow-sm)] disabled:opacity-60"
                 >
                   <RefreshCw className={["h-3.5 w-3.5", isRefreshing ? "animate-spin" : ""].join(" ")} />
                   {isRefreshing ? "Refreshing…" : "Refresh Status"}
@@ -665,17 +665,17 @@ export default function VerificationStatusPage() {
 
               {/* ── Overall Progress Banner ── */}
               <motion.div custom={1} variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden"
+                className="card-flat rounded-2xl overflow-hidden"
               >
                 <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-5">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-extrabold text-secondary">Overall Verification Progress</span>
+                      <TrendingUp className="h-4 w-4 text-[#FF5A36]" />
+                      <span className="text-xs font-extrabold text-[#211F1D]">Overall Verification Progress</span>
                       <StatusBadge variant={reg.status} />
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="flex-1 bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                      <div className="flex-1 bg-[#EFE9DF] rounded-full h-2.5 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${reg.overallProgress}%` }}
@@ -683,16 +683,16 @@ export default function VerificationStatusPage() {
                           className="h-full bg-gradient-to-r from-primary to-blue-400 rounded-full"
                         />
                       </div>
-                      <span className="text-sm font-black text-primary w-10 text-right">{reg.overallProgress}%</span>
+                      <span className="text-sm font-black text-[#FF5A36] w-10 text-right">{reg.overallProgress}%</span>
                     </div>
-                    <p className="text-[10px] text-slate-500 mt-2">
-                      Current Stage: <span className="font-bold text-slate-700">{reg.currentStage}</span>
-                      {" · "}Est. Completion: <span className="font-bold text-slate-700">{reg.estimatedCompletion}</span>
+                    <p className="text-[10px] text-[#78716A] mt-2">
+                      Current Stage: <span className="font-bold text-[#211F1D]">{reg.currentStage}</span>
+                      {" · "}Est. Completion: <span className="font-bold text-[#211F1D]">{reg.estimatedCompletion}</span>
                     </p>
                   </div>
-                  <div className="flex flex-col items-center justify-center bg-blue-50 border border-blue-100 rounded-xl px-5 py-3 shrink-0">
-                    <span className="text-2xl font-black text-primary">{reg.currentStageId}</span>
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">of 9 Stages</span>
+                  <div className="flex flex-col items-center justify-center bg-[#FFF0ED] border border-blue-100 rounded-xl px-5 py-3 shrink-0">
+                    <span className="text-2xl font-black text-[#FF5A36]">{reg.currentStageId}</span>
+                    <span className="text-[10px] font-bold text-[#78716A] uppercase tracking-wider">of 9 Stages</span>
                   </div>
                 </div>
               </motion.div>
@@ -707,14 +707,14 @@ export default function VerificationStatusPage() {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-white border-2 border-amber-300 rounded-2xl shadow-sm overflow-hidden">
-                      <div className="px-6 py-4 bg-amber-50 border-b border-amber-200 flex items-center gap-2.5">
+                    <div className="bg-[#FBF7F0] border-2 border-amber-300 rounded-2xl shadow-[var(--shadow-sm)] overflow-hidden">
+                      <div className="px-6 py-4 bg-[#FEF3C7] border-b border-amber-200 flex items-center gap-2.5">
                         <div className="h-8 w-8 rounded-lg bg-amber-100 border border-amber-200 flex items-center justify-center">
-                          <AlertTriangle className="h-4 w-4 text-amber-700" />
+                          <AlertTriangle className="h-4 w-4 text-[#B45309]" />
                         </div>
                         <div>
                           <h2 className="text-sm font-extrabold text-amber-900">Action Required</h2>
-                          <p className="text-[10px] text-amber-700 mt-0.5">
+                          <p className="text-[10px] text-[#B45309] mt-0.5">
                             {pendingActionsToShow.length} pending action{pendingActionsToShow.length !== 1 ? "s" : ""} — verification is paused until completed
                           </p>
                         </div>
@@ -724,21 +724,21 @@ export default function VerificationStatusPage() {
                           <div key={action.id} className="px-6 py-5">
                             <div className="flex items-start justify-between gap-4 mb-3">
                               <div className="flex items-start gap-3">
-                                <div className="h-8 w-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
-                                  {action.type === "upload" && <Upload className="h-3.5 w-3.5 text-amber-700" />}
-                                  {action.type === "review" && <Eye className="h-3.5 w-3.5 text-amber-700" />}
-                                  {action.type === "sign"   && <FileText className="h-3.5 w-3.5 text-amber-700" />}
-                                  {action.type === "clarify"&& <Info className="h-3.5 w-3.5 text-amber-700" />}
+                                <div className="h-8 w-8 rounded-lg bg-[#FEF3C7] border border-amber-200 flex items-center justify-center shrink-0 mt-0.5">
+                                  {action.type === "upload" && <Upload className="h-3.5 w-3.5 text-[#B45309]" />}
+                                  {action.type === "review" && <Eye className="h-3.5 w-3.5 text-[#B45309]" />}
+                                  {action.type === "sign"   && <FileText className="h-3.5 w-3.5 text-[#B45309]" />}
+                                  {action.type === "clarify"&& <Info className="h-3.5 w-3.5 text-[#B45309]" />}
                                 </div>
                                 <div>
                                   <div className="flex flex-wrap items-center gap-2 mb-1">
-                                    <p className="text-xs font-extrabold text-secondary">{action.title}</p>
+                                    <p className="text-xs font-extrabold text-[#211F1D]">{action.title}</p>
                                     <PriorityBadge priority={action.priority} />
                                   </div>
-                                  <p className="text-[11px] text-slate-600 leading-relaxed">{action.description}</p>
+                                  <p className="text-[11px] text-[#57534E] leading-relaxed">{action.description}</p>
                                   <div className="flex items-center gap-1 mt-1.5">
                                     <Calendar className="h-3 w-3 text-amber-600" />
-                                    <span className="text-[10px] font-bold text-amber-700">Due by {action.dueDate}</span>
+                                    <span className="text-[10px] font-bold text-[#B45309]">Due by {action.dueDate}</span>
                                   </div>
                                 </div>
                               </div>
@@ -764,29 +764,29 @@ export default function VerificationStatusPage() {
 
               {/* ── Current Status ── */}
               <motion.div custom={2} variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6"
+                className="card-flat rounded-2xl p-6"
               >
-                <div className="flex items-center gap-2.5 mb-5 pb-4 border-b border-slate-100">
-                  <div className="h-8 w-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center">
-                    <Layers className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-2.5 mb-5 pb-4 border-b border-[#E2DCD2]">
+                  <div className="h-8 w-8 rounded-lg bg-[#FFF0ED] border border-blue-100 flex items-center justify-center">
+                    <Layers className="h-4 w-4 text-[#FF5A36]" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-extrabold text-secondary">Current Verification Status</h2>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Live status — updated by the compliance team</p>
+                    <h2 className="text-sm font-extrabold text-[#211F1D]">Current Verification Status</h2>
+                    <p className="text-[10px] text-[#A8A196] mt-0.5">Live status — updated by the compliance team</p>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-5">
-                  <div className="flex-1 bg-blue-50/50 border border-blue-100 rounded-xl p-4">
+                  <div className="flex-1 bg-[#FFF0ED]/50 border border-blue-100 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <Loader2 className="h-4 w-4 text-primary animate-spin" />
-                      <p className="text-xs font-extrabold text-primary">{reg.currentStage}</p>
+                      <Loader2 className="h-4 w-4 text-[#FF5A36] animate-spin" />
+                      <p className="text-xs font-extrabold text-[#FF5A36]">{reg.currentStage}</p>
                     </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <p className="text-[11px] text-[#57534E] leading-relaxed">
                       Your registration is currently under organization verification. Our compliance team is reviewing
                       your credentials against MCA, state registrar and regulatory records.
                     </p>
-                    <p className="text-[10px] text-slate-500 font-semibold mt-3 flex items-center gap-1.5">
-                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                    <p className="text-[10px] text-[#78716A] font-semibold mt-3 flex items-center gap-1.5">
+                      <ShieldCheck className="h-3.5 w-3.5 text-[#2F6B4F]" />
                       No action is required from your side at this time.
                     </p>
                   </div>
@@ -796,13 +796,13 @@ export default function VerificationStatusPage() {
                       { label: "Priority", value: reg.verificationPriority === "expedited" ? "Expedited" : "Standard", icon: Zap },
                       { label: "Est. Complete", value: reg.estimatedCompletion, icon: Clock }
                     ].map(({ label, value, icon: Icon }) => (
-                      <div key={label} className="flex items-center gap-2.5 py-2 border-b border-slate-100 last:border-0">
-                        <div className="h-6 w-6 rounded bg-slate-100 flex items-center justify-center shrink-0">
-                          <Icon className="h-3 w-3 text-slate-500" />
+                      <div key={label} className="flex items-center gap-2.5 py-2 border-b border-[#E2DCD2] last:border-0">
+                        <div className="h-6 w-6 rounded bg-[#EFE9DF] flex items-center justify-center shrink-0">
+                          <Icon className="h-3 w-3 text-[#78716A]" />
                         </div>
                         <div>
-                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
-                          <p className="text-[11px] font-bold text-slate-700">{value}</p>
+                          <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wider">{label}</p>
+                          <p className="text-[11px] font-bold text-[#211F1D]">{value}</p>
                         </div>
                       </div>
                     ))}
@@ -812,19 +812,19 @@ export default function VerificationStatusPage() {
 
               {/* ── Verification Timeline ── */}
               <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden"
+                className="card-flat rounded-2xl overflow-hidden"
               >
-                <div className="px-7 py-5 border-b border-slate-100 flex items-center justify-between">
+                <div className="px-7 py-5 border-b border-[#E2DCD2] flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
-                      <Layers className="h-4 w-4 text-slate-600" />
+                    <div className="h-8 w-8 rounded-lg bg-[#EFE9DF] flex items-center justify-center">
+                      <Layers className="h-4 w-4 text-[#57534E]" />
                     </div>
                     <div>
-                      <h2 className="text-sm font-extrabold text-secondary">Verification Pipeline</h2>
-                      <p className="text-[10px] text-slate-400 mt-0.5">9-stage enterprise verification lifecycle</p>
+                      <h2 className="text-sm font-extrabold text-[#211F1D]">Verification Pipeline</h2>
+                      <p className="text-[10px] text-[#A8A196] mt-0.5">9-stage enterprise verification lifecycle</p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
+                  <div className="text-[10px] font-bold text-[#A8A196] flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5" /> Est. 5 business days total
                   </div>
                 </div>
@@ -837,15 +837,15 @@ export default function VerificationStatusPage() {
 
               {/* ── Verification History ── */}
               <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden"
+                className="card-flat rounded-2xl overflow-hidden"
               >
-                <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
-                    <Calendar className="h-4 w-4 text-slate-600" />
+                <div className="px-6 py-5 border-b border-[#E2DCD2] flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-lg bg-[#EFE9DF] flex items-center justify-center">
+                    <Calendar className="h-4 w-4 text-[#57534E]" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-extrabold text-secondary">Verification Activity Log</h2>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Chronological record of all completed actions</p>
+                    <h2 className="text-sm font-extrabold text-[#211F1D]">Verification Activity Log</h2>
+                    <p className="text-[10px] text-[#A8A196] mt-0.5">Chronological record of all completed actions</p>
                   </div>
                 </div>
                 <div className="px-6 py-2">
@@ -857,15 +857,15 @@ export default function VerificationStatusPage() {
 
               {/* ── FAQ ── */}
               <motion.div custom={5} variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden"
+                className="card-flat rounded-2xl overflow-hidden"
               >
-                <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
-                    <HelpCircle className="h-4 w-4 text-slate-600" />
+                <div className="px-6 py-5 border-b border-[#E2DCD2] flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-lg bg-[#EFE9DF] flex items-center justify-center">
+                    <HelpCircle className="h-4 w-4 text-[#57534E]" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-extrabold text-secondary">Frequently Asked Questions</h2>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Common questions about the verification pipeline</p>
+                    <h2 className="text-sm font-extrabold text-[#211F1D]">Frequently Asked Questions</h2>
+                    <p className="text-[10px] text-[#A8A196] mt-0.5">Common questions about the verification pipeline</p>
                   </div>
                 </div>
                 <div className="p-5 space-y-2">
@@ -880,21 +880,21 @@ export default function VerificationStatusPage() {
                 <button
                   onClick={handleDownload}
                   disabled={downloading}
-                  className="h-11 px-5 inline-flex items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-secondary rounded-xl text-xs font-bold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
+                  className="h-11 px-5 inline-flex items-center gap-2 border border-[#E2DCD2] bg-[#FBF7F0] hover:bg-[#FBF7F0] text-[#211F1D] rounded-xl text-xs font-bold shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
                 >
                   {downloading ? <><Loader2 className="h-4 w-4 animate-spin" /> Generating…</>
-                    : downloadDone ? <><CheckCircle2 className="h-4 w-4 text-emerald-600" /> Downloaded</>
+                    : downloadDone ? <><CheckCircle2 className="h-4 w-4 text-[#2F6B4F]" /> Downloaded</>
                     : <><Download className="h-4 w-4" /> Download Status Report</>}
                 </button>
                 <button
                   onClick={() => setShowSupportModal(true)}
-                  className="h-11 px-5 inline-flex items-center gap-2 bg-primary hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  className="h-11 px-5 inline-flex items-center gap-2 bg-[#FF5A36] hover:bg-[#E04826] text-white rounded-xl text-xs font-bold shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <MessageSquare className="h-4 w-4" /> Contact Verification Team
                 </button>
                 <Link
                   href="/auth/login"
-                  className="h-11 px-5 inline-flex items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-secondary rounded-xl text-xs font-bold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  className="h-11 px-5 inline-flex items-center gap-2 border border-[#E2DCD2] bg-[#FBF7F0] hover:bg-[#FBF7F0] text-[#211F1D] rounded-xl text-xs font-bold shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <LogIn className="h-4 w-4" /> Return to Login
                 </Link>
@@ -909,12 +909,12 @@ export default function VerificationStatusPage() {
                 initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden"
+                className="card-flat rounded-2xl overflow-hidden"
               >
-                <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <div className="px-5 py-4 border-b border-[#E2DCD2] flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-extrabold text-secondary">Registration Summary</p>
+                    <Building2 className="h-4 w-4 text-[#FF5A36]" />
+                    <p className="text-xs font-extrabold text-[#211F1D]">Registration Summary</p>
                   </div>
                   <StatusBadge variant={reg.status} />
                 </div>
@@ -928,12 +928,12 @@ export default function VerificationStatusPage() {
                     { label: "Priority",       value: reg.verificationPriority === "expedited" ? "Expedited" : "Standard", icon: Zap }
                   ].map(({ label, value, icon: Icon }) => (
                     <div key={label} className="flex items-start gap-2.5 py-2 border-b border-slate-50 last:border-0">
-                      <div className="h-6 w-6 rounded bg-slate-100 flex items-center justify-center shrink-0 mt-0.5">
-                        <Icon className="h-3 w-3 text-slate-500" />
+                      <div className="h-6 w-6 rounded bg-[#EFE9DF] flex items-center justify-center shrink-0 mt-0.5">
+                        <Icon className="h-3 w-3 text-[#78716A]" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
-                        <p className="text-[11px] font-bold text-slate-700 break-words leading-snug mt-0.5">{value}</p>
+                        <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wider">{label}</p>
+                        <p className="text-[11px] font-bold text-[#211F1D] break-words leading-snug mt-0.5">{value}</p>
                       </div>
                     </div>
                   ))}
@@ -945,20 +945,20 @@ export default function VerificationStatusPage() {
                 initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.18 }}
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden"
+                className="card-flat rounded-2xl overflow-hidden"
               >
-                <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <div className="px-5 py-4 border-b border-[#E2DCD2] flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Bell className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-extrabold text-secondary">Notifications</p>
+                    <Bell className="h-4 w-4 text-[#FF5A36]" />
+                    <p className="text-xs font-extrabold text-[#211F1D]">Notifications</p>
                     {unreadCount > 0 && (
-                      <span className="h-5 w-5 rounded-full bg-red-500 text-white text-[9px] font-black flex items-center justify-center">
+                      <span className="h-5 w-5 rounded-full bg-[#FEE2E2]0 text-white text-[10px] font-black flex items-center justify-center">
                         {unreadCount}
                       </span>
                     )}
                   </div>
                   {unreadCount > 0 && (
-                    <button onClick={markAllRead} className="text-[10px] font-bold text-primary hover:underline">
+                    <button onClick={markAllRead} className="text-[10px] font-bold text-[#FF5A36] hover:underline">
                       Mark all read
                     </button>
                   )}
@@ -975,11 +975,11 @@ export default function VerificationStatusPage() {
                 initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.24 }}
-                className="bg-white border border-slate-200 rounded-2xl shadow-sm p-5"
+                className="card-flat rounded-2xl p-5"
               >
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-                  <HelpCircle className="h-4 w-4 text-primary" />
-                  <p className="text-xs font-extrabold text-secondary">Verification Support</p>
+                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#E2DCD2]">
+                  <HelpCircle className="h-4 w-4 text-[#FF5A36]" />
+                  <p className="text-xs font-extrabold text-[#211F1D]">Verification Support</p>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -988,19 +988,19 @@ export default function VerificationStatusPage() {
                     { icon: Server, label: "Response Time",   value: "1–2 Business Hours" }
                   ].map(({ icon: Icon, label, value }) => (
                     <div key={label} className="flex items-start gap-2.5">
-                      <div className="h-6 w-6 rounded bg-slate-100 flex items-center justify-center shrink-0 mt-0.5">
-                        <Icon className="h-3 w-3 text-slate-500" />
+                      <div className="h-6 w-6 rounded bg-[#EFE9DF] flex items-center justify-center shrink-0 mt-0.5">
+                        <Icon className="h-3 w-3 text-[#78716A]" />
                       </div>
                       <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
-                        <p className="text-[11px] font-semibold text-slate-700 mt-0.5">{value}</p>
+                        <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wider">{label}</p>
+                        <p className="text-[11px] font-semibold text-[#211F1D] mt-0.5">{value}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <button
                   onClick={() => setShowSupportModal(true)}
-                  className="mt-4 w-full h-9 inline-flex items-center justify-center gap-1.5 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
+                  className="mt-4 w-full h-9 inline-flex items-center justify-center gap-1.5 border border-[#E2DCD2] rounded-lg text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] hover:text-[#FF5A36] transition-colors"
                 >
                   <MessageSquare className="h-3.5 w-3.5" /> Contact Verification Team
                 </button>
@@ -1011,15 +1011,15 @@ export default function VerificationStatusPage() {
                 initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.3 }}
-                className="bg-slate-50 border border-slate-200 rounded-2xl p-4"
+                className="card-flat rounded-2xl p-4"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <Lock className="h-3.5 w-3.5 text-emerald-600" />
-                  <p className="text-[11px] font-bold text-secondary">Security Reminder</p>
+                  <Lock className="h-3.5 w-3.5 text-[#2F6B4F]" />
+                  <p className="text-[11px] font-bold text-[#211F1D]">Security Reminder</p>
                 </div>
-                <p className="text-[10px] text-slate-500 leading-relaxed">
+                <p className="text-[10px] text-[#78716A] leading-relaxed">
                   AnveshakHub will never request your password or OTP via email or phone. 
-                  All official communications come from <span className="font-bold text-slate-600">@anveshakhub.com</span> addresses only.
+                  All official communications come from <span className="font-bold text-[#57534E]">@anveshakhub.com</span> addresses only.
                 </p>
               </motion.div>
             </aside>

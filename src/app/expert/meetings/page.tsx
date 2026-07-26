@@ -79,28 +79,28 @@ export default function ExpertMeetingsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Expert Meetings & Collaboration Calendar</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Schedule research syncs, conduct video calls, draft Minutes of Meeting (MoM) & track follow-up action items</p>
+          <h1 className="text-xl font-bold text-[#211F1D]">Expert Meetings & Collaboration Calendar</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Schedule research syncs, conduct video calls, draft Minutes of Meeting (MoM) & track follow-up action items</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={fetchMeetings} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+          <button onClick={fetchMeetings} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
             <RefreshCw className="h-3.5 w-3.5" /> Refresh
           </button>
-          <button onClick={() => setScheduleOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
+          <button onClick={() => setScheduleOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826]">
             <Plus className="h-3.5 w-3.5" /> Schedule Call
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4">
+      <div className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search meetings by title or partner organization..."
-            className="pl-9 pr-3 h-8 w-full text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary"
+            className="pl-9 pr-3 h-8 w-full text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36]"
           />
         </div>
         <div className="flex items-center gap-1.5">
@@ -109,7 +109,7 @@ export default function ExpertMeetingsPage() {
               key={s}
               onClick={() => setStatusFilter(s)}
               className={`h-7 px-3 text-[10px] font-bold rounded-lg border transition-all ${
-                statusFilter === s ? "bg-primary text-white border-primary" : "bg-slate-50 text-slate-600 border-slate-200"
+                statusFilter === s ? "bg-[#FF5A36] text-white border-[#FF5A36]" : "bg-[#FBF7F0] text-[#57534E] border-[#E2DCD2]"
               }`}
             >
               {s}
@@ -121,13 +121,13 @@ export default function ExpertMeetingsPage() {
       {/* Meetings List */}
       {loading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
         </div>
       ) : meetings.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-          <Calendar className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-xs font-bold text-slate-800">No Meetings Scheduled</p>
-          <p className="text-[10px] text-slate-400 mt-1">Schedule a session with your project team or student mentees.</p>
+        <div className="card-flat rounded-2xl p-12 text-center">
+          <Calendar className="h-10 w-10 text-[#D8D2C7] mx-auto mb-3" />
+          <p className="text-xs font-bold text-[#211F1D]">No Meetings Scheduled</p>
+          <p className="text-[10px] text-[#A8A196] mt-1">Schedule a session with your project team or student mentees.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -137,20 +137,20 @@ export default function ExpertMeetingsPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04 }}
-              className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center justify-between gap-4 hover:shadow-md transition-all group"
+              className="card-flat rounded-2xl p-5 flex items-center justify-between gap-4 hover:shadow-md transition-all group"
             >
               <div className="flex items-center gap-4 flex-1 min-w-0">
-                <div className="h-10 w-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center font-extrabold shrink-0">
+                <div className="h-10 w-10 rounded-xl bg-[#E8F2EC] text-[#2F6B4F] flex items-center justify-center font-extrabold shrink-0">
                   <Video className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xs font-bold text-slate-800 group-hover:text-primary transition-colors truncate">{m.title}</h3>
-                    {m.isRecurring && <Repeat className="h-3 w-3 text-slate-400 shrink-0" />}
+                    <h3 className="text-xs font-bold text-[#211F1D] group-hover:text-[#FF5A36] transition-colors truncate">{m.title}</h3>
+                    {m.isRecurring && <Repeat className="h-3 w-3 text-[#A8A196] shrink-0" />}
                   </div>
-                  <p className="text-[10px] text-slate-500 font-semibold truncate">{m.orgName} · {m.agenda}</p>
-                  <div className="flex items-center gap-3 text-[9px] text-slate-400 font-medium">
-                    <span className="text-primary font-bold">
+                  <p className="text-[10px] text-[#78716A] font-semibold truncate">{m.orgName} · {m.agenda}</p>
+                  <div className="flex items-center gap-3 text-[10px] text-[#A8A196] font-medium">
+                    <span className="text-[#FF5A36] font-bold">
                       {new Date(m.startTime).toLocaleDateString("en-IN")} ({new Date(m.startTime).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })})
                     </span>
                     <span>·</span>
@@ -162,7 +162,7 @@ export default function ExpertMeetingsPage() {
               <div className="flex items-center gap-2 shrink-0">
                 <Link
                   href={`/expert/meetings/${m.id}`}
-                  className="h-8 px-3 border border-slate-200 hover:border-primary text-slate-600 hover:text-primary rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors"
+                  className="h-8 px-3 border border-[#E2DCD2] hover:border-[#FF5A36] text-[#57534E] hover:text-[#FF5A36] rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors"
                 >
                   <FileText className="h-3 w-3" /> Workspace
                 </Link>
@@ -189,32 +189,32 @@ export default function ExpertMeetingsPage() {
               initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl shadow-2xl p-6 w-[480px] max-w-full mx-4"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[480px] max-w-full mx-4"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                  <Video className="h-4 w-4 text-primary" /> Schedule Video Call Session
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
+                <h3 className="text-sm font-bold text-[#211F1D] flex items-center gap-1.5">
+                  <Video className="h-4 w-4 text-[#FF5A36]" /> Schedule Video Call Session
                 </h3>
-                <button onClick={() => setScheduleOpen(false)}><X className="h-4 w-4 text-slate-400 hover:text-slate-600" /></button>
+                <button onClick={() => setScheduleOpen(false)}><X className="h-4 w-4 text-[#A8A196] hover:text-[#57534E]" /></button>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Session Title *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Session Title *</label>
                   <input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Sprint 3 Technical Architecture Sync"
-                    className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                    className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Partner Organization</label>
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Partner Organization</label>
                     <input value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="e.g. Solaris Power / IIT Madras"
-                      className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                      className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Video Platform</label>
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Video Platform</label>
                     <select value={platform} onChange={e => setPlatform(e.target.value)}
-                      className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary text-xs font-bold">
+                      className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36] text-xs font-bold">
                       <option value="GOOGLE_MEET">Google Meet</option>
                       <option value="MICROSOFT_TEAMS">MS Teams</option>
                       <option value="ZOOM">Zoom</option>
@@ -222,16 +222,16 @@ export default function ExpertMeetingsPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Agenda & Notes</label>
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Agenda & Notes</label>
                   <textarea value={agenda} onChange={e => setAgenda(e.target.value)} rows={3} placeholder="Discussion topics, deliverables review..."
-                    className="w-full p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs resize-none" />
+                    className="w-full p-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs resize-none" />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-4 mt-4">
-                <button onClick={() => setScheduleOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-4 mt-4">
+                <button onClick={() => setScheduleOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-xs font-semibold hover:bg-[#EFE9DF]">Cancel</button>
                 <button onClick={handleScheduleCall} disabled={saving || !title.trim()}
-                  className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                  className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                   {saving && <Loader2 className="h-3 w-3 animate-spin" />} Schedule Call
                 </button>
               </div>

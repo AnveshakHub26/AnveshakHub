@@ -142,12 +142,12 @@ export default function MeetingWorkspacePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full bg-[#FBF7F0]">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-slate-200 px-8 py-4">
+      <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-4">
         <div className="flex items-start gap-4">
           <Link href="/admin/meetings">
-            <button className="h-7 w-7 flex items-center justify-center border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 mt-0.5">
+            <button className="h-7 w-7 flex items-center justify-center border border-[#E2DCD2] rounded-lg text-[#78716A] hover:bg-[#FBF7F0] mt-0.5">
               <ChevronLeft className="h-4 w-4" />
             </button>
           </Link>
@@ -156,19 +156,19 @@ export default function MeetingWorkspacePage() {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-base font-bold text-slate-900 truncate">{profile.title}</h1>
-              <span className="text-[10px] px-2 py-0.5 bg-blue-50 text-primary border border-blue-150 rounded-full font-bold">
+              <h1 className="text-base font-bold text-[#211F1D] truncate">{profile.title}</h1>
+              <span className="text-[10px] px-2 py-0.5 bg-[#FFF0ED] text-primary border border-blue-150 rounded-full font-bold">
                 {profile.platform}
               </span>
             </div>
             {profile.project && (
-              <p className="text-[10px] text-slate-500 mt-0.5 font-medium">Linked Project: {profile.project.name}</p>
+              <p className="text-[10px] text-[#78716A] mt-0.5 font-medium">Linked Project: {profile.project.name}</p>
             )}
           </div>
 
           {profile.videoLink && (
             <a href={profile.videoLink} target="_blank" rel="noreferrer" className="flex-shrink-0">
-              <button className="h-8 px-4 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5">
+              <button className="h-8 px-4 bg-primary hover:bg-[#E04826] text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5">
                 <Play className="h-3.5 w-3.5" /> Join Video Call
               </button>
             </a>
@@ -181,34 +181,34 @@ export default function MeetingWorkspacePage() {
         
         {/* Left Side: Meeting Minutes and Discussion Points */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Meeting Agenda</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">{profile.agenda}</p>
+          <div className="card-flat rounded-2xl p-5 space-y-3">
+            <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Meeting Agenda</h3>
+            <p className="text-xs text-[#57534E] leading-relaxed font-medium">{profile.agenda}</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><FileText className="h-4.5 w-4.5 text-primary" /> Meeting Minutes & Outcomes</h3>
+          <div className="card-flat rounded-2xl p-5 space-y-4">
+            <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><FileText className="h-[1.125rem] w-[1.125rem] text-primary" /> Meeting Minutes & Outcomes</h3>
             
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Key Outcomes & Resolutions</label>
+                <label className="text-[9px] font-bold text-[#78716A] uppercase block mb-1">Key Outcomes & Resolutions</label>
                 <textarea
                   value={meetingOutcomes}
                   onChange={(e) => setMeetingOutcomes(e.target.value)}
                   rows={4}
                   placeholder="Summarize decided points, parameter thresholds, and agreements…"
-                  className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50/20 text-xs"
+                  className="w-full p-2.5 border border-[#E2DCD2] rounded-xl bg-[#FBF7F0]/20 text-xs"
                 />
               </div>
 
               <div>
-                <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Internal Follow-up Notes</label>
+                <label className="text-[9px] font-bold text-[#78716A] uppercase block mb-1">Internal Follow-up Notes</label>
                 <textarea
                   value={meetingNotes}
                   onChange={(e) => setMeetingNotes(e.target.value)}
                   rows={2}
                   placeholder="Notes for platform moderators and compliance compliance syncs…"
-                  className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50/20 text-xs"
+                  className="w-full p-2.5 border border-[#E2DCD2] rounded-xl bg-[#FBF7F0]/20 text-xs"
                 />
               </div>
 
@@ -221,19 +221,19 @@ export default function MeetingWorkspacePage() {
           </div>
 
           {/* Action Items Tracker */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><HardHat className="h-4.5 w-4.5 text-primary" /> Decisions & Action Items</h3>
+          <div className="card-flat rounded-2xl p-5 space-y-4">
+            <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><HardHat className="h-[1.125rem] w-[1.125rem] text-primary" /> Decisions & Action Items</h3>
             
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y">
               {profile.actionItemsList.map((item) => (
                 <div key={item.id} className="py-3 first:pt-0 last:pb-0 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`h-4 w-4 rounded-full flex items-center justify-center border text-[8px] font-bold ${item.status === "COMPLETED" ? "bg-green-500 border-green-500 text-white" : "border-slate-350 text-slate-400"}`}>
+                    <span className={`h-4 w-4 rounded-full flex items-center justify-center border text-[8px] font-bold ${item.status === "COMPLETED" ? "bg-[#E8F2EC]0 border-green-500 text-white" : "border-slate-350 text-[#A8A196]"}`}>
                       {item.status === "COMPLETED" ? <Check className="h-3 w-3" /> : null}
                     </span>
-                    <span className={`text-xs font-semibold ${item.status === "COMPLETED" ? "line-through text-slate-400" : "text-slate-800"}`}>{item.title}</span>
+                    <span className={`text-xs font-semibold ${item.status === "COMPLETED" ? "line-through text-[#A8A196]" : "text-[#211F1D]"}`}>{item.title}</span>
                   </div>
-                  <div className="text-[10px] text-slate-400 font-semibold flex items-center gap-3">
+                  <div className="text-[10px] text-[#A8A196] font-semibold flex items-center gap-3">
                     <span>{item.assigneeId}</span>
                     {item.dueDate && <span>Due: {new Date(item.dueDate).toLocaleDateString("en-IN")}</span>}
                   </div>
@@ -243,54 +243,54 @@ export default function MeetingWorkspacePage() {
 
             {/* Inline Action Item Creator */}
             <div className="pt-3 border-t border-slate-50 flex gap-2">
-              <input value={newActionTitle} onChange={(e) => setNewActionTitle(e.target.value)} placeholder="Assign new follow-up task…" className="flex-1 h-8 px-2.5 border border-slate-200 rounded-lg text-xs" />
-              <input value={newActionAssignee} onChange={(e) => setNewActionAssignee(e.target.value)} placeholder="Assignee name" className="w-32 h-8 px-2.5 border border-slate-200 rounded-lg text-xs" />
-              <button onClick={handleCreateActionItem} disabled={actionLoading} className="h-8 px-3 bg-primary text-white text-xs font-bold rounded-lg hover:bg-blue-700">+</button>
+              <input value={newActionTitle} onChange={(e) => setNewActionTitle(e.target.value)} placeholder="Assign new follow-up task…" className="flex-1 h-8 px-2.5 border border-[#E2DCD2] rounded-lg text-xs" />
+              <input value={newActionAssignee} onChange={(e) => setNewActionAssignee(e.target.value)} placeholder="Assignee name" className="w-32 h-8 px-2.5 border border-[#E2DCD2] rounded-lg text-xs" />
+              <button onClick={handleCreateActionItem} disabled={actionLoading} className="h-8 px-3 bg-primary text-white text-xs font-bold rounded-lg hover:bg-[#E04826]">+</button>
             </div>
           </div>
         </div>
 
         {/* Right Side: Participant List & Feedback Tracker */}
         <div className="space-y-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-3">Participant Registry</h3>
+          <div className="card-flat rounded-2xl p-5">
+            <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide mb-3">Participant Registry</h3>
             <div className="space-y-2">
               {profile.participants.map((email) => (
                 <div key={email} className="flex items-center gap-2 border border-slate-50 rounded-xl p-2.5 text-xs">
-                  <div className="h-6 w-6 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-[10px] uppercase">
+                  <div className="h-6 w-6 rounded-full bg-[#EFE9DF] flex items-center justify-center font-bold text-[#78716A] text-[10px] uppercase">
                     {email[0]}
                   </div>
-                  <span className="font-semibold text-slate-650 truncate">{email}</span>
+                  <span className="font-semibold text-[#57534E] truncate">{email}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Feedback & Ratings */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3.5">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1"><Award className="h-4.5 w-4.5 text-primary" /> Session Feedback & Rating</h3>
+          <div className="card-flat rounded-2xl p-5 space-y-3.5">
+            <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1"><Award className="h-[1.125rem] w-[1.125rem] text-primary" /> Session Feedback & Rating</h3>
             
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y">
               {profile.feedbacks.map((fb) => (
                 <div key={fb.id} className="py-2.5 first:pt-0 last:pb-0">
                   <div className="flex gap-0.5 text-amber-400 mb-1">
                     {Array.from({ length: fb.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-current" />)}
                   </div>
-                  <p className="text-[10px] text-slate-500 italic">"{fb.comment}"</p>
+                  <p className="text-[10px] text-[#78716A] italic">"{fb.comment}"</p>
                 </div>
               ))}
             </div>
 
-            <div className="pt-2 border-t border-slate-100 space-y-2 text-xs">
+            <div className="pt-2 border-t border-[#E2DCD2] space-y-2 text-xs">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold text-slate-500 uppercase">Rate Call</span>
-                <select value={newRating} onChange={(e) => setNewRating(parseInt(e.target.value))} className="h-7 border border-slate-200 rounded px-1.5 bg-white text-xs">
+                <span className="text-[10px] font-bold text-[#78716A] uppercase">Rate Call</span>
+                <select value={newRating} onChange={(e) => setNewRating(parseInt(e.target.value))} className="h-7 border border-[#E2DCD2] rounded px-1.5 bg-[#FBF7F0] text-xs">
                   {[5, 4, 3, 2, 1].map(n => <option key={n} value={n}>{n} Stars</option>)}
                 </select>
               </div>
               <div className="flex gap-2">
-                <input value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Log session rating notes…" className="flex-1 h-8 px-2.5 border border-slate-200 rounded-lg text-xs" />
-                <button onClick={handlePostFeedback} disabled={actionLoading} className="h-8 px-3 bg-primary text-white text-xs font-bold rounded-lg hover:bg-blue-700">Submit</button>
+                <input value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Log session rating notes…" className="flex-1 h-8 px-2.5 border border-[#E2DCD2] rounded-lg text-xs" />
+                <button onClick={handlePostFeedback} disabled={actionLoading} className="h-8 px-3 bg-primary text-white text-xs font-bold rounded-lg hover:bg-[#E04826]">Submit</button>
               </div>
             </div>
           </div>

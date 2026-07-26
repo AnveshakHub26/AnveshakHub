@@ -172,13 +172,13 @@ export default function CrmDashboardPage() {
   if (loading) {
     return (
       <div className="p-8 space-y-6 flex-grow">
-        <div className="h-7 w-48 bg-slate-200 animate-pulse rounded-lg" />
+        <div className="h-7 w-48 bg-[#D8D2C7] animate-pulse rounded-lg" />
         <div className="grid grid-cols-4 gap-4">
           {Array(4).fill(0).map((_, i) => (
-            <div key={i} className="h-24 bg-slate-200 animate-pulse rounded-xl" />
+            <div key={i} className="h-24 bg-[#D8D2C7] animate-pulse rounded-xl" />
           ))}
         </div>
-        <div className="h-96 bg-slate-200 animate-pulse rounded-2xl" />
+        <div className="h-96 bg-[#D8D2C7] animate-pulse rounded-2xl" />
       </div>
     );
   }
@@ -188,12 +188,12 @@ export default function CrmDashboardPage() {
       {/* ── Top Info Action Bar ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-black text-secondary tracking-tight">Enterprise CRM Pipeline</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Manage partner relationships, schedule proposals, and initiate pilot projects.</p>
+          <h1 className="text-xl font-black text-[#211F1D] tracking-tight">Enterprise CRM Pipeline</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Manage partner relationships, schedule proposals, and initiate pilot projects.</p>
         </div>
         <button
           onClick={() => setAddLeadOpen(true)}
-          className="h-9 px-4 inline-flex items-center gap-1.5 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
+          className="h-9 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] hover:bg-[#E04826] text-white rounded-lg text-xs font-bold transition-all shadow-[var(--shadow-sm)]"
         >
           <Plus className="h-4 w-4" /> Add Enterprise Lead
         </button>
@@ -202,15 +202,15 @@ export default function CrmDashboardPage() {
       {/* ── CRM Stats Summary ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Active Pipelines", value: stats.totalLeads, icon: Users, color: "text-blue-600 bg-blue-50 border-blue-100" },
-          { label: "Total Pipeline Value", value: stats.pipelineValue, icon: Wallet, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
+          { label: "Active Pipelines", value: stats.totalLeads, icon: Users, color: "text-[#FF5A36] bg-[#FFF0ED] border-blue-100" },
+          { label: "Total Pipeline Value", value: stats.pipelineValue, icon: Wallet, color: "text-[#2F6B4F] bg-[#E8F2EC] border-emerald-100" },
           { label: "Average Health Score", value: stats.avgHealth, icon: TrendingUp, color: "text-purple-600 bg-purple-50 border-purple-100" },
           { label: "Conversion Rate", value: stats.conversionRate, icon: ClipboardCheck, color: "text-cyan-600 bg-cyan-50 border-cyan-100" }
         ].map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-4">
+          <div key={label} className="card-flat rounded-2xl p-4 shadow-[var(--shadow-sm)] flex items-center justify-between gap-4">
             <div>
-              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{label}</p>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight mt-1.5">{value}</h3>
+              <p className="text-[10px] font-bold text-[#A8A196] uppercase tracking-widest">{label}</p>
+              <h3 className="text-xl font-black text-[#211F1D] tracking-tight mt-1.5">{value}</h3>
             </div>
             <div className={`h-10 w-10 rounded-xl flex items-center justify-center border ${color}`}>
               <Icon className="h-5 w-5" />
@@ -232,14 +232,14 @@ export default function CrmDashboardPage() {
               onDragLeave={() => setDraggedOverStage(null)}
               onDrop={e => handleDrop(e, stage.key)}
               className={[
-                "w-72 bg-slate-100 border rounded-2xl p-4 shrink-0 flex flex-col justify-between transition-all min-h-[360px]",
-                isOver ? "border-primary bg-blue-50/50 scale-[1.01] ring-2 ring-primary/10" : "border-slate-200"
+                "w-72 bg-[#EFE9DF] border rounded-2xl p-4 shrink-0 flex flex-col justify-between transition-all min-h-[360px]",
+                isOver ? "border-[#FF5A36] bg-[#FFF0ED]/50 scale-[1.01] ring-2 ring-[#FF5A36]/10" : "border-[#E2DCD2]"
               ].join(" ")}
             >
               {/* Header info */}
-              <div className="mb-3 flex justify-between items-center pb-2.5 border-b border-slate-200/60">
-                <span className="text-[10px] font-black text-slate-700 uppercase tracking-wider">{stage.label}</span>
-                <span className="text-[10px] font-bold bg-white text-slate-500 border border-slate-200 px-2 py-0.5 rounded-full shadow-sm">
+              <div className="mb-3 flex justify-between items-center pb-2.5 border-b border-[#E2DCD2]/60">
+                <span className="text-[10px] font-black text-[#211F1D] uppercase tracking-wider">{stage.label}</span>
+                <span className="text-[10px] font-bold bg-[#FBF7F0] text-[#78716A] border border-[#E2DCD2] px-2 py-0.5 rounded-full shadow-[var(--shadow-sm)]">
                   {stageLeads.length}
                 </span>
               </div>
@@ -252,32 +252,32 @@ export default function CrmDashboardPage() {
                       key={lead.id}
                       draggable={true}
                       onDragStart={e => handleDragStart(e, lead.id)}
-                      className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing hover:border-primary transition-all space-y-2.5 relative group"
+                      className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-3.5 shadow-[var(--shadow-sm)] hover:shadow-md cursor-grab active:cursor-grabbing hover:border-[#FF5A36] transition-all space-y-2.5 relative group"
                     >
                       <div>
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className="text-xs font-bold text-slate-800 leading-tight">{lead.orgName}</h4>
+                          <h4 className="text-xs font-bold text-[#211F1D] leading-tight">{lead.orgName}</h4>
                           <span className={[
                             "text-[8px] font-bold px-1.5 py-0.5 rounded border leading-none shrink-0",
-                            lead.healthScore > 85 ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
-                            lead.healthScore > 60 ? "bg-amber-50 text-amber-700 border-amber-100" :
-                            "bg-red-50 text-red-700 border-red-100"
+                            lead.healthScore > 85 ? "bg-[#E8F2EC] text-[#2F6B4F] border-emerald-100" :
+                            lead.healthScore > 60 ? "bg-[#FEF3C7] text-[#B45309] border-amber-100" :
+                            "bg-[#FEE2E2] text-[#C0392B] border-red-100"
                           ].join(" ")}>
                             {lead.healthScore}% Health
                           </span>
                         </div>
-                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-1">{lead.domain}</p>
+                        <p className="text-[10px] text-[#A8A196] font-bold uppercase tracking-wider mt-1">{lead.domain}</p>
                       </div>
 
-                      <div className="flex justify-between items-center text-[10px] border-t border-slate-100 pt-2.5">
-                        <span className="text-slate-500 font-medium">Est: <span className="font-extrabold text-slate-700">₹{(lead.estRevenue / 100000).toFixed(1)}L</span></span>
-                        <span className="text-slate-400 font-bold truncate max-w-[80px]">{lead.assignedTo}</span>
+                      <div className="flex justify-between items-center text-[10px] border-t border-[#E2DCD2] pt-2.5">
+                        <span className="text-[#78716A] font-medium">Est: <span className="font-extrabold text-[#211F1D]">₹{(lead.estRevenue / 100000).toFixed(1)}L</span></span>
+                        <span className="text-[#A8A196] font-bold truncate max-w-[80px]">{lead.assignedTo}</span>
                       </div>
                     </div>
                   ))
                 ) : (
                   <div className="h-full flex items-center justify-center py-10">
-                    <p className="text-[10px] text-slate-400 font-medium text-center">Drag leads here...</p>
+                    <p className="text-[10px] text-[#A8A196] font-medium text-center">Drag leads here...</p>
                   </div>
                 )}
               </div>
@@ -290,14 +290,14 @@ export default function CrmDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* CRM Tasks Checklist */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-[#FBF7F0] border border-[#E2DCD2] rounded-2xl shadow-[var(--shadow-sm)] p-6 flex flex-col justify-between">
           <div>
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-              <h3 className="text-xs font-extrabold text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <ClipboardCheck className="h-4.5 w-4.5 text-primary" />
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#E2DCD2]">
+              <h3 className="text-xs font-extrabold text-[#211F1D] uppercase tracking-wider flex items-center gap-1.5">
+                <ClipboardCheck className="h-[1.125rem] w-[1.125rem] text-[#FF5A36]" />
                 Pipeline Follow-Up Tasks
               </h3>
-              <span className="text-[10px] font-bold text-slate-400">
+              <span className="text-[10px] font-bold text-[#A8A196]">
                 {tasks.filter(t => t.status === "PENDING").length} Remaining
               </span>
             </div>
@@ -308,7 +308,7 @@ export default function CrmDashboardPage() {
                   key={task.id}
                   className={[
                     "p-3.5 border rounded-xl flex items-start justify-between gap-3 transition-opacity",
-                    task.status === "COMPLETED" ? "bg-slate-50 border-slate-200 opacity-60" : "bg-white border-slate-200"
+                    task.status === "COMPLETED" ? "bg-[#FBF7F0] border-[#E2DCD2] opacity-60" : "bg-[#FBF7F0] border-[#E2DCD2]"
                   ].join(" ")}
                 >
                   <div className="flex items-start gap-3 min-w-0">
@@ -316,25 +316,25 @@ export default function CrmDashboardPage() {
                       onClick={() => handleToggleTask(task.id, task.status)}
                       className={[
                         "h-4 w-4 mt-0.5 rounded border-2 flex items-center justify-center transition-colors shrink-0",
-                        task.status === "COMPLETED" ? "bg-primary border-primary text-white" : "border-slate-350 bg-white"
+                        task.status === "COMPLETED" ? "bg-[#FF5A36] border-[#FF5A36] text-white" : "border-slate-350 bg-[#FBF7F0]"
                       ].join(" ")}
                       aria-label={task.status === "COMPLETED" ? "Mark incomplete" : "Mark complete"}
                     >
                       {task.status === "COMPLETED" && <CheckCircle2 className="h-3 w-3" />}
                     </button>
                     <div className="min-w-0">
-                      <p className={["text-xs font-bold leading-tight", task.status === "COMPLETED" ? "line-through text-slate-500" : "text-slate-800"].join(" ")}>
+                      <p className={["text-xs font-bold leading-tight", task.status === "COMPLETED" ? "line-through text-[#78716A]" : "text-[#211F1D]"].join(" ")}>
                         {task.title}
                       </p>
-                      <p className="text-[10px] text-slate-400 font-semibold mt-1">Lead: {task.leadName} · Due by {task.dueDate}</p>
+                      <p className="text-[10px] text-[#A8A196] font-semibold mt-1">Lead: {task.leadName} · Due by {task.dueDate}</p>
                     </div>
                   </div>
 
                   <span className={[
                     "text-[8px] font-black uppercase px-2 py-0.5 rounded-full border shrink-0",
-                    task.priority === "HIGH" ? "bg-red-50 text-red-700 border-red-200" :
-                    task.priority === "MEDIUM" ? "bg-amber-50 text-amber-700 border-amber-200" :
-                    "bg-slate-100 text-slate-500 border-slate-200"
+                    task.priority === "HIGH" ? "bg-[#FEE2E2] text-[#C0392B] border-[#FECACA]" :
+                    task.priority === "MEDIUM" ? "bg-[#FEF3C7] text-[#B45309] border-amber-200" :
+                    "bg-[#EFE9DF] text-[#78716A] border-[#E2DCD2]"
                   ].join(" ")}>
                     {task.priority}
                   </span>
@@ -345,12 +345,12 @@ export default function CrmDashboardPage() {
         </div>
 
         {/* CRM Reports Charts */}
-        <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col justify-between">
-          <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-            <h3 className="text-xs font-extrabold text-secondary uppercase tracking-wider">
+        <div className="lg:col-span-6 bg-[#FBF7F0] border border-[#E2DCD2] rounded-2xl shadow-[var(--shadow-sm)] p-6 flex flex-col justify-between">
+          <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#E2DCD2]">
+            <h3 className="text-xs font-extrabold text-[#211F1D] uppercase tracking-wider">
               Lead Funnel Conversions
             </h3>
-            <span className="text-[10px] text-slate-400 font-bold">Updated hourly</span>
+            <span className="text-[10px] text-[#A8A196] font-bold">Updated hourly</span>
           </div>
 
           <div className="my-3">
@@ -386,9 +386,9 @@ export default function CrmDashboardPage() {
             </svg>
           </div>
 
-          <div className="flex items-center gap-4 text-[9px] font-black text-slate-450 border-t border-slate-100 pt-3">
-            <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-slate-300 block" /> Leads Created</div>
-            <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-primary block" /> Converted Projects</div>
+          <div className="flex items-center gap-4 text-[10px] font-black text-[#78716A] border-t border-[#E2DCD2] pt-3">
+            <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#C4BCB0] block" /> Leads Created</div>
+            <div className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-[#FF5A36] block" /> Converted Projects</div>
           </div>
         </div>
       </div>
@@ -405,20 +405,20 @@ export default function CrmDashboardPage() {
               initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl border border-[#E2DCD2] overflow-hidden"
             >
-              <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+              <div className="px-6 py-5 border-b border-[#E2DCD2] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                    <Users className="h-4.5 w-4.5 text-primary" />
+                  <div className="h-9 w-9 rounded-xl bg-[#FFF0ED] border border-blue-100 flex items-center justify-center">
+                    <Users className="h-[1.125rem] w-[1.125rem] text-[#FF5A36]" />
                   </div>
                   <div>
-                    <Dialog.Title className="text-sm font-extrabold text-secondary">Add Enterprise Lead</Dialog.Title>
-                    <p id="add-lead-desc" className="text-[10px] text-slate-400 mt-0.5">Register a new prospective organization target</p>
+                    <Dialog.Title className="text-sm font-extrabold text-[#211F1D]">Add Enterprise Lead</Dialog.Title>
+                    <p id="add-lead-desc" className="text-[10px] text-[#A8A196] mt-0.5">Register a new prospective organization target</p>
                   </div>
                 </div>
                 <Dialog.Close asChild>
-                  <button className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-650 hover:bg-slate-100 transition-colors">
+                  <button className="h-8 w-8 flex items-center justify-center rounded-lg text-[#A8A196] hover:text-[#57534E] hover:bg-[#EFE9DF] transition-colors">
                     <X className="h-4 w-4" />
                   </button>
                 </Dialog.Close>
@@ -426,55 +426,55 @@ export default function CrmDashboardPage() {
 
               <form onSubmit={handleAddLeadSubmit} className="p-6 space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Organization Name <span className="text-red-500">*</span></label>
+                  <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Organization Name <span className="text-red-500">*</span></label>
                   <input
                     required
                     value={newLeadForm.orgName}
                     onChange={e => setNewLeadForm(f => ({ ...f, orgName: e.target.value }))}
                     placeholder="Enter legal entity name"
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all"
+                    className="w-full h-10 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium text-[#211F1D] placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Industry Domain <span className="text-red-500">*</span></label>
+                  <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Industry Domain <span className="text-red-500">*</span></label>
                   <input
                     required
                     value={newLeadForm.domain}
                     onChange={e => setNewLeadForm(f => ({ ...f, domain: e.target.value }))}
                     placeholder="e.g. Aerospace, Quantum, AgriTech"
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all"
+                    className="w-full h-10 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium text-[#211F1D] placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Est. Annual Value (INR)</label>
+                    <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Est. Annual Value (INR)</label>
                     <input
                       type="number"
                       value={newLeadForm.estRevenue}
                       onChange={e => setNewLeadForm(f => ({ ...f, estRevenue: e.target.value }))}
                       placeholder="e.g. 1500000"
-                      className="w-full h-10 px-3 rounded-lg border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all"
+                      className="w-full h-10 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium text-[#211F1D] placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Assigned Owner</label>
+                    <label className="block text-[10px] font-bold text-[#78716A] uppercase tracking-wider mb-1.5">Assigned Owner</label>
                     <input
                       value={newLeadForm.assignedTo}
                       onChange={e => setNewLeadForm(f => ({ ...f, assignedTo: e.target.value }))}
                       placeholder="e.g. Aditya Mehta"
-                      className="w-full h-10 px-3 rounded-lg border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-primary focus:ring-3 focus:ring-primary/20 transition-all"
+                      className="w-full h-10 px-3 rounded-lg border border-[#E2DCD2] text-xs font-medium text-[#211F1D] placeholder-slate-400 outline-none focus:border-[#FF5A36] focus:ring-3 focus:ring-[#FF5A36]/20 transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="flex gap-3 justify-end pt-2 border-t border-slate-100">
+                <div className="flex gap-3 justify-end pt-2 border-t border-[#E2DCD2]">
                   <Dialog.Close asChild>
-                    <button type="button" className="h-9 px-4 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>
+                    <button type="button" className="h-9 px-4 border border-[#E2DCD2] rounded-lg text-xs font-bold text-[#57534E] hover:bg-[#FBF7F0] transition-colors">Cancel</button>
                   </Dialog.Close>
                   <button
                     type="submit"
                     disabled={formLoading}
-                    className="h-9 px-5 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+                    className="h-9 px-5 bg-[#FF5A36] hover:bg-[#E04826] text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 shadow-[var(--shadow-sm)]"
                   >
                     {formLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Confirm & Add"}
                   </button>

@@ -163,22 +163,22 @@ export default function GrantsConsoleHub() {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full bg-[#FBF7F0]">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-slate-200 px-8 py-5">
+      <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Government Grants & Funding Management</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Track innovation schemes, Startup India allocations, research funding, CSR pipelines, and committee scores</p>
+            <h1 className="text-xl font-bold text-[#211F1D]">Government Grants & Funding Management</h1>
+            <p className="text-xs text-[#78716A] mt-0.5">Track innovation schemes, Startup India allocations, research funding, CSR pipelines, and committee scores</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setEligOpen(true)} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-50 transition-colors">
+            <button onClick={() => setEligOpen(true)} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-semibold hover:bg-[#FBF7F0] transition-colors">
               <Zap className="h-3.5 w-3.5 text-amber-500 fill-current" /> Eligibility Checker
             </button>
-            <button onClick={fetchGrants} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+            <button onClick={fetchGrants} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#FBF7F0] transition-colors">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
-            <button onClick={() => setPublishOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors">
+            <button onClick={() => setPublishOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] transition-colors">
               <Plus className="h-3.5 w-3.5" /> Publish Scheme
             </button>
           </div>
@@ -188,20 +188,20 @@ export default function GrantsConsoleHub() {
         {stats && (
           <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { label: "Active Portals", value: stats.total, icon: Landmark, bg: "bg-blue-50", color: "text-primary" },
-              { label: "Committed Funds Pool", value: formatCurrency(stats.totalFunding), icon: Wallet, bg: "bg-green-50", color: "text-green-600" },
-              { label: "Proposals Submitted", value: stats.applicationsCount, icon: UsersRound, bg: "bg-indigo-50", color: "text-indigo-600" },
+              { label: "Active Portals", value: stats.total, icon: Landmark, bg: "bg-[#FFF0ED]", color: "text-[#FF5A36]" },
+              { label: "Committed Funds Pool", value: formatCurrency(stats.totalFunding), icon: Wallet, bg: "bg-[#E8F2EC]", color: "text-[#2F6B4F]" },
+              { label: "Proposals Submitted", value: stats.applicationsCount, icon: UsersRound, bg: "bg-[#FF5A36]/50", color: "text-[#FF5A36]/600" },
               { label: "Audit Success Rate", value: "88%", icon: ShieldCheck, bg: "bg-teal-50", color: "text-teal-650" }
             ].map((stat) => {
               const Icon = stat.icon;
               return (
-                <div key={stat.label} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
+                <div key={stat.label} className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl p-4 flex items-center gap-3">
                   <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${stat.bg}`}>
-                    <Icon className={`h-4.5 w-4.5 ${stat.color}`} />
+                    <Icon className={`h-[1.125rem] w-[1.125rem] ${stat.color}`} />
                   </div>
                   <div>
-                    <div className="text-base font-extrabold text-slate-800">{stat.value}</div>
-                    <div className="text-[10px] text-slate-500 font-medium">{stat.label}</div>
+                    <div className="text-base font-extrabold text-[#211F1D]">{stat.value}</div>
+                    <div className="text-[10px] text-[#78716A] font-medium">{stat.label}</div>
                   </div>
                 </div>
               );
@@ -210,14 +210,14 @@ export default function GrantsConsoleHub() {
         )}
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-0 mt-5 border-t border-slate-100 pt-0 -mb-5">
+        <div className="flex items-center gap-0 mt-5 border-t border-[#E2DCD2] pt-0 -mb-5">
           {[
             { key: "schemes", label: "Funding Opportunities", count: grants.length },
             { key: "applications", label: "Evaluations queue", count: stats?.applicationsCount || 0 },
             { key: "compliance", label: "Compliance & Audits", count: null }
           ].map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
-              {tab.label} {tab.count !== null && <span className="text-[9px] px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded-full font-bold">{tab.count}</span>}
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"}`}>
+              {tab.label} {tab.count !== null && <span className="text-[10px] px-1.5 py-0.2 bg-[#EFE9DF] text-[#78716A] rounded-full font-bold">{tab.count}</span>}
             </button>
           ))}
         </div>
@@ -225,19 +225,19 @@ export default function GrantsConsoleHub() {
 
       {/* ── Toolbar ── */}
       {activeTab === "schemes" && (
-        <div className="bg-white border-b border-slate-100 px-8 py-3 flex items-center gap-3 flex-wrap">
+        <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-3 flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#A8A196]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search scheme titles, agencies, requirements…"
-              className="w-full pl-9 pr-3 h-8 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 bg-white"
+              className="w-full pl-9 pr-3 h-8 text-xs border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36]/20 bg-[#FBF7F0]"
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`h-8 px-3 inline-flex items-center gap-1.5 border rounded-lg text-xs font-medium transition-colors ${showFilters ? "border-primary bg-blue-50 text-primary" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}
+            className={`h-8 px-3 inline-flex items-center gap-1.5 border rounded-lg text-xs font-medium transition-colors ${showFilters ? "border-[#FF5A36] bg-[#FFF0ED] text-[#FF5A36]" : "border-[#E2DCD2] text-[#57534E] hover:bg-[#EFE9DF]"}`}
           >
             <Filter className="h-3.5 w-3.5" /> Scheme Filters
           </button>
@@ -247,11 +247,11 @@ export default function GrantsConsoleHub() {
       {/* Filters Panel */}
       <AnimatePresence>
         {showFilters && activeTab === "schemes" && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-white border-b border-slate-100">
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-[#FBF7F0] border-b border-[#E2DCD2]">
             <div className="px-8 py-3.5 flex flex-wrap items-center gap-6">
               <div className="flex items-center gap-2">
-                <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Agency</label>
-                <select value={agencyFilter} onChange={(e) => setAgencyFilter(e.target.value)} className="h-7 text-xs border border-slate-200 rounded-lg px-2 bg-white focus:outline-none focus:border-primary">
+                <label className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide">Agency</label>
+                <select value={agencyFilter} onChange={(e) => setAgencyFilter(e.target.value)} className="h-7 text-xs border border-[#E2DCD2] rounded-lg px-2 bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36]">
                   <option value="ALL">All Agencies</option>
                   <option value="MeitY">MeitY</option>
                   <option value="DST">DST</option>
@@ -260,8 +260,8 @@ export default function GrantsConsoleHub() {
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Funding Type</label>
-                <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="h-7 text-xs border border-slate-200 rounded-lg px-2 bg-white focus:outline-none focus:border-primary">
+                <label className="text-[10px] font-semibold text-[#78716A] uppercase tracking-wide">Funding Type</label>
+                <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="h-7 text-xs border border-[#E2DCD2] rounded-lg px-2 bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36]">
                   <option value="ALL">All Funding Types</option>
                   {Object.entries(SCHEME_TYPES).map(([key, val]) => (
                     <option key={key} value={key}>{val}</option>
@@ -277,7 +277,7 @@ export default function GrantsConsoleHub() {
       <div className="flex-1 overflow-auto p-8">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
           </div>
         ) : (
           <AnimatePresence mode="wait">
@@ -289,30 +289,30 @@ export default function GrantsConsoleHub() {
                   <motion.div
                     key={g.id}
                     whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.06)" }}
-                    className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-3 transition-all"
+                    className="card-flat rounded-2xl p-5 flex flex-col gap-3 transition-all"
                   >
                     <div className="flex justify-between items-start">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{g.id}</span>
-                      <span className="text-[9px] px-2 py-0.5 bg-blue-50 border border-blue-100 rounded text-primary font-bold">
+                      <span className="text-[10px] font-bold text-[#A8A196] uppercase tracking-wider">{g.id}</span>
+                      <span className="text-[10px] px-2 py-0.5 bg-[#FFF0ED] border border-blue-100 rounded text-[#FF5A36] font-bold">
                         {SCHEME_TYPES[g.schemeType] || SCHEME_TYPES.GOVT_GRANT}
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="text-xs font-bold text-slate-800 leading-snug h-8 line-clamp-2">{g.title}</h3>
-                      <p className="text-[9px] text-slate-400 font-semibold mt-1">Agency: {g.agency}</p>
+                      <h3 className="text-xs font-bold text-[#211F1D] leading-snug h-8 line-clamp-2">{g.title}</h3>
+                      <p className="text-[10px] text-[#A8A196] font-semibold mt-1">Agency: {g.agency}</p>
                     </div>
 
-                    <p className="text-[10px] text-slate-500 line-clamp-2 h-7 font-medium leading-relaxed">"{g.description}"</p>
+                    <p className="text-[10px] text-[#78716A] line-clamp-2 h-7 font-medium leading-relaxed">"{g.description}"</p>
 
-                    <div className="flex justify-between items-center text-[10px] text-slate-500 pt-2.5 border-t border-slate-50">
+                    <div className="flex justify-between items-center text-[10px] text-[#78716A] pt-2.5 border-t border-slate-50">
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase block font-semibold leading-none">Funding Pool</span>
+                        <span className="text-[10px] text-[#A8A196] uppercase block font-semibold leading-none">Funding Pool</span>
                         <span className="font-extrabold text-slate-855 text-xs">{formatCurrency(g.amount)}</span>
                       </div>
                       
                       <Link href={`/admin/grants/${g.id}`}>
-                        <button className="h-8 px-3.5 bg-primary hover:bg-blue-700 text-white rounded-xl text-[10px] font-bold transition-colors flex items-center gap-1">
+                        <button className="h-8 px-3.5 bg-[#FF5A36] hover:bg-[#E04826] text-white rounded-xl text-[10px] font-bold transition-colors flex items-center gap-1">
                           Open Details <Eye className="h-3.5 w-3.5" />
                         </button>
                       </Link>
@@ -324,9 +324,9 @@ export default function GrantsConsoleHub() {
 
             {/* ──── EVALUATION TAB ──── */}
             {activeTab === "applications" && (
-              <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-                <table className="w-full border-collapse text-left text-xs text-slate-700">
-                  <thead className="bg-slate-50 border-b border-slate-150 text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+              <div className="card-flat rounded-2xl overflow-hidden">
+                <table className="w-full border-collapse text-left text-xs text-[#211F1D]">
+                  <thead className="bg-[#FBF7F0] border-b border-slate-150 text-[10px] font-bold text-[#A8A196] uppercase tracking-wide">
                     <tr>
                       <th className="px-6 py-3">Applicant Organization</th>
                       <th className="px-6 py-3">Scheme Title</th>
@@ -335,20 +335,20 @@ export default function GrantsConsoleHub() {
                       <th className="px-6 py-3 text-center">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="px-6 py-4 font-bold text-slate-800">Solaris Power Pvt Ltd</td>
+                  <tbody className="divide-y font-medium">
+                    <tr className="hover:bg-[#EFE9DF]/50">
+                      <td className="px-6 py-4 font-bold text-[#211F1D]">Solaris Power Pvt Ltd</td>
                       <td className="px-6 py-4">Grid Synced Embedded Serial Telemetry Driver</td>
-                      <td className="px-6 py-4 text-slate-450">10/07/2026</td>
+                      <td className="px-6 py-4 text-[#78716A]">10/07/2026</td>
                       <td className="px-6 py-4 text-center font-bold">88 / 100</td>
-                      <td className="px-6 py-4 text-center"><span className="text-[9px] px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-100 rounded">UNDER_REVIEW</span></td>
+                      <td className="px-6 py-4 text-center"><span className="text-[10px] px-2 py-0.5 bg-[#FEF3C7] text-[#B45309] border border-amber-100 rounded">UNDER_REVIEW</span></td>
                     </tr>
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="px-6 py-4 font-bold text-slate-800">BioGen Diagnostics LLP</td>
+                    <tr className="hover:bg-[#EFE9DF]/50">
+                      <td className="px-6 py-4 font-bold text-[#211F1D]">BioGen Diagnostics LLP</td>
                       <td className="px-6 py-4">Clinical Convolutional Image Accelerator Proposal</td>
-                      <td className="px-6 py-4 text-slate-450">12/07/2026</td>
+                      <td className="px-6 py-4 text-[#78716A]">12/07/2026</td>
                       <td className="px-6 py-4 text-center font-bold">94 / 100</td>
-                      <td className="px-6 py-4 text-center"><span className="text-[9px] px-2 py-0.5 bg-green-50 text-green-700 border border-green-100 rounded">APPROVED</span></td>
+                      <td className="px-6 py-4 text-center"><span className="text-[10px] px-2 py-0.5 bg-[#E8F2EC] text-[#2F6B4F] border border-green-100 rounded">APPROVED</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -357,10 +357,10 @@ export default function GrantsConsoleHub() {
 
             {/* ──── COMPLIANCE TAB ──── */}
             {activeTab === "compliance" && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><ShieldCheck className="h-4.5 w-4.5 text-primary" /> DPIIT Eligibility Rules Engine</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">Auto-assess applicant organizations matching DPIIT regulations (Minimum equity levels, capital rules, CSR thresholds) before releasing funds.</p>
-                <button className="h-8 px-4 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">Run Eligibility Sweep</button>
+              <div className="card-flat rounded-2xl p-5 space-y-4">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><ShieldCheck className="h-[1.125rem] w-[1.125rem] text-[#FF5A36]" /> DPIIT Eligibility Rules Engine</h3>
+                <p className="text-xs text-[#78716A] leading-relaxed font-medium">Auto-assess applicant organizations matching DPIIT regulations (Minimum equity levels, capital rules, CSR thresholds) before releasing funds.</p>
+                <button className="h-8 px-4 bg-[#0F0E0C] text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">Run Eligibility Sweep</button>
               </div>
             )}
 
@@ -372,33 +372,33 @@ export default function GrantsConsoleHub() {
       <AnimatePresence>
         {eligOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setEligOpen(false)}>
-            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-white rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
                 <h3 className="text-sm font-bold text-slate-850 flex items-center gap-1"><Zap className="h-4 w-4 text-amber-500 fill-current" /> Scheme Eligibility Validator</h3>
-                <button onClick={() => setEligOpen(false)} className="text-slate-400 hover:text-slate-655"><X className="h-4 w-4" /></button>
+                <button onClick={() => setEligOpen(false)} className="text-[#A8A196] hover:text-slate-655"><X className="h-4 w-4" /></button>
               </div>
 
               <div className="space-y-4 text-xs">
-                <p className="text-slate-500">Assess eligibility parameters before launching custom committee reviews.</p>
+                <p className="text-[#78716A]">Assess eligibility parameters before launching custom committee reviews.</p>
                 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between border-b border-slate-50 pb-2">
-                    <span className="font-semibold text-slate-700">DPIIT Registered Startup Status *</span>
-                    <button onClick={() => setEligDpiit(!eligDpiit)} className={`h-6 px-2.5 rounded text-[10px] font-bold ${eligDpiit ? "bg-green-50 text-green-700 border border-green-150" : "bg-red-50 text-red-700 border border-red-150"}`}>
+                    <span className="font-semibold text-[#211F1D]">DPIIT Registered Startup Status *</span>
+                    <button onClick={() => setEligDpiit(!eligDpiit)} className={`h-6 px-2.5 rounded text-[10px] font-bold ${eligDpiit ? "bg-[#E8F2EC] text-[#2F6B4F] border border-green-150" : "bg-[#FEE2E2] text-[#C0392B] border border-red-150"}`}>
                       {eligDpiit ? "DPIIT Verified" : "Not Registered"}
                     </button>
                   </div>
                   
                   <div className="flex items-center justify-between border-b border-slate-50 pb-2">
-                    <span className="font-semibold text-slate-700">Active Educational MoU Signed *</span>
-                    <button onClick={() => setEligMou(!eligMou)} className={`h-6 px-2.5 rounded text-[10px] font-bold ${eligMou ? "bg-green-50 text-green-700 border border-green-150" : "bg-red-50 text-red-700 border border-red-150"}`}>
+                    <span className="font-semibold text-[#211F1D]">Active Educational MoU Signed *</span>
+                    <button onClick={() => setEligMou(!eligMou)} className={`h-6 px-2.5 rounded text-[10px] font-bold ${eligMou ? "bg-[#E8F2EC] text-[#2F6B4F] border border-green-150" : "bg-[#FEE2E2] text-[#C0392B] border border-red-150"}`}>
                       {eligMou ? "MoU Active" : "No Active MoU"}
                     </button>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-700">Technology Readiness Level (TRL) *</span>
-                    <select value={eligTrl} onChange={(e) => setEligTrl(e.target.value)} className="h-8 border border-slate-200 rounded px-1.5 text-xs bg-white">
+                    <span className="font-semibold text-[#211F1D]">Technology Readiness Level (TRL) *</span>
+                    <select value={eligTrl} onChange={(e) => setEligTrl(e.target.value)} className="h-8 border border-[#E2DCD2] rounded px-1.5 text-xs bg-[#FBF7F0]">
                       <option value="TRL-3">TRL-3 (Research Stage)</option>
                       <option value="TRL-4">TRL-4 (Lab Proof)</option>
                       <option value="TRL-5">TRL-5 (Component Sync)</option>
@@ -408,9 +408,9 @@ export default function GrantsConsoleHub() {
                 </div>
 
                 {eligResult !== null && (
-                  <div className="p-3.5 bg-blue-50/50 border border-blue-150 rounded-xl space-y-1">
-                    <div className="font-bold text-slate-800">Compatibility Score: {eligResult}%</div>
-                    <p className="text-[10px] text-slate-500">
+                  <div className="p-3.5 bg-[#FFF0ED]/50 border border-blue-150 rounded-xl space-y-1">
+                    <div className="font-bold text-[#211F1D]">Compatibility Score: {eligResult}%</div>
+                    <p className="text-[10px] text-[#78716A]">
                       {eligResult >= 70 
                         ? "Meets eligibility limits. Proceed to committee review queue."
                         : "Requires active MoU links or TRL validation checks before proposal submittal."}
@@ -419,9 +419,9 @@ export default function GrantsConsoleHub() {
                 )}
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
-                <button onClick={calculateEligibility} className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-blue-700">Run Validation Check</button>
-                <button onClick={() => { setEligResult(null); setEligOpen(false); }} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg font-semibold hover:bg-slate-50">Close</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-3.5 mt-4">
+                <button onClick={calculateEligibility} className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold hover:bg-[#E04826]">Run Validation Check</button>
+                <button onClick={() => { setEligResult(null); setEligOpen(false); }} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg font-semibold hover:bg-[#EFE9DF]">Close</button>
               </div>
             </motion.div>
           </motion.div>
@@ -432,59 +432,59 @@ export default function GrantsConsoleHub() {
       <AnimatePresence>
         {publishOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setPublishOpen(false)}>
-            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-white rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+            <motion.div initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }} className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[450px] max-w-full" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
                 <h3 className="text-sm font-bold text-slate-855">Publish Funding Scheme</h3>
-                <button onClick={() => setPublishOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="h-4 w-4" /></button>
+                <button onClick={() => setPublishOpen(false)} className="text-[#A8A196] hover:text-[#57534E]"><X className="h-4 w-4" /></button>
               </div>
 
               <div className="space-y-3.5 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Scheme Title *</label>
-                  <input value={pubTitle} onChange={(e) => setPubTitle(e.target.value)} placeholder="e.g. DST Smart Grid R&D Call" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Scheme Title *</label>
+                  <input value={pubTitle} onChange={(e) => setPubTitle(e.target.value)} placeholder="e.g. DST Smart Grid R&D Call" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                 </div>
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Detailed Description *</label>
-                  <textarea value={pubDesc} onChange={(e) => setPubDesc(e.target.value)} rows={3} placeholder="Outline research boundaries and goals…" className="w-full p-2.5 border border-slate-200 rounded-lg bg-white" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Detailed Description *</label>
+                  <textarea value={pubDesc} onChange={(e) => setPubDesc(e.target.value)} rows={3} placeholder="Outline research boundaries and goals…" className="w-full p-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Funding Agency *</label>
-                    <input value={pubAgency} onChange={(e) => setPubAgency(e.target.value)} placeholder="e.g. MeitY or DST" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Funding Agency *</label>
+                    <input value={pubAgency} onChange={(e) => setPubAgency(e.target.value)} placeholder="e.g. MeitY or DST" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Grant Pool (INR) *</label>
-                    <input type="number" value={pubAmount} onChange={(e) => setPubAmount(e.target.value)} placeholder="e.g. 15000000" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Grant Pool (INR) *</label>
+                    <input type="number" value={pubAmount} onChange={(e) => setPubAmount(e.target.value)} placeholder="e.g. 15000000" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Scheme Type *</label>
-                    <select value={pubSchemeType} onChange={(e) => setPubSchemeType(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white">
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Scheme Type *</label>
+                    <select value={pubSchemeType} onChange={(e) => setPubSchemeType(e.target.value)} className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]">
                       {Object.entries(SCHEME_TYPES).map(([key, val]) => (
                         <option key={key} value={key}>{val}</option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Due Date</label>
-                    <input type="date" value={pubDueDate} onChange={(e) => setPubDueDate(e.target.value)} className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white" />
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Due Date</label>
+                    <input type="date" value={pubDueDate} onChange={(e) => setPubDueDate(e.target.value)} className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Key Eligibility Criteria (comma separated)</label>
-                  <input value={pubElig} onChange={(e) => setPubElig(e.target.value)} placeholder="e.g. DPIIT registered, 1 Ph.D lead" className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Key Eligibility Criteria (comma separated)</label>
+                  <input value={pubElig} onChange={(e) => setPubElig(e.target.value)} placeholder="e.g. DPIIT registered, 1 Ph.D lead" className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-3.5 mt-4">
-                <button onClick={handlePublishGrant} disabled={publishLoading} className="h-8 px-4 bg-primary text-white rounded-lg font-bold flex items-center gap-1 hover:bg-blue-700">
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-3.5 mt-4">
+                <button onClick={handlePublishGrant} disabled={publishLoading} className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold flex items-center gap-1 hover:bg-[#E04826]">
                   {publishLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null} Publish Scheme
                 </button>
-                <button onClick={() => setPublishOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg font-semibold hover:bg-slate-50">Cancel</button>
+                <button onClick={() => setPublishOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg font-semibold hover:bg-[#EFE9DF]">Cancel</button>
               </div>
             </motion.div>
           </motion.div>

@@ -48,24 +48,24 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         {/* Overlay */}
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs transition-opacity duration-300" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-[#0F0E0C]/40 backdrop-blur-xs transition-opacity duration-300" />
         
         {/* Modal Content */}
-        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-2xl bg-white border border-slate-200 p-8 shadow-2xl transition-all focus:outline-none animate-fade-in-up">
+        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-2xl bg-[#FBF7F0] border border-[#E2DCD2] p-8 shadow-2xl transition-all focus:outline-none animate-fade-in-up">
           
           {/* Header */}
           <div className="flex items-start justify-between">
             <div>
-              <Dialog.Title className="text-xl font-bold text-secondary flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-primary" />
+              <Dialog.Title className="text-xl font-bold text-[#211F1D] flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-[#FF5A36]" />
                 Schedule Consultation
               </Dialog.Title>
-              <Dialog.Description className="text-xs text-slate-500 mt-1.5">
+              <Dialog.Description className="text-xs text-[#78716A] mt-1.5">
                 Connect with our enterprise partnerships team to integrate your research pipeline or join the expert pool.
               </Dialog.Description>
             </div>
             
-            <Dialog.Close className="rounded-md text-slate-400 hover:text-slate-600 transition-colors focus:ring-2 focus:ring-primary/20">
+            <Dialog.Close className="rounded-md text-[#A8A196] hover:text-[#57534E] transition-colors focus:ring-2 focus:ring-[#FF5A36]/20">
               <X className="h-5 w-5" />
               <span className="sr-only">Close</span>
             </Dialog.Close>
@@ -75,11 +75,11 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
           <div className="mt-6">
             {isSuccess ? (
               <div className="py-12 flex flex-col items-center justify-center text-center">
-                <div className="h-14 w-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 mb-4 animate-[bounce_1s_infinite_alternate]">
+                <div className="h-14 w-14 rounded-full bg-[#E8F2EC] text-[#2F6B4F] flex items-center justify-center border border-emerald-100 mb-4 animate-[bounce_1s_infinite_alternate]">
                   <CheckCircle2 className="h-8 w-8" />
                 </div>
-                <h3 className="text-lg font-bold text-secondary">Consultation Requested</h3>
-                <p className="mt-2 text-xs text-slate-500 max-w-xs leading-relaxed">
+                <h3 className="text-lg font-bold text-[#211F1D]">Consultation Requested</h3>
+                <p className="mt-2 text-xs text-[#78716A] max-w-xs leading-relaxed">
                   Thank you! An AnveshakHub partnerships coordinator will contact you at the provided email within 24 business hours.
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                 
                 {/* Stakeholder Role selection */}
                 <div>
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                  <label className="text-xs font-bold text-[#78716A] uppercase tracking-wider block mb-2">
                     I am interested in joining as:
                   </label>
                   <div className="grid grid-cols-3 gap-3">
@@ -99,8 +99,8 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                         onClick={() => setFormData({ ...formData, role: r })}
                         className={`py-2 px-3 text-xs font-semibold rounded-lg border text-center capitalize transition-all focus:outline-none ${
                           formData.role === r
-                            ? "bg-blue-50 border-primary text-primary"
-                            : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                            ? "bg-blue-50 border-[#FF5A36] text-[#FF5A36]"
+                            : "bg-[#FBF7F0] border-[#E2DCD2] text-[#57534E] hover:bg-[#EFE9DF]"
                         }`}
                       >
                         {r}
@@ -111,7 +111,7 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
 
                 {/* Company/Institution Name */}
                 <div>
-                  <label htmlFor="companyName" className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                  <label htmlFor="companyName" className="text-xs font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">
                     {formData.role === "student" ? "Institution Name" : "Company / Institution Name"} *
                   </label>
                   <input
@@ -121,13 +121,13 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                     value={formData.companyName}
                     onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                     placeholder={formData.role === "student" ? "e.g. Indian Institute of Science" : "e.g. Aether Technologies Ltd"}
-                    className="w-full text-sm py-2 px-3.5 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                    className="w-full text-sm py-2 px-3.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] placeholder-slate-400 focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36] focus:outline-none transition-colors"
                   />
                 </div>
 
                 {/* Contact Name */}
                 <div>
-                  <label htmlFor="fullName" className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                  <label htmlFor="fullName" className="text-xs font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">
                     Full Name *
                   </label>
                   <input
@@ -137,13 +137,13 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="e.g. Dr. Elena Rostova"
-                    className="w-full text-sm py-2 px-3.5 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                    className="w-full text-sm py-2 px-3.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] placeholder-slate-400 focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36] focus:outline-none transition-colors"
                   />
                 </div>
 
                 {/* Contact Email */}
                 <div>
-                  <label htmlFor="email" className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                  <label htmlFor="email" className="text-xs font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">
                     Email Address *
                   </label>
                   <input
@@ -153,13 +153,13 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="e.g. elena@aethertech.com"
-                    className="w-full text-sm py-2 px-3.5 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                    className="w-full text-sm py-2 px-3.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] placeholder-slate-400 focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36] focus:outline-none transition-colors"
                   />
                 </div>
 
                 {/* Message Request */}
                 <div>
-                  <label htmlFor="message" className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
+                  <label htmlFor="message" className="text-xs font-bold text-[#78716A] uppercase tracking-wider block mb-1.5">
                     Consultation Request Details *
                   </label>
                   <textarea
@@ -169,7 +169,7 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Briefly describe your project goals, research requirements, or academic fields..."
-                    className="w-full text-sm py-2 px-3.5 border border-slate-200 rounded-lg bg-white placeholder-slate-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none resize-none transition-colors"
+                    className="w-full text-sm py-2 px-3.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] placeholder-slate-400 focus:border-[#FF5A36] focus:ring-1 focus:ring-[#FF5A36] focus:outline-none resize-none transition-colors"
                   />
                 </div>
 
@@ -178,7 +178,7 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg shadow-sm hover:bg-blue-700 active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed gap-2"
+                    className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-[#FF5A36] rounded-lg shadow-[var(--shadow-sm)] hover:bg-blue-700 active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed gap-2"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
@@ -191,7 +191,7 @@ export default function ContactModal({ isOpen, onOpenChange }: ContactModalProps
                     ) : (
                       <>
                         Submit Request
-                        <ArrowRight className="h-4.5 w-4.5" />
+                        <ArrowRight className="h-[1.125rem] w-[1.125rem]" />
                       </>
                     )}
                   </button>

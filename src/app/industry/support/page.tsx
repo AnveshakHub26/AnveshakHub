@@ -30,17 +30,17 @@ interface Faq {
 }
 
 const PRIORITY_BADGES: Record<string, { label: string; bg: string; text: string }> = {
-  CRITICAL: { label: "Critical", bg: "bg-red-50",    text: "text-red-700" },
-  HIGH:     { label: "High",     bg: "bg-orange-50", text: "text-orange-700" },
-  MEDIUM:   { label: "Medium",   bg: "bg-amber-50",  text: "text-amber-700" },
-  LOW:      { label: "Low",      bg: "bg-slate-50",  text: "text-slate-600" }
+  CRITICAL: { label: "Critical", bg: "bg-[#FEE2E2]",    text: "text-[#C0392B]" },
+  HIGH:     { label: "High",     bg: "bg-[#FFF4ED]", text: "text-[#C2410C]" },
+  MEDIUM:   { label: "Medium",   bg: "bg-[#FEF3C7]",  text: "text-[#B45309]" },
+  LOW:      { label: "Low",      bg: "bg-[#EFE9DF]",  text: "text-[#57534E]" }
 };
 
 const STATUS_BADGES: Record<string, { label: string; bg: string; text: string }> = {
-  OPEN:        { label: "Open",        bg: "bg-blue-50",  text: "text-blue-700" },
-  IN_PROGRESS: { label: "In Progress", bg: "bg-amber-50", text: "text-amber-700" },
-  RESOLVED:    { label: "Resolved",    bg: "bg-green-50", text: "text-green-700" },
-  CLOSED:      { label: "Closed",      bg: "bg-slate-100",text: "text-slate-600" }
+  OPEN:        { label: "Open",        bg: "bg-[#FFF0ED]",  text: "text-[#FF5A36]" },
+  IN_PROGRESS: { label: "In Progress", bg: "bg-[#FEF3C7]", text: "text-[#B45309]" },
+  RESOLVED:    { label: "Resolved",    bg: "bg-[#E8F2EC]", text: "text-[#2F6B4F]" },
+  CLOSED:      { label: "Closed",      bg: "bg-[#EFE9DF]",text: "text-[#57534E]" }
 };
 
 export default function SupportPage() {
@@ -99,21 +99,21 @@ export default function SupportPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Support & Knowledge Center</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Search self-service documentation, view SLA resolution status, or raise support tickets</p>
+          <h1 className="text-xl font-bold text-[#211F1D]">Support & Knowledge Center</h1>
+          <p className="text-xs text-[#78716A] mt-0.5">Search self-service documentation, view SLA resolution status, or raise support tickets</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={fetchSupport} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium hover:bg-slate-50">
+          <button onClick={fetchSupport} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-[#57534E] rounded-lg text-xs font-medium hover:bg-[#EFE9DF]">
             <RefreshCw className="h-3.5 w-3.5" /> Refresh
           </button>
-          <button onClick={() => setCreateModalOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover">
+          <button onClick={() => setCreateModalOpen(true)} className="h-8 px-4 inline-flex items-center gap-1.5 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826]">
             <Plus className="h-3.5 w-3.5" /> Submit Support Ticket
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-0 border-b border-slate-200 -mb-2.5">
+      <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "kb", label: "Knowledge Base & FAQs", icon: BookOpen },
           { key: "tickets", label: `My Support Tickets (${tickets.length})`, icon: LifeBuoy }
@@ -124,7 +124,7 @@ export default function SupportPage() {
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all -mb-[2px] ${
-                activeTab === t.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"
+                activeTab === t.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {t.label}
@@ -135,40 +135,40 @@ export default function SupportPage() {
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A8A196]" />
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search support articles, FAQs, or ticket numbers..."
-          className="pl-10 pr-4 h-10 w-full text-xs border border-slate-200 rounded-xl focus:outline-none focus:border-primary bg-white shadow-sm"
+          className="pl-10 pr-4 h-10 w-full text-xs border border-[#E2DCD2] rounded-xl focus:outline-none focus:border-[#FF5A36] bg-[#FBF7F0] shadow-[var(--shadow-sm)]"
         />
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 min-h-[360px]">
+      <div className="card-flat rounded-2xl p-6 min-h-[360px]">
         {/* KNOWLEDGE BASE */}
         {activeTab === "kb" && (
           <div className="space-y-4">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">Frequently Asked Questions</h3>
+            <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Frequently Asked Questions</h3>
             <div className="space-y-2">
               {faqs.map(faq => {
                 const isExpanded = expandedFaq === faq.id;
                 return (
-                  <div key={faq.id} className="border border-slate-200 rounded-xl overflow-hidden">
+                  <div key={faq.id} className="border border-[#E2DCD2] rounded-xl overflow-hidden">
                     <button
                       onClick={() => setExpandedFaq(isExpanded ? null : faq.id)}
-                      className="w-full p-4 text-left flex items-center justify-between font-bold text-xs text-slate-800 hover:bg-slate-50 transition-colors"
+                      className="w-full p-4 text-left flex items-center justify-between font-bold text-xs text-[#211F1D] hover:bg-[#FBF7F0] transition-colors"
                     >
                       <span className="flex items-center gap-2">
-                        <HelpCircle className="h-4 w-4 text-primary shrink-0" /> {faq.title}
+                        <HelpCircle className="h-4 w-4 text-[#FF5A36] shrink-0" /> {faq.title}
                       </span>
-                      {isExpanded ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
+                      {isExpanded ? <ChevronUp className="h-4 w-4 text-[#A8A196]" /> : <ChevronDown className="h-4 w-4 text-[#A8A196]" />}
                     </button>
 
                     {isExpanded && (
-                      <div className="p-4 bg-slate-50 border-t border-slate-100 text-xs text-slate-600 leading-relaxed space-y-2 font-medium">
+                      <div className="p-4 bg-[#FBF7F0] border-t border-[#E2DCD2] text-xs text-[#57534E] leading-relaxed space-y-2 font-medium">
                         <p>{faq.content}</p>
-                        <div className="text-[9px] text-slate-400 font-semibold pt-1">
+                        <div className="text-[10px] text-[#A8A196] font-semibold pt-1">
                           {faq.viewsCount} views · {faq.helpfulCount} found this helpful
                         </div>
                       </div>
@@ -185,23 +185,23 @@ export default function SupportPage() {
           <div className="space-y-4 text-xs">
             {loading ? (
               <div className="flex items-center justify-center h-36">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <Loader2 className="h-6 w-6 animate-spin text-[#FF5A36]" />
               </div>
             ) : tickets.length === 0 ? (
-              <p className="text-[10px] text-slate-400 text-center py-8">No support tickets found.</p>
+              <p className="text-[10px] text-[#A8A196] text-center py-8">No support tickets found.</p>
             ) : (
               <div className="space-y-3">
                 {tickets.map(tkt => {
                   const priority = PRIORITY_BADGES[tkt.priority] || PRIORITY_BADGES.MEDIUM;
                   const status = STATUS_BADGES[tkt.status] || STATUS_BADGES.OPEN;
                   return (
-                    <div key={tkt.id} className="border border-slate-200 rounded-xl p-4 flex items-center justify-between hover:shadow-sm transition-all">
+                    <div key={tkt.id} className="border border-[#E2DCD2] rounded-xl p-4 flex items-center justify-between hover:shadow-[var(--shadow-sm)] transition-all">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-[8px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">{tkt.ticketNumber}</span>
-                          <h4 className="text-xs font-bold text-slate-800">{tkt.subject}</h4>
+                          <span className="text-[8px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-[#EFE9DF] text-[#211F1D]">{tkt.ticketNumber}</span>
+                          <h4 className="text-xs font-bold text-[#211F1D]">{tkt.subject}</h4>
                         </div>
-                        <p className="text-[9px] text-slate-400 font-semibold">Assigned to: {tkt.assignedTo} · Opened: {new Date(tkt.createdAt).toLocaleDateString("en-IN")}</p>
+                        <p className="text-[10px] text-[#A8A196] font-semibold">Assigned to: {tkt.assignedTo} · Opened: {new Date(tkt.createdAt).toLocaleDateString("en-IN")}</p>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -225,27 +225,27 @@ export default function SupportPage() {
               initial={{ scale: 0.95, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl shadow-2xl p-6 w-[480px] max-w-full mx-4"
+              className="bg-[#FBF7F0] rounded-2xl shadow-2xl p-6 w-[480px] max-w-full mx-4"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
-                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                  <LifeBuoy className="h-4 w-4 text-primary" /> Submit Support Ticket
+              <div className="flex justify-between items-center border-b border-[#E2DCD2] pb-3 mb-4">
+                <h3 className="text-sm font-bold text-[#211F1D] flex items-center gap-1.5">
+                  <LifeBuoy className="h-4 w-4 text-[#FF5A36]" /> Submit Support Ticket
                 </h3>
-                <button onClick={() => setCreateModalOpen(false)}><X className="h-4 w-4 text-slate-400 hover:text-slate-600" /></button>
+                <button onClick={() => setCreateModalOpen(false)}><X className="h-4 w-4 text-[#A8A196] hover:text-[#57534E]" /></button>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Issue Subject *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Issue Subject *</label>
                   <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Summary of the technical or billing issue..."
-                    className="w-full h-8 px-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-primary text-xs" />
+                    className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg focus:outline-none focus:border-[#FF5A36] text-xs" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Category</label>
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Category</label>
                     <select value={category} onChange={e => setCategory(e.target.value)}
-                      className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary text-xs font-bold">
+                      className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36] text-xs font-bold">
                       <option value="TECHNICAL">Technical Issue</option>
                       <option value="BILLING">Billing & Grants</option>
                       <option value="VERIFICATION">Verification</option>
@@ -253,9 +253,9 @@ export default function SupportPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Priority</label>
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Priority</label>
                     <select value={priority} onChange={e => setPriority(e.target.value)}
-                      className="w-full h-8 px-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-primary text-xs font-bold">
+                      className="w-full h-8 px-2 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0] focus:outline-none focus:border-[#FF5A36] text-xs font-bold">
                       <option value="LOW">Low</option>
                       <option value="MEDIUM">Medium</option>
                       <option value="HIGH">High</option>
@@ -265,10 +265,10 @@ export default function SupportPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 border-t border-slate-100 pt-4 mt-4">
-                <button onClick={() => setCreateModalOpen(false)} className="h-8 px-3 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:bg-slate-50">Cancel</button>
+              <div className="flex justify-end gap-2 border-t border-[#E2DCD2] pt-4 mt-4">
+                <button onClick={() => setCreateModalOpen(false)} className="h-8 px-3 border border-[#E2DCD2] text-[#78716A] rounded-lg text-xs font-semibold hover:bg-[#EFE9DF]">Cancel</button>
                 <button onClick={handleCreateTicket} disabled={saving || !subject}
-                  className="h-8 px-4 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-hover flex items-center gap-1.5">
+                  className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg text-xs font-bold hover:bg-[#E04826] flex items-center gap-1.5">
                   {saving && <Loader2 className="h-3 w-3 animate-spin" />} Submit Ticket
                 </button>
               </div>

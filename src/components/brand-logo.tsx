@@ -37,12 +37,12 @@ export default function BrandLogo({
         <img
           src="/logo.png"
           alt="AnveshakHub Logo"
-          className={`${heightMap[size]} w-auto object-contain rounded-md transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm`}
+          className={`${heightMap[size]} w-auto object-contain rounded-md transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[var(--shadow-sm)]`}
         />
       </div>
 
       {showText && (
-        <span className={`${textMap[size]} ${lightText ? "text-[#211F1D]" : "text-[#211F1D]"} font-bold tracking-tight`}>
+        <span className={`${textMap[size]} ${lightText ? "text-white" : "text-[#211F1D]"} font-bold tracking-tight`}>
           Anveshak<span className="text-[#FF5A36] font-black">Hub</span>
         </span>
       )}

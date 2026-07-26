@@ -11,245 +11,367 @@ import {
   Calendar, ShoppingBag, Landmark, Wallet, HardHat,
   LineChart, FolderSearch, ShieldAlert, FileSignature, Settings, LogOut,
   ChevronLeft, ChevronRight, Bell, Search, HelpCircle, FileCode2,
-  CheckCircle2, AlertTriangle, AlertCircle, RefreshCw, X, ShieldCheck, Zap
+  CheckCircle2, AlertTriangle, AlertCircle, RefreshCw, X, ShieldCheck, Zap,
+  Menu
 } from "lucide-react";
 
-
-// Sidebar Links
-const sidebarLinks: { href: string; label: string; icon: any; comingSoon?: boolean }[] = [
-  { href: "/admin/dashboard",            label: "Dashboard",           icon: LayoutDashboard },
-  { href: "/admin/crm",                  label: "CRM Pipeline",        icon: Users },
-  { href: "/admin/verification-center",  label: "Verification Center", icon: ShieldCheck },
-  { href: "/admin/industries",           label: "Industry Partners",   icon: Building2 },
-  { href: "/admin/experts",              label: "Subject Experts",     icon: UsersRound },
-  { href: "/admin/students",             label: "Students Portal",     icon: GraduationCap },
-  { href: "/admin/projects",             label: "Projects Control",    icon: Briefcase },
-  { href: "/admin/meetings",             label: "Meeting Manager",     icon: Calendar },
-  { href: "/admin/marketplace",          label: "B2B Marketplace",     icon: ShoppingBag },
-
-
-  { href: "/admin/grants",               label: "Grants & Funding",    icon: Landmark },
-  { href: "/admin/finance",              label: "Financial Mgmt",      icon: Wallet },
-
-
-  { href: "/admin/hr",                  label: "HR Management",       icon: UsersRound },
-  { href: "/admin/operations",           label: "System Operations",   icon: HardHat },
-  { href: "/admin/reports",              label: "Reports & Center",    icon: FileCode2 },
-  { href: "/admin/analytics",            label: "System Analytics",    icon: LineChart },
-  { href: "/admin/legal",                label: "Legal & Vault",       icon: FileSignature },
-  { href: "/admin/notifications",        label: "Notifications",       icon: Bell },
-  { href: "/admin/ai-insights",          label: "AI Insights",         icon: Zap },
-  { href: "/admin/audit",                label: "Audit & Security",    icon: FolderSearch },
-  { href: "/admin/settings",             label: "System Settings",     icon: Settings },
-  { href: "/admin/docs",                 label: "Developer Docs",      icon: FileCode2 },
+// ─── Sidebar Navigation Definition ─────────────────────────────────
+const CORE_LINKS = [
+  { href: "/admin/dashboard",           label: "Dashboard",          icon: LayoutDashboard },
+  { href: "/admin/crm",                 label: "CRM Pipeline",       icon: Users },
+  { href: "/admin/verification-center", label: "Verification",       icon: ShieldCheck },
 ];
 
+const PLATFORM_LINKS = [
+  { href: "/admin/industries",          label: "Industry Partners",  icon: Building2 },
+  { href: "/admin/experts",             label: "Subject Experts",    icon: UsersRound },
+  { href: "/admin/students",            label: "Students",           icon: GraduationCap },
+  { href: "/admin/projects",            label: "Projects",           icon: Briefcase },
+  { href: "/admin/meetings",            label: "Meetings",           icon: Calendar },
+  { href: "/admin/marketplace",         label: "B2B Marketplace",    icon: ShoppingBag },
+];
 
+const FINANCE_LINKS = [
+  { href: "/admin/grants",              label: "Grants & Funding",   icon: Landmark },
+  { href: "/admin/finance",             label: "Finance",            icon: Wallet },
+  { href: "/admin/hr",                  label: "HR",                 icon: UsersRound },
+];
+
+const SYSTEM_LINKS = [
+  { href: "/admin/operations",          label: "Operations",         icon: HardHat },
+  { href: "/admin/reports",             label: "Reports",            icon: FileCode2 },
+  { href: "/admin/analytics",           label: "Analytics",          icon: LineChart },
+  { href: "/admin/legal",               label: "Legal & Vault",      icon: FileSignature },
+  { href: "/admin/notifications",       label: "Notifications",      icon: Bell },
+  { href: "/admin/ai-insights",         label: "AI Insights",        icon: Zap },
+  { href: "/admin/audit",               label: "Audit & Security",   icon: FolderSearch },
+  { href: "/admin/settings",            label: "Settings",           icon: Settings },
+  { href: "/admin/docs",                label: "Dev Docs",           icon: FileCode2 },
+];
+
+// ─── NavSection component ────────────────────────────────────────────
+function NavSection({
+  label,
+  links,
+  pathname,
+  collapsed,
+}: {
+  label: string;
+  links: { href: string; label: string; icon: any }[];
+  pathname: string;
+  collapsed: boolean;
+}) {
+  return (
+    <div>
+      {!collapsed && (
+        <p className="sidebar-nav-group-label">{label}</p>
+      )}
+      {links.map((link) => {
+        const Icon = link.icon;
+        const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            aria-label={link.label}
+            title={collapsed ? link.label : undefined}
+            className={`sidebar-nav-item ${isActive ? "active" : ""}`}
+          >
+            <Icon className="h-[1.0625rem] w-[1.0625rem] shrink-0" aria-hidden="true" />
+            {!collapsed && <span className="truncate">{link.label}</span>}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Main Layout ─────────────────────────────────────────────────────
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Settings / State
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [role, setRole] = useState<"SUPER_ADMIN" | "CRM_SPECIALIST" | "STAKEHOLDER">("SUPER_ADMIN");
-  
-  // Notification menu state
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
-    { id: "1", title: "Brute Force Warning", desc: "OpenSearch server utilization exceeded 85%.", read: false, type: "critical" },
-    { id: "2", title: "Appeal Submitted", desc: "Solaris Power submitted a Verification appeal.", read: false, type: "action" },
-    { id: "3", title: "Backup Sync Complete", desc: "Database snapshot synced with MinIO.", read: true, type: "info" }
+    { id: "1", title: "High CPU on OpenSearch node", desc: "Utilization hit 85% — auto-scaled 1 replica.", read: false, type: "critical" },
+    { id: "2", title: "Solaris Power appeal filed", desc: "Verification appeal submitted for review.", read: false, type: "action" },
+    { id: "3", title: "DB snapshot completed", desc: "MinIO backup sync successful at 02:00 UTC.", read: true, type: "info" },
   ]);
 
-  // Global Search state
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Simulated Session Timeout State (Prompt warning after 30 seconds of load to make it interactive, in production it would be 15 mins)
   const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60); // 60s warning countdown
+  const [timeLeft, setTimeLeft] = useState(60);
 
+  // Close mobile sidebar on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
+  // Session timeout
   useEffect(() => {
-    // Show Session Warning after 60 seconds
-    const warningTimer = setTimeout(() => {
-      setSessionTimeoutOpen(true);
-    }, 60000);
-
-    return () => clearTimeout(warningTimer);
+    const t = setTimeout(() => setSessionTimeoutOpen(true), 60000);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
     if (!sessionTimeoutOpen) return;
-    if (timeLeft <= 0) {
-      setSessionTimeoutOpen(false);
-      router.push("/auth/login"); // Redirect to login on timeout
-      return;
-    }
-    const cd = setInterval(() => setTimeLeft(t => t - 1), 1000);
+    if (timeLeft <= 0) { router.push("/auth/login"); return; }
+    const cd = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(cd);
   }, [sessionTimeoutOpen, timeLeft, router]);
 
-  const extendSession = () => {
-    setSessionTimeoutOpen(false);
-    setTimeLeft(60);
-  };
+  const extendSession = () => { setSessionTimeoutOpen(false); setTimeLeft(60); };
 
-  // RBAC Permission Guard Simulation
-  // STAKEHOLDER role cannot view Admin sections
+  // RBAC guard
   const hasAccess = (() => {
     if (role === "SUPER_ADMIN") return true;
-    if (role === "CRM_SPECIALIST" && pathname.includes("/admin/crm")) return true;
-    if (role === "CRM_SPECIALIST" && pathname.includes("/admin/dashboard")) return true;
+    if (role === "CRM_SPECIALIST" && (pathname.includes("/admin/crm") || pathname.includes("/admin/dashboard"))) return true;
     return false;
   })();
 
-  const handleRoleChange = (newRole: "SUPER_ADMIN" | "CRM_SPECIALIST" | "STAKEHOLDER") => {
-    setRole(newRole);
-  };
+  const unread = notifications.filter((n) => !n.read).length;
 
-  return (
-    <div className="min-h-screen flex bg-slate-50 text-slate-800">
-      {/* ── Collapsible Left Sidebar ── */}
-      <aside className={[
-        "bg-secondary border-r border-slate-700/30 flex flex-col transition-all duration-300 relative text-slate-300",
-        collapsed ? "w-16" : "w-64"
-      ].join(" ")}>
-        {/* Brand Header */}
-        <div className="h-16 flex items-center px-4 border-b border-slate-700/30 overflow-hidden shrink-0">
-          <BrandLogo lightText size="sm" showText={!collapsed} />
+  // Sidebar rendering (shared between desktop and mobile drawer)
+  const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (
+    <aside
+      style={{ backgroundColor: "var(--bg-sidebar)" }}
+      className={[
+        "flex flex-col h-full border-r transition-all duration-300",
+        "border-white/5",
+        isMobile ? "w-64" : collapsed ? "w-16" : "w-64",
+      ].join(" ")}
+    >
+      {/* Brand */}
+      <div className="h-14 flex items-center px-4 shrink-0 border-b border-white/5">
+        {!collapsed || isMobile ? (
+          <BrandLogo lightText size="sm" />
+        ) : (
+          <div
+            className="h-7 w-7 rounded-lg flex items-center justify-center font-heading font-extrabold text-xs"
+            style={{ backgroundColor: "var(--brand)", color: "#fff" }}
+          >
+            A
+          </div>
+        )}
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5 scrollbar-thin">
+        <NavSection label="Core" links={CORE_LINKS} pathname={pathname} collapsed={collapsed && !isMobile} />
+        <NavSection label="Platform" links={PLATFORM_LINKS} pathname={pathname} collapsed={collapsed && !isMobile} />
+        <NavSection label="Finance" links={FINANCE_LINKS} pathname={pathname} collapsed={collapsed && !isMobile} />
+        <NavSection label="System" links={SYSTEM_LINKS} pathname={pathname} collapsed={collapsed && !isMobile} />
+      </nav>
+
+      {/* User Widget */}
+      <div className="px-2 pb-3 pt-2 border-t border-white/5">
+        <div
+          className="flex items-center gap-2.5 rounded-lg p-2 overflow-hidden"
+          style={{ backgroundColor: "var(--bg-sidebar-hover)" }}
+        >
+          <div
+            className="h-7 w-7 rounded-md flex items-center justify-center font-bold text-[10px] shrink-0"
+            style={{ backgroundColor: "var(--brand)", color: "#fff" }}
+          >
+            {role === "SUPER_ADMIN" ? "SA" : role === "CRM_SPECIALIST" ? "CR" : "ST"}
+          </div>
+          {(!collapsed || isMobile) && (
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-bold truncate" style={{ color: "var(--text-inverse)" }}>
+                System Admin
+              </p>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value as any)}
+                className="bg-transparent border-0 text-[10px] font-medium p-0 outline-none w-full cursor-pointer"
+                style={{ color: "#6B6560" }}
+              >
+                <option value="SUPER_ADMIN">Super Admin</option>
+                <option value="CRM_SPECIALIST">CRM Specialist</option>
+                <option value="STAKEHOLDER">Stakeholder</option>
+              </select>
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* Sidebar Nav links */}
-        <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1.5">
-          {sidebarLinks.map(link => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href;
-            return (
-              <div key={link.label} className="relative group">
-                <Link
-                  href={link.comingSoon ? "#" : link.href}
-                  className={[
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all",
-                    isActive
-                      ? "bg-primary text-white"
-                      : "hover:bg-white/5 hover:text-white text-slate-400",
-                    link.comingSoon ? "opacity-45 cursor-not-allowed" : ""
-                  ].join(" ")}
-                >
-                  <Icon className="h-4.5 w-4.5 shrink-0" />
-                  {!collapsed && <span className="truncate">{link.label}</span>}
-                </Link>
-                {link.comingSoon && !collapsed && (
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[8px] bg-slate-800 text-slate-400 border border-slate-700/40 px-1.5 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                    Soon
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Collapser controller button */}
+      {/* Collapse toggle (desktop only) */}
+      {!isMobile && (
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-20 bg-slate-800 hover:bg-slate-700 border border-slate-700/50 text-slate-300 rounded-full h-6.5 w-6.5 flex items-center justify-center shadow-md z-20 outline-none"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="absolute -right-3.5 top-[4.5rem] z-20 h-7 w-7 rounded-full flex items-center justify-center transition-colors"
+          style={{
+            backgroundColor: "var(--bg-sidebar)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "#6B6560",
+          }}
         >
           {collapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
         </button>
+      )}
+    </aside>
+  );
 
-        {/* User profile widget at bottom */}
-        <div className="p-3 border-t border-slate-700/30">
-          <div className="flex items-center gap-3 overflow-hidden bg-white/5 border border-white/10 rounded-xl p-2">
-            <div className="h-8 w-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">
-              {role === "SUPER_ADMIN" ? "SA" : role === "CRM_SPECIALIST" ? "CR" : "ST"}
-            </div>
-            {!collapsed && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-w-0 flex-1">
-                <p className="text-[10px] font-bold text-white truncate leading-none">System Admin</p>
-                <select
-                  value={role}
-                  onChange={e => handleRoleChange(e.target.value as any)}
-                  className="bg-transparent border-0 text-[9px] text-slate-400 font-bold p-0 mt-1 outline-none select-none w-full block cursor-pointer hover:text-white"
-                >
-                  <option value="SUPER_ADMIN" className="bg-secondary text-slate-300 text-xs">Super Admin</option>
-                  <option value="CRM_SPECIALIST" className="bg-secondary text-slate-300 text-xs">CRM Expert</option>
-                  <option value="STAKEHOLDER" className="bg-secondary text-slate-300 text-xs">Stakeholder</option>
-                </select>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </aside>
+  return (
+    <div className="min-h-screen flex" style={{ backgroundColor: "var(--bg-app)" }}>
 
-      {/* ── Main Panel ── */}
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex relative flex-shrink-0" style={{ position: "sticky", top: 0, height: "100vh" }}>
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Sidebar Drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            />
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed inset-y-0 left-0 z-50 md:hidden"
+            >
+              <SidebarContent isMobile />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        {/* Header */}
-        <header className="sticky top-0 z-40 bg-white border-b border-slate-200 py-3.5 px-6 flex items-center justify-between shrink-0 shadow-sm">
-          {/* Breadcrumbs */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-400">Control Center</span>
-            <span className="text-slate-300 text-xs">/</span>
-            <span className="text-xs font-bold text-slate-700 capitalize">
-              {pathname.split("/").pop()?.replace("-", " ") || "Dashboard"}
-            </span>
+
+        {/* Top Header */}
+        <header
+          className="sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 shrink-0"
+          style={{
+            height: "3.5rem",
+            backgroundColor: "var(--bg-surface)",
+            borderBottom: "1px solid var(--border)",
+          }}
+        >
+          {/* Left: Mobile menu + Breadcrumb */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="md:hidden btn-ghost btn-sm !px-2 !min-h-[36px]"
+              aria-label="Open navigation"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+            <nav className="flex items-center gap-2 text-xs" aria-label="Breadcrumb">
+              <span style={{ color: "var(--text-subtle)" }}>Admin</span>
+              <span style={{ color: "var(--border-strong)" }}>/</span>
+              <span className="font-semibold capitalize" style={{ color: "var(--text-heading)" }}>
+                {pathname.split("/").pop()?.replace(/-/g, " ") || "Dashboard"}
+              </span>
+            </nav>
           </div>
 
-          {/* Action links */}
-          <div className="flex items-center gap-3">
-            {/* Search Box Trigger */}
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2">
+            {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="h-9 w-48 hidden md:flex items-center gap-2 px-3 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-400 rounded-lg text-xs font-medium cursor-pointer transition-colors shadow-sm"
+              className="hidden sm:flex items-center gap-2 text-xs font-medium rounded-lg px-3 py-2 transition-colors"
+              style={{
+                backgroundColor: "var(--bg-elevated)",
+                border: "1px solid var(--border)",
+                color: "var(--text-muted)",
+                minHeight: "36px",
+              }}
             >
               <Search className="h-3.5 w-3.5" />
-              <span>Universal Search…</span>
+              <span>Search…</span>
+              <kbd
+                className="ml-1 text-[10px] font-bold px-1 rounded"
+                style={{ backgroundColor: "var(--border)", color: "var(--text-muted)" }}
+              >
+                ⌘K
+              </kbd>
             </button>
 
-            {/* Notification Trigger */}
+            {/* Notifications */}
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="h-9 w-9 inline-flex items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 relative"
-                aria-label="System Notifications"
+                aria-label={`${unread} system notifications`}
+                className="relative flex items-center justify-center rounded-lg transition-colors"
+                style={{
+                  width: "36px", height: "36px",
+                  backgroundColor: "var(--bg-elevated)",
+                  border: "1px solid var(--border)",
+                  color: "var(--text-muted)",
+                }}
               >
                 <Bell className="h-4 w-4" />
-                {notifications.some(n => !n.read) && (
-                  <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" />
+                {unread > 0 && (
+                  <span
+                    className="absolute top-1 right-1 h-2 w-2 rounded-full"
+                    style={{ backgroundColor: "var(--brand)" }}
+                  />
                 )}
               </button>
+
               <AnimatePresence>
                 {showNotifications && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)} />
                     <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      initial={{ opacity: 0, y: 6, scale: 0.97 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.97 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden"
+                      className="absolute right-0 mt-2 w-80 rounded-xl shadow-xl overflow-hidden z-50"
+                      style={{
+                        backgroundColor: "var(--bg-surface)",
+                        border: "1px solid var(--border)",
+                      }}
                     >
-                      <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                        <span className="text-xs font-extrabold text-secondary">System Alerts</span>
+                      <div
+                        className="flex items-center justify-between px-4 py-3 border-b"
+                        style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-elevated)" }}
+                      >
+                        <span className="text-xs font-bold" style={{ color: "var(--text-heading)" }}>
+                          System Alerts
+                        </span>
                         <button
-                          onClick={() => setNotifications(prev => prev.map(n => ({ ...n, read: true })))}
-                          className="text-[9px] font-bold text-primary hover:underline"
+                          onClick={() => setNotifications((p) => p.map((n) => ({ ...n, read: true })))}
+                          className="text-[10px] font-semibold link-inline"
+                          style={{ color: "var(--brand)" }}
                         >
                           Mark all read
                         </button>
                       </div>
-                      <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
-                        {notifications.map(n => (
-                          <div key={n.id} className={["px-5 py-3.5", !n.read ? "bg-blue-50/20" : ""].join(" ")}>
-                            <div className="flex justify-between items-start gap-2">
-                              <p className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                                {n.type === "critical" && <AlertCircle className="h-3.5 w-3.5 text-red-500 shrink-0" />}
-                                {n.type === "action" && <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />}
-                                {n.type === "info" && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />}
-                                {n.title}
-                              </p>
-                              {!n.read && <span className="h-1.5 w-1.5 rounded-full bg-primary mt-1" />}
+                      <div className="max-h-72 overflow-y-auto">
+                        {notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            className="px-4 py-3 border-b flex gap-3"
+                            style={{
+                              borderColor: "var(--border)",
+                              backgroundColor: !n.read ? "var(--brand-subtle)" : "transparent",
+                            }}
+                          >
+                            <div className="mt-0.5 shrink-0">
+                              {n.type === "critical" && <AlertCircle className="h-4 w-4" style={{ color: "var(--danger)" }} />}
+                              {n.type === "action" && <AlertTriangle className="h-4 w-4" style={{ color: "var(--warning)" }} />}
+                              {n.type === "info" && <CheckCircle2 className="h-4 w-4" style={{ color: "var(--success)" }} />}
                             </div>
-                            <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{n.desc}</p>
+                            <div>
+                              <p className="text-xs font-semibold" style={{ color: "var(--text-heading)" }}>{n.title}</p>
+                              <p className="text-[11px] mt-0.5 leading-relaxed" style={{ color: "var(--text-muted)" }}>{n.desc}</p>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -259,56 +381,59 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </AnimatePresence>
             </div>
 
-            {/* Help Button */}
-            <a
-              href="mailto:support@anveshakhub.com"
-              className="h-9 px-3 inline-flex items-center gap-1 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
-            >
-              <HelpCircle className="h-4 w-4" /> Help
-            </a>
-
-            {/* Logout button */}
+            {/* Sign Out */}
             <Link
               href="/auth/login"
-              className="h-9 px-3 inline-flex items-center gap-1.5 rounded-lg bg-red-55 border border-red-200 text-xs font-bold text-red-650 hover:bg-red-50 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-semibold rounded-lg px-3 py-2 transition-colors link-inline"
+              style={{
+                backgroundColor: "var(--danger-subtle)",
+                color: "var(--danger)",
+                border: "1px solid var(--danger-border)",
+                minHeight: "36px",
+              }}
             >
-              <LogOut className="h-4 w-4" /> Sign Out
+              <LogOut className="h-3.5 w-3.5" />
+              Sign Out
             </Link>
           </div>
         </header>
 
-        {/* ── Main Children Content Guarded by RBAC ── */}
-        <main className="flex-grow flex flex-col min-w-0 relative">
+        {/* Page Content */}
+        <main className="flex-grow flex flex-col min-w-0">
           {hasAccess ? (
             children
           ) : (
-            /* ── 403 Forbidden Screen ── */
-            <div className="flex-grow flex items-center justify-center p-8 bg-slate-50 relative z-10">
+            <div
+              className="flex-grow flex items-center justify-center p-8"
+              style={{ backgroundColor: "var(--bg-app)" }}
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="max-w-md w-full bg-white border border-slate-200 rounded-2xl shadow-xl p-8 text-center"
+                className="max-w-md w-full card-flat p-8 text-center"
               >
-                <div className="h-16 w-16 rounded-2xl bg-red-50 border-2 border-red-100 flex items-center justify-center mx-auto mb-5 text-red-600">
+                <div
+                  className="h-16 w-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
+                  style={{ backgroundColor: "var(--danger-subtle)", color: "var(--danger)" }}
+                >
                   <ShieldAlert className="h-8 w-8" />
                 </div>
-                <h1 className="text-xl font-black text-secondary tracking-tight">403 — Unauthorized Access</h1>
-                <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-                  Your current profile role (<span className="font-bold text-slate-700">{role}</span>) lacks permissions to view this admin panel. 
-                  Please request access authorization from your organization coordinator or switch your simulated role at the bottom-left profile block.
+                <h1 className="text-xl font-extrabold" style={{ color: "var(--text-heading)" }}>
+                  Access Restricted
+                </h1>
+                <p className="text-sm mt-2 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                  Your current role (<strong style={{ color: "var(--text-heading)" }}>{role}</strong>) doesn't have permission
+                  to view this section. Switch to Super Admin or contact your platform coordinator.
                 </p>
                 <div className="mt-6 flex gap-3 justify-center">
                   <button
-                    onClick={() => handleRoleChange("SUPER_ADMIN")}
-                    className="h-10 px-4 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors"
+                    onClick={() => setRole("SUPER_ADMIN")}
+                    className="btn-primary btn-sm"
                   >
                     Switch to Super Admin
                   </button>
-                  <Link
-                    href="/auth/login"
-                    className="h-10 px-4 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors inline-flex items-center"
-                  >
-                    Go back
+                  <Link href="/auth/login" className="btn-secondary btn-sm">
+                    Sign out
                   </Link>
                 </div>
               </motion.div>
@@ -317,64 +442,86 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </main>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-slate-200 py-3.5 px-8 flex flex-col sm:flex-row items-center justify-between text-[10px] font-bold text-slate-450 shrink-0">
-          <span>AnveshakHub Administration Interface. All systems operational.</span>
-          <div className="flex gap-4 mt-2 sm:mt-0">
-            <a href="#" className="hover:text-primary transition-colors">Privacy Charter</a>
-            <span>·</span>
-            <a href="#" className="hover:text-primary transition-colors">Acceptable Use Terms</a>
+        <footer
+          className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 text-[11px] font-medium shrink-0"
+          style={{
+            borderTop: "1px solid var(--border)",
+            backgroundColor: "var(--bg-surface)",
+            color: "var(--text-subtle)",
+          }}
+        >
+          <span>AnveshakHub Admin — All systems operational</span>
+          <div className="flex gap-4 mt-1 sm:mt-0">
+            <a href="#" className="hover:underline link-inline" style={{ color: "inherit" }}>Privacy</a>
+            <a href="#" className="hover:underline link-inline" style={{ color: "inherit" }}>Terms</a>
           </div>
         </footer>
       </div>
 
-      {/* ── Global Search Modal ── */}
+      {/* Global Search Modal */}
       <Dialog.Root open={searchOpen} onOpenChange={setSearchOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
+          <Dialog.Overlay
+            className="fixed inset-0 z-50"
+            style={{ backgroundColor: "rgba(33,31,29,0.5)", backdropFilter: "blur(4px)" }}
+          />
           <Dialog.Content
-            className="fixed z-50 left-1/2 top-40 -translate-x-1/2 w-full max-w-lg focus:outline-none px-4"
-            aria-describedby="global-search-desc"
+            className="fixed z-50 left-1/2 top-32 -translate-x-1/2 w-full max-w-xl px-4 focus:outline-none"
+            aria-describedby="search-hint"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+              className="rounded-2xl shadow-2xl overflow-hidden"
+              style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border)" }}
             >
-              <div className="p-4 border-b border-slate-100 flex items-center gap-2">
-                <Search className="h-4.5 w-4.5 text-slate-400" />
+              <div
+                className="flex items-center gap-3 px-4 py-3 border-b"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <Search className="h-4 w-4 shrink-0" style={{ color: "var(--text-muted)" }} />
                 <input
-                  id="global-search-input"
+                  autoFocus
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Search organization, project, expert profile, or documents..."
-                  className="flex-1 text-sm text-slate-800 placeholder-slate-400 outline-none"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search organization, project, expert, or document…"
+                  className="flex-1 bg-transparent outline-none text-sm"
+                  style={{ color: "var(--text-heading)" }}
                 />
                 <button
                   onClick={() => setSearchOpen(false)}
-                  className="text-xs text-slate-400 hover:text-slate-600"
+                  className="text-xs font-semibold link-inline"
+                  style={{ color: "var(--text-muted)" }}
                 >
                   Esc
                 </button>
               </div>
-              <div id="global-search-desc" className="px-5 py-4 max-h-60 overflow-y-auto bg-slate-50/50">
+              <div id="search-hint" className="px-4 py-5 max-h-72 overflow-y-auto">
                 {searchQuery ? (
-                  <div className="space-y-3">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Search Results</p>
+                  <div className="space-y-2">
                     {[
                       { type: "Organization", title: "Solaris Power Pvt Ltd", desc: "Energy & Infrastructure partner" },
                       { type: "Project", title: "Hypersonic Nozzle Research", desc: "Collaborative project with IIT Madras" },
-                      { type: "Document", title: "Certificate of Incorporation.pdf", desc: "Pending verification check" }
-                    ].filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase())).map(item => (
-                      <div key={item.title} className="p-3 bg-white border border-slate-200 rounded-xl hover:border-primary cursor-pointer transition-colors">
-                        <span className="text-[9px] font-black uppercase text-primary tracking-wider">{item.type}</span>
-                        <p className="text-xs font-bold text-slate-800 mt-0.5">{item.title}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{item.desc}</p>
-                      </div>
-                    ))}
+                      { type: "Document", title: "Certificate of Incorporation.pdf", desc: "Pending verification" },
+                    ]
+                      .filter((i) => i.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .map((item) => (
+                        <button
+                          key={item.title}
+                          className="w-full text-left p-3 rounded-xl transition-colors"
+                          style={{ backgroundColor: "var(--bg-elevated)", border: "1px solid var(--border)" }}
+                        >
+                          <span className="badge-ember badge" style={{ marginBottom: "0.25rem" }}>{item.type}</span>
+                          <p className="text-sm font-semibold mt-1" style={{ color: "var(--text-heading)" }}>{item.title}</p>
+                          <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{item.desc}</p>
+                        </button>
+                      ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 text-center py-6">Type to search for assets across AnveshakHub...</p>
+                  <p className="text-sm text-center py-6" style={{ color: "var(--text-muted)" }}>
+                    Type to search across AnveshakHub
+                  </p>
                 )}
               </div>
             </motion.div>
@@ -382,40 +529,46 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </Dialog.Portal>
       </Dialog.Root>
 
-      {/* ── Session Timeout Warning Modal ── */}
+      {/* Session Timeout */}
       <Dialog.Root open={sessionTimeoutOpen} onOpenChange={setSessionTimeoutOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
+          <Dialog.Overlay
+            className="fixed inset-0 z-50"
+            style={{ backgroundColor: "rgba(33,31,29,0.5)", backdropFilter: "blur(4px)" }}
+          />
           <Dialog.Content
-            className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md focus:outline-none px-4"
+            className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4 focus:outline-none"
             aria-describedby="session-desc"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 text-center"
+              className="rounded-2xl shadow-2xl p-8 text-center"
+              style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border)" }}
             >
-              <div className="h-14 w-14 rounded-2xl bg-amber-50 border-2 border-amber-100 flex items-center justify-center mx-auto mb-4 text-amber-600">
+              <div
+                className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ backgroundColor: "var(--warning-subtle)", color: "var(--warning)" }}
+              >
                 <AlertTriangle className="h-7 w-7" />
               </div>
-              <Dialog.Title className="text-sm font-extrabold text-secondary">Session Security Timeout</Dialog.Title>
-              <p id="session-desc" className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                You have been inactive for a while. For secure access compliance, your administrator session will terminate automatically in{" "}
-                <span className="font-black text-red-600 tabular-nums">{timeLeft} seconds</span>.
+              <Dialog.Title className="text-base font-extrabold" style={{ color: "var(--text-heading)" }}>
+                Session Expiring Soon
+              </Dialog.Title>
+              <p id="session-desc" className="text-sm mt-2 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                Your admin session will end in{" "}
+                <span className="font-bold tabular-nums" style={{ color: "var(--danger)" }}>
+                  {timeLeft}s
+                </span>{" "}
+                due to inactivity.
               </p>
-              <div className="mt-5 flex gap-3 justify-center">
-                <button
-                  onClick={extendSession}
-                  className="h-10 px-5 bg-primary hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
-                >
-                  <RefreshCw className="h-3.5 w-3.5 animate-spin" /> Extend Session
+              <div className="mt-6 flex gap-3 justify-center">
+                <button onClick={extendSession} className="btn-primary">
+                  <RefreshCw className="h-4 w-4" />
+                  Stay Signed In
                 </button>
-                <button
-                  onClick={() => router.push("/auth/login")}
-                  className="h-10 px-5 border border-slate-205 text-slate-600 hover:bg-slate-55 rounded-lg text-xs font-bold transition-colors"
-                >
-                  Logout
+                <button onClick={() => router.push("/auth/login")} className="btn-secondary">
+                  Sign Out
                 </button>
               </div>
             </motion.div>

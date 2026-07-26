@@ -111,23 +111,23 @@ export default function SettingsConsole() {
   };
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50">
+    <div className="flex flex-col min-h-full bg-[#FBF7F0]">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-slate-200 px-8 py-5">
+      <div className="bg-[#FBF7F0] border-b border-[#E2DCD2] px-8 py-5">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">System Settings & Console</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Central settings console categorizing security password policies, organization profile values, and API keys</p>
+            <h1 className="text-xl font-bold text-[#211F1D]">System Settings & Console</h1>
+            <p className="text-xs text-[#78716A] mt-0.5">Central settings console categorizing security password policies, organization profile values, and API keys</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={fetchSettings} className="h-8 px-3 inline-flex items-center gap-1.5 border border-slate-200 text-slate-655 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+            <button onClick={fetchSettings} className="h-8 px-3 inline-flex items-center gap-1.5 border border-[#E2DCD2] text-slate-655 rounded-lg text-xs font-medium hover:bg-[#FBF7F0] transition-colors">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </button>
           </div>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-0 mt-5 border-t border-slate-100 pt-0 -mb-5">
+        <div className="flex items-center gap-0 mt-5 border-t border-[#E2DCD2] pt-0 -mb-5">
           {[
             { key: "profile", label: "Organization Profile", icon: Globe },
             { key: "security", label: "Security & Passwords", icon: ShieldAlert },
@@ -135,7 +135,7 @@ export default function SettingsConsole() {
           ].map(tab => {
             const Icon = tab.icon;
             return (
-              <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
+              <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all ${activeTab === tab.key ? "border-[#FF5A36] text-[#FF5A36]" : "border-transparent text-[#78716A] hover:text-[#211F1D]"}`}>
                 <Icon className="h-3.5 w-3.5" /> {tab.label}
               </button>
             );
@@ -147,33 +147,33 @@ export default function SettingsConsole() {
       <div className="flex-1 overflow-auto p-8">
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF5A36]" />
           </div>
         ) : (
           <AnimatePresence mode="wait">
 
             {/* ──── PROFILE TAB ──── */}
             {activeTab === "profile" && orgProfile && (
-              <div className="max-w-xl bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Ecosystem Profile Metadata</h3>
+              <div className="max-w-xl bg-[#FBF7F0] border border-[#E2DCD2] rounded-2xl p-6 space-y-4">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Ecosystem Profile Metadata</h3>
                 
                 <div className="space-y-3.5 text-xs">
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Organization Title *</label>
-                    <input value={orgName} onChange={(e) => setOrgName(e.target.value)} className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Organization Title *</label>
+                    <input value={orgName} onChange={(e) => setOrgName(e.target.value)} className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Dedicated Platform Domain *</label>
-                    <input value={orgDomain} onChange={(e) => setOrgDomain(e.target.value)} className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Dedicated Platform Domain *</label>
+                    <input value={orgDomain} onChange={(e) => setOrgDomain(e.target.value)} className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                   </div>
                   <div>
-                    <label className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Support Email Address *</label>
-                    <input value={orgEmail} onChange={(e) => setOrgEmail(e.target.value)} className="w-full h-8 px-2.5 border border-slate-200 rounded-lg bg-white" />
+                    <label className="text-[10px] font-bold text-[#78716A] uppercase block mb-1">Support Email Address *</label>
+                    <input value={orgEmail} onChange={(e) => setOrgEmail(e.target.value)} className="w-full h-8 px-2.5 border border-[#E2DCD2] rounded-lg bg-[#FBF7F0]" />
                   </div>
                 </div>
 
-                <div className="flex justify-end pt-3 border-t border-slate-100">
-                  <button onClick={handleSaveProfile} disabled={updating} className="h-8 px-4 bg-primary text-white rounded-lg font-bold hover:bg-blue-700 flex items-center gap-1">
+                <div className="flex justify-end pt-3 border-t border-[#E2DCD2]">
+                  <button onClick={handleSaveProfile} disabled={updating} className="h-8 px-4 bg-[#FF5A36] text-white rounded-lg font-bold hover:bg-[#E04826] flex items-center gap-1">
                     {updating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null} Update Profile
                   </button>
                 </div>
@@ -182,16 +182,16 @@ export default function SettingsConsole() {
 
             {/* ──── SECURITY TAB ──── */}
             {activeTab === "security" && (
-              <div className="max-w-xl bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-1.5"><ShieldAlert className="h-4.5 w-4.5 text-primary" /> Global Security Policies</h3>
+              <div className="max-w-xl bg-[#FBF7F0] border border-[#E2DCD2] rounded-2xl p-6 space-y-4">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide flex items-center gap-1.5"><ShieldAlert className="h-[1.125rem] w-[1.125rem] text-[#FF5A36]" /> Global Security Policies</h3>
                 
-                <div className="space-y-4 text-xs font-semibold text-slate-700">
+                <div className="space-y-4 text-xs font-semibold text-[#211F1D]">
                   <div className="flex items-center justify-between border-b border-slate-50 pb-3">
                     <div>
                       <span>Minimum Password Length *</span>
-                      <p className="text-[9px] text-slate-450 font-normal mt-0.5">Enforces longer passphrase complexity limits for logins.</p>
+                      <p className="text-[10px] text-[#78716A] font-normal mt-0.5">Enforces longer passphrase complexity limits for logins.</p>
                     </div>
-                    <select value={passLength} onChange={(e) => { setPassLength(e.target.value); handleUpdateSetting("PASSWORD_MIN_LENGTH", e.target.value); }} className="h-8 border border-slate-200 rounded-lg px-2 bg-white">
+                    <select value={passLength} onChange={(e) => { setPassLength(e.target.value); handleUpdateSetting("PASSWORD_MIN_LENGTH", e.target.value); }} className="h-8 border border-[#E2DCD2] rounded-lg px-2 bg-[#FBF7F0]">
                       <option value="8">8 Characters</option>
                       <option value="12">12 Characters</option>
                       <option value="16">16 Characters</option>
@@ -201,9 +201,9 @@ export default function SettingsConsole() {
                   <div className="flex items-center justify-between border-b border-slate-50 pb-3">
                     <div>
                       <span>Session Expiration Timeout *</span>
-                      <p className="text-[9px] text-slate-450 font-normal mt-0.5">Auto expires inactive sessions to prevent terminal hijack.</p>
+                      <p className="text-[10px] text-[#78716A] font-normal mt-0.5">Auto expires inactive sessions to prevent terminal hijack.</p>
                     </div>
-                    <select value={sessionTimeout} onChange={(e) => { setSessionTimeout(e.target.value); handleUpdateSetting("SESSION_TIMEOUT_MINUTES", e.target.value); }} className="h-8 border border-slate-200 rounded-lg px-2 bg-white">
+                    <select value={sessionTimeout} onChange={(e) => { setSessionTimeout(e.target.value); handleUpdateSetting("SESSION_TIMEOUT_MINUTES", e.target.value); }} className="h-8 border border-[#E2DCD2] rounded-lg px-2 bg-[#FBF7F0]">
                       <option value="15">15 Minutes</option>
                       <option value="30">30 Minutes</option>
                       <option value="60">60 Minutes</option>
@@ -213,9 +213,9 @@ export default function SettingsConsole() {
                   <div className="flex items-center justify-between">
                     <div>
                       <span>Require Two-Factor Auth (2FA) *</span>
-                      <p className="text-[9px] text-slate-450 font-normal mt-0.5">Force all administration workforce officers to pass OTP steps.</p>
+                      <p className="text-[10px] text-[#78716A] font-normal mt-0.5">Force all administration workforce officers to pass OTP steps.</p>
                     </div>
-                    <button onClick={() => { setRequire2fa(!require2fa); handleUpdateSetting("TWO_FACTOR_REQUIRED", String(!require2fa)); }} className={`h-7 px-3 rounded-lg text-[10px] font-bold border transition-colors ${require2fa ? "bg-green-50 text-green-700 border-green-150" : "bg-red-50 text-red-700 border-red-150"}`}>
+                    <button onClick={() => { setRequire2fa(!require2fa); handleUpdateSetting("TWO_FACTOR_REQUIRED", String(!require2fa)); }} className={`h-7 px-3 rounded-lg text-[10px] font-bold border transition-colors ${require2fa ? "bg-[#E8F2EC] text-[#2F6B4F] border-green-150" : "bg-[#FEE2E2] text-[#C0392B] border-red-150"}`}>
                       {require2fa ? "MFA Required" : "Optional"}
                     </button>
                   </div>
@@ -225,25 +225,25 @@ export default function SettingsConsole() {
 
             {/* ──── KEYS TAB ──── */}
             {activeTab === "keys" && (
-              <div className="max-w-xl bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wide">Storage Provider & API Keys</h3>
-                <div className="space-y-4 text-xs font-semibold text-slate-700">
+              <div className="max-w-xl bg-[#FBF7F0] border border-[#E2DCD2] rounded-2xl p-6 space-y-4">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide">Storage Provider & API Keys</h3>
+                <div className="space-y-4 text-xs font-semibold text-[#211F1D]">
                   <div className="flex items-center justify-between border-b border-slate-50 pb-3">
                     <div>
                       <span>MinIO Document Storage Node</span>
-                      <p className="text-[9px] text-slate-450 font-normal mt-0.5">Primary host node link target for NDA/MOU document vaults.</p>
+                      <p className="text-[10px] text-[#78716A] font-normal mt-0.5">Primary host node link target for NDA/MOU document vaults.</p>
                     </div>
-                    <span className="text-[10px] font-bold bg-slate-100 text-slate-600 rounded px-2 py-0.5">https://minio.anveshakhub.gov.in</span>
+                    <span className="text-[10px] font-bold bg-[#EFE9DF] text-[#57534E] rounded px-2 py-0.5">https://minio.anveshakhub.gov.in</span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
                       <span>Platform API Authorization Key</span>
-                      <p className="text-[9px] text-slate-450 font-normal mt-0.5">Symmetric secret key configured for client integrations.</p>
+                      <p className="text-[10px] text-[#78716A] font-normal mt-0.5">Symmetric secret key configured for client integrations.</p>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-mono bg-slate-50 rounded px-2 py-1 select-all">anveshak_key_prod_abc123z</span>
-                      <button className="h-6 w-6 border border-slate-200 rounded flex items-center justify-center text-slate-400 hover:text-slate-600"><EyeOff className="h-3.5 w-3.5" /></button>
+                      <span className="text-[10px] font-mono bg-[#FBF7F0] rounded px-2 py-1 select-all">anveshak_key_prod_abc123z</span>
+                      <button className="h-6 w-6 border border-[#E2DCD2] rounded flex items-center justify-center text-[#A8A196] hover:text-[#57534E]"><EyeOff className="h-3.5 w-3.5" /></button>
                     </div>
                   </div>
                 </div>
