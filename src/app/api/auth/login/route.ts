@@ -137,13 +137,15 @@ export async function POST(request: Request) {
     }
 
     // Determine redirect route based on role
-    let redirectUrl = "/";
-    if (dbUser.role === "SUPER_ADMIN" || dbUser.role === "CRM_SPECIALIST" || dbUser.role === "COMPLIANCE_OFFICER") {
+    let redirectUrl = "/student/dashboard";
+    if (dbUser.role === "SUPER_ADMIN" || dbUser.role === "ADMIN" || dbUser.role === "CRM_SPECIALIST" || dbUser.role === "COMPLIANCE_OFFICER") {
       redirectUrl = "/admin/dashboard";
-    } else if (dbUser.role === "INDUSTRY_MANAGER" || dbUser.organizationId) {
+    } else if (dbUser.role === "INDUSTRY_MANAGER" || dbUser.role === "INDUSTRY" || dbUser.organizationId) {
       redirectUrl = "/industry/dashboard";
-    } else if (dbUser.role === "STAKEHOLDER") {
+    } else if (dbUser.role === "EXPERT") {
       redirectUrl = "/expert/dashboard";
+    } else if (dbUser.role === "STUDENT") {
+      redirectUrl = "/student/dashboard";
     }
 
     const response = NextResponse.json({
@@ -173,7 +175,7 @@ export async function POST(request: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 365, // 365 days persistent session
       path: "/",
     });
 

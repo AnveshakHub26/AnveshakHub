@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
-  try {
-    const supabase = await createClient();
-    await supabase.auth.signOut();
+  const response = NextResponse.json({ success: true, message: "Logged out successfully" });
+  
+  response.cookies.set("anveshakhub-auth", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    expires: new Date(0),
+    path: "/",
+  });
 
-    return NextResponse.json({ success: true, message: "Logged out successfully" });
-  } catch (error: any) {
-    return NextResponse.json({ success: true, message: "Logged out" });
-  }
+  return response;
 }

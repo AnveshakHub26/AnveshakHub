@@ -92,24 +92,24 @@ export default function ExpertDashboardPage() {
   }
 
   const expert = data?.expert || {
-    name: "Dr. S. Ramanathan",
-    designation: "Professor & Department Head",
-    institution: "IISc Bangalore",
-    department: "Aerospace Engineering",
+    name: "Verified Expert Researcher",
+    designation: "Subject Matter Expert",
+    institution: "Partner University",
+    department: "R&D Department",
     availabilityStatus: "AVAILABLE",
-    rating: 4.9,
-    reviewsCount: 18,
+    rating: 5.0,
+    reviewsCount: 0,
     verificationStatus: "VERIFIED",
   };
 
   const kpis = data?.kpis || {
-    activeEngagementsCount: 2,
-    completedEngagementsCount: 14,
-    studentsMentoredCount: 6,
-    totalConsultationHours: 120,
-    hIndex: 24,
-    citationsCount: 1420,
-    totalPublications: 38,
+    activeEngagementsCount: 0,
+    completedEngagementsCount: 0,
+    studentsMentoredCount: 0,
+    totalConsultationHours: 0,
+    hIndex: 0,
+    citationsCount: 0,
+    totalPublications: 0,
   };
 
   const projects     = data?.activeProjects || [];

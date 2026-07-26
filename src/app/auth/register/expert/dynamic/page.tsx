@@ -447,7 +447,19 @@ export default function DynamicExpertRegistrationPage() {
 
             <div className="flex justify-between pt-4 border-t border-[#D8D2C7]">
               <button onClick={() => setStep(2)} className="px-4 py-2 text-xs font-bold border border-[#E2DCD2] rounded-xl hover:bg-[#FBF7F0]">Back</button>
-              <button onClick={() => setStep(4)} className="px-6 py-2 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826]">Preview Registration</button>
+              <button
+                onClick={() => {
+                  const hasUploaded = Object.keys(uploadedDocs).length > 0;
+                  if (!hasUploaded) {
+                    alert("Please click 'Upload File' on at least one required verification document before proceeding.");
+                    return;
+                  }
+                  setStep(4);
+                }}
+                className="px-6 py-2 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826] cursor-pointer"
+              >
+                Preview Registration
+              </button>
             </div>
           </div>
         )}

@@ -99,23 +99,23 @@ export default function StudentDashboardPage() {
   }
 
   const student = data?.student || {
-    name: "Aditya Kumar",
-    usn: "1RV21CS014",
-    institution: "RV College of Engineering",
-    degree: "B.Tech Computer Science",
-    semester: 6,
-    cgpa: 9.2,
+    name: "Student Researcher",
+    usn: "N/A",
+    institution: "Partner University",
+    degree: "Undergraduate Degree",
+    semester: 1,
+    cgpa: 0,
     verificationStatus: "VERIFIED",
   };
 
   const kpis = data?.kpis || {
-    activeProjectsCount: 1,
-    completedTasksCount: 8,
-    totalTasksCount: 12,
-    mentorshipScore: 9.4,
-    attendanceRate: 98,
-    learningGoalsCompleted: 4,
-    totalLearningGoals: 5,
+    activeProjectsCount: 0,
+    completedTasksCount: 0,
+    totalTasksCount: 0,
+    mentorshipScore: 0,
+    attendanceRate: 0,
+    learningGoalsCompleted: 0,
+    totalLearningGoals: 0,
   };
 
   const assignedProject = data?.assignedProject || {

@@ -64,16 +64,16 @@ export default function IndustryDashboard() {
   }
 
   const kpis = data?.kpis || {
-    activeProjects: 3,
-    pendingMeetings: 2,
-    openProblemStatements: 4,
-    grantApplications: 1,
-    platformCreditBalance: 250000,
+    activeProjects: 0,
+    pendingMeetings: 0,
+    openProblemStatements: 0,
+    grantApplications: 0,
+    platformCreditBalance: 0,
   };
   const projects  = data?.projects  || [];
   const meetings  = data?.meetings  || [];
   const activities = data?.activities || [];
-  const financial = data?.financial || { allocatedBudget: 5000000, disbursedAmount: 3200000, remainingBalance: 1800000, currency: "INR" };
+  const financial = data?.financial || { allocatedBudget: 0, disbursedAmount: 0, remainingBalance: 0, currency: "INR" };
 
   const kpiCards = [
     { label: "Active R&D Projects",     value: kpis.activeProjects,         sub: "Milestones on schedule",    icon: Briefcase,    color: "#FF5A36", bg: "#FFF0ED" },

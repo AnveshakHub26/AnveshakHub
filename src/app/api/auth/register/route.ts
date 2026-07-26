@@ -25,19 +25,39 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Password must be at least 8 characters long" }, { status: 400 });
     }
 
-    // 2. Duplicate user prevention check
+    // 2. Duplicate user prevention check (email and fullName)
     const existingUser = await prisma.user.findFirst({
-      where: { OR: [{ email }] }
+      where: {
+        OR: [
+          { email },
+          { fullName }
+        ]
+      }
     });
 
     if (existingUser) {
-      return NextResponse.json({ error: "An account with this email address already exists" }, { status: 400 });
+      if (existingUser.email === email) {
+        return NextResponse.json({ error: "An account with this email address already exists. Please sign in instead." }, { status: 400 });
+      }
+      if (existingUser.fullName === fullName) {
+        return NextResponse.json({ error: "An account with this full name already exists. Please use a unique full name." }, { status: 400 });
+      }
     }
 
     // Map role enum
-    let dbRole = "STAKEHOLDER";
-    if (role === "industry") dbRole = "INDUSTRY_MANAGER";
-    if (role === "admin") dbRole = "SUPER_ADMIN";
+    let dbRole = "STUDENT";
+    let redirectUrl = "/student/dashboard";
+
+    if (role === "industry") {
+      dbRole = "INDUSTRY_MANAGER";
+      redirectUrl = "/industry/dashboard";
+    } else if (role === "expert") {
+      dbRole = "EXPERT";
+      redirectUrl = "/expert/dashboard";
+    } else if (role === "admin") {
+      dbRole = "SUPER_ADMIN";
+      redirectUrl = "/admin/dashboard";
+    }
 
     // 3. Register User in Supabase Auth via Service Role with fallback for local dev
     let authUser: { id: string; email?: string } | null = null;
@@ -131,7 +151,7 @@ export async function POST(request: Request) {
       details: JSON.stringify({ role: dbRole, email, organizationId }),
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: "Account created successfully",
       user: {
@@ -141,8 +161,23 @@ export async function POST(request: Request) {
         fullName: dbUser.fullName || dbUser.name,
         role: dbUser.role,
         organization: dbUser.organization,
-      }
+      },
+      redirectUrl,
     });
+
+    response.cookies.set("anveshakhub-auth", JSON.stringify({
+      userId: dbUser.id,
+      email: dbUser.email,
+      role: dbUser.role,
+    }), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365, // 365 days persistent session
+      path: "/",
+    });
+
+    return response;
   } catch (error: any) {
     console.error("Registration API Error:", error);
     return NextResponse.json(

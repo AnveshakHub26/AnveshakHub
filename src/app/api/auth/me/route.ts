@@ -1,49 +1,35 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+    const cookieStore = await cookies();
+    const authCookie = cookieStore.get("anveshakhub-auth")?.value;
 
-    if (authError || !authUser) {
-      return NextResponse.json({ authenticated: false }, { status: 401 });
+    if (!authCookie) {
+      return NextResponse.json({ authenticated: false, user: null }, { status: 200 });
     }
 
-    const dbUser = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { supabaseId: authUser.id },
-          { email: authUser.email }
-        ]
-      },
-      include: {
-        organization: true,
-      }
-    });
+    const userData = JSON.parse(authCookie);
 
-    if (!dbUser) {
-      return NextResponse.json({ authenticated: false, error: "User profile not found in database" }, { status: 404 });
+    let redirectUrl = "/student/dashboard";
+    const role = userData.role || "";
+    if (role === "SUPER_ADMIN" || role === "ADMIN" || role === "CRM_SPECIALIST" || role === "COMPLIANCE_OFFICER") {
+      redirectUrl = "/admin/dashboard";
+    } else if (role === "INDUSTRY_MANAGER" || role === "INDUSTRY") {
+      redirectUrl = "/industry/dashboard";
+    } else if (role === "EXPERT") {
+      redirectUrl = "/expert/dashboard";
+    } else if (role === "STUDENT") {
+      redirectUrl = "/student/dashboard";
     }
 
     return NextResponse.json({
       authenticated: true,
-      user: {
-        id: dbUser.id,
-        supabaseId: authUser.id,
-        email: dbUser.email,
-        fullName: dbUser.fullName || dbUser.name,
-        role: dbUser.role,
-        avatarUrl: dbUser.avatarUrl,
-        phone: dbUser.phone,
-        emailVerified: dbUser.emailVerified,
-        createdAt: dbUser.createdAt,
-        organization: dbUser.organization,
-      }
+      user: userData,
+      redirectUrl,
     });
-  } catch (error: any) {
-    console.error("Auth Me API Error:", error);
-    return NextResponse.json({ authenticated: false, error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ authenticated: false, user: null }, { status: 200 });
   }
 }

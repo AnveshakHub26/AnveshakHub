@@ -27,15 +27,15 @@ export async function GET(req: NextRequest) {
     const projectsFormatted = totalProjects.map(p => ({
       id: p.id,
       name: p.name,
-      progress: 50,
+      progress: p.lifecycle === "COMPLETED" ? 100 : 50,
       status: p.lifecycle,
       milestone: "Active Phase"
     }));
 
     const financial = {
-      allocatedBudget: totalAllocated || 5000000,
-      disbursedAmount: totalUsed || 1200000,
-      remainingBalance: (totalAllocated - totalUsed) || 3800000,
+      allocatedBudget: totalAllocated,
+      disbursedAmount: totalUsed,
+      remainingBalance: totalAllocated - totalUsed,
       currency: "INR"
     };
 
