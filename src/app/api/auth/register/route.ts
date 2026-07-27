@@ -32,6 +32,12 @@ export async function POST(request: Request) {
           { email },
           { fullName }
         ]
+      },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
       }
     });
 
@@ -127,8 +133,14 @@ export async function POST(request: Request) {
         department: department || null,
         emailVerified: true,
       },
-      include: {
-        organization: true
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        fullName: true,
+        role: true,
+        organizationId: true,
+        organization: true,
       }
     });
 
