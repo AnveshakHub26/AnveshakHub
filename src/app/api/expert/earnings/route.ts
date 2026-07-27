@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({
-      transactions: [],
-      totalAmount: 0,
-      escrowBalance: 0,
-      currency: "INR"
+      totalEarnings: 0,
+      pendingPayouts: 0,
+      currency: "INR",
+      payoutHistory: []
     });
   } catch (error: any) {
-    return NextResponse.json({ transactions: [], totalAmount: 0, escrowBalance: 0, currency: "INR" });
+    return NextResponse.json({ totalEarnings: 0, pendingPayouts: 0, currency: "INR", payoutHistory: [] });
   }
 }

@@ -1,75 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ─────────────────────────────────────────────────────────────────
-// STU-012 ENTERPRISE STUDENT SUPPORT & HELP CENTER API
-// ─────────────────────────────────────────────────────────────────
-
-const MOCK_FAQS = [
-  { id: "faq-std-01", question: "How do I apply for an industry R&D internship?", category: "OPPORTUNITIES", answer: "Open Opportunities Directory, select an active role, click 'Apply Now', enter your cover note and submit your verified student resume." },
-  { id: "faq-std-02", question: "How is my student stipend disbursed?", category: "FINANCE", answer: "Stipends are transferred to your registered bank account upon monthly lead mentor milestone approval." },
-  { id: "faq-std-03", question: "How do I request a review call with my lead expert mentor?", category: "MEETINGS", answer: "Navigate to Meetings & Collaboration, click 'Request Review Session', enter the agenda and select your preferred meeting date." }
-];
-
-const MOCK_TICKETS = [
-  {
-    id: "tkt-std-001",
-    ticketNumber: "STU-TKT-1042",
-    subject: "Inquiry regarding Month 1 Stipend Payout Date",
-    category: "REIMBURSEMENT",
-    priority: "MEDIUM",
-    status: "OPEN",
-    createdAt: "2026-07-20T10:00:00Z"
-  },
-  {
-    id: "tkt-std-002",
-    ticketNumber: "STU-TKT-0918",
-    subject: "Request for Official IEEE Student Verification Badge",
-    category: "VERIFICATION",
-    priority: "LOW",
-    status: "RESOLVED",
-    createdAt: "2026-06-10T14:00:00Z"
-  }
-];
+import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get("search") || "";
+  try {
+    const cookieStore = await cookies();
+    const authCookie = cookieStore.get("anveshakhub-auth")?.value;
+    let userId: string | undefined = undefined;
 
-  let filteredFaqs = MOCK_FAQS;
-  if (search) {
-    const q = search.toLowerCase();
-    filteredFaqs = MOCK_FAQS.filter(f => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q));
+    if (authCookie) {
+      try {
+        const parsed = JSON.parse(authCookie);
+        userId = parsed.userId;
+      } catch {}
+    }
+
+    const { searchParams } = new URL(req.url);
+    const q = searchParams.get("q")?.toLowerCase() || "";
+
+    const faqs = [
+      { id: "faq-1", question: "How do student R&D stipends get disbursed?", answer: "Stipends are transferred on the 1st of every month via direct bank transfer under corporate SLA approval.", category: "STIPEND" },
+      { id: "faq-2", question: "What happens if a project milestone is delayed?", answer: "Inform your expert lead via the sprint board. Milestone extensions can be granted by the industry sponsor.", category: "MILESTONES" },
+      { id: "faq-3", question: "How can I request an institutional NOC letter?", answer: "Submit an NOC request through the Document Portal under Student Verification Services.", category: "DOCUMENTS" }
+    ];
+
+    const filteredFaqs = q
+      ? faqs.filter(f => f.question.toLowerCase().includes(q) || f.answer.toLowerCase().includes(q))
+      : faqs;
+
+    return NextResponse.json({
+      faqs: filteredFaqs,
+      tickets: [],
+      unreadCount: 0
+    });
+  } catch (error: any) {
+    return NextResponse.json({ faqs: [], tickets: [], unreadCount: 0 });
   }
-
-  return NextResponse.json({
-    faqs: filteredFaqs,
-    tickets: MOCK_TICKETS
-  });
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { subject, category, priority, description } = body;
-
-    const newTicket = {
-      id: `tkt-std-${Date.now()}`,
-      ticketNumber: `STU-TKT-${Math.floor(1000 + Math.random() * 9000)}`,
-      subject: subject || "General Support Ticket",
-      category: category || "TECHNICAL",
-      priority: priority || "MEDIUM",
-      status: "OPEN",
-      createdAt: new Date().toISOString()
-    };
-
-    MOCK_TICKETS.unshift(newTicket);
-
     return NextResponse.json({
       success: true,
-      ticket: newTicket,
-      message: "Student support ticket created. An AnveshakHub support engineer will respond within 4 business hours."
-    }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Failed to create support ticket" }, { status: 500 });
+      ticket: {
+        id: `tkt-${Date.now()}`,
+        ticketNumber: `TKT-STD-${Math.floor(1000 + Math.random() * 9000)}`,
+        subject: body.subject || "Student Inquiry",
+        category: body.category || "GENERAL",
+        priority: body.priority || "MEDIUM",
+        status: "OPEN",
+        createdAt: new Date().toISOString()
+      }
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || "Failed to create support ticket" }, { status: 500 });
   }
 }

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
@@ -15,16 +14,12 @@ export async function GET(req: NextRequest) {
       } catch {}
     }
 
-    if (!userId) {
-      return NextResponse.json({ meetings: [], total: 0 });
-    }
-
     return NextResponse.json({
-      meetings: [],
+      proposals: [],
       total: 0
     });
   } catch (error: any) {
-    return NextResponse.json({ meetings: [], total: 0 });
+    return NextResponse.json({ proposals: [], total: 0 });
   }
 }
 
@@ -33,14 +28,14 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     return NextResponse.json({
       success: true,
-      meeting: {
-        id: `mtg-${Date.now()}`,
-        title: body.title || "Consultation Call",
-        scheduledAt: body.scheduledAt || new Date().toISOString(),
-        status: "SCHEDULED"
+      proposal: {
+        id: `prp-${Date.now()}`,
+        title: body.title || "Research Advisory Proposal",
+        status: "SUBMITTED",
+        createdAt: new Date().toISOString()
       }
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to schedule meeting" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to create proposal" }, { status: 500 });
   }
 }
