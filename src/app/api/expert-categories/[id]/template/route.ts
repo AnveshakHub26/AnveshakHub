@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// ─────────────────────────────────────────────────────────────────
-// DYNAMIC EXPERT REGISTRATION TEMPLATE API
-// ─────────────────────────────────────────────────────────────────
-
 const DYNAMIC_EXPERT_TEMPLATES: Record<string, any> = {
   "PROFESSOR": {
     expertCategoryCode: "PROFESSOR",
@@ -15,7 +11,8 @@ const DYNAMIC_EXPERT_TEMPLATES: Record<string, any> = {
           { fieldKey: "institutionName", label: "University / Institution Name", fieldType: "TEXT", required: true, placeholder: "e.g. Indian Institute of Technology Bombay" },
           { fieldKey: "department", label: "Academic Department", fieldType: "TEXT", required: true, placeholder: "e.g. Department of Electrical Engineering" },
           { fieldKey: "designation", label: "Academic Designation", fieldType: "SELECT", required: true, options: ["PROFESSOR", "ASSOCIATE_PROFESSOR", "ASSISTANT_PROFESSOR", "DEPARTMENT_HEAD"] },
-          { fieldKey: "highestQualification", label: "Highest Academic Degree", fieldType: "SELECT", required: true, options: ["Ph.D.", "D.Sc.", "Postdoctoral", "Master of Technology"] }
+          { fieldKey: "highestQualification", label: "Highest Academic Degree", fieldType: "SELECT", required: true, options: ["Ph.D.", "D.Sc.", "Postdoctoral", "Master of Technology"] },
+          { fieldKey: "teachingExperienceYears", label: "Academic Experience (Years)", fieldType: "NUMBER", required: true, placeholder: "12" }
         ]
       },
       {
@@ -33,6 +30,72 @@ const DYNAMIC_EXPERT_TEMPLATES: Record<string, any> = {
       { docKey: "facultyIdCard", label: "University Faculty ID Card", required: true },
       { docKey: "cvResume", label: "Academic Curriculum Vitae (CV)", required: true },
       { docKey: "degreeCertificate", label: "Highest Doctoral Degree Certificate", required: true }
+    ]
+  },
+  "PHD_HOLDER": {
+    expertCategoryCode: "PHD_HOLDER",
+    title: "PhD Holder & Postdoc Researcher Registration",
+    sections: [
+      {
+        title: "Doctoral Degree & Thesis Information",
+        fields: [
+          { fieldKey: "thesisTitle", label: "Doctoral Dissertation / Thesis Title", fieldType: "TEXT", required: true, placeholder: "e.g. High Efficiency Power Electronics Digital Twins" },
+          { fieldKey: "degreeAwardedUniversity", label: "University Awarding PhD", fieldType: "TEXT", required: true, placeholder: "e.g. IISc Bangalore / IIT Madras" },
+          { fieldKey: "yearAwarded", label: "Year Awarded", fieldType: "NUMBER", required: true, placeholder: "2022" },
+          { fieldKey: "researchDomain", label: "Core Research Specialization", fieldType: "TEXT", required: true, placeholder: "e.g. Power Electronics & HIL Simulation" }
+        ]
+      },
+      {
+        title: "Research Profiles & Publications",
+        fields: [
+          { fieldKey: "orcidId", label: "ORCID iD Number", fieldType: "TEXT", required: true, placeholder: "0000-0001-9283-4921" },
+          { fieldKey: "googleScholarUrl", label: "Google Scholar Profile", fieldType: "TEXT", required: false, placeholder: "https://scholar.google.com/citations?user=..." },
+          { fieldKey: "journalPapersCount", label: "Journal Publications", fieldType: "NUMBER", required: true, placeholder: "12" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "phdCertificate", label: "PhD Degree Award Certificate", required: true },
+      { docKey: "cvResume", label: "Detailed Academic CV", required: true }
+    ]
+  },
+  "RESEARCH_SCHOLAR": {
+    expertCategoryCode: "RESEARCH_SCHOLAR",
+    title: "Research Scholar Onboarding",
+    sections: [
+      {
+        title: "Academic & Research Lab Affiliation",
+        fields: [
+          { fieldKey: "institutionName", label: "Research Institution / University", fieldType: "TEXT", required: true, placeholder: "e.g. IIT Delhi" },
+          { fieldKey: "programType", label: "Current Research Program", fieldType: "SELECT", required: true, options: ["DIRECT_PHD", "SPONSORED_PHD", "MS_BY_RESEARCH", "POSTGRADUATE"] },
+          { fieldKey: "guideName", label: "Supervising Guide / Professor Name", fieldType: "TEXT", required: true, placeholder: "Dr. Alok Verma" },
+          { fieldKey: "researchTopic", label: "Current Research Problem Statement", fieldType: "TEXTAREA", required: true, placeholder: "Summary of ongoing research objectives" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "studentIdCard", label: "Institutional ID Card", required: true },
+      { docKey: "cvResume", label: "Academic CV / Synopsis", required: true }
+    ]
+  },
+  "INDUSTRY_PROFESSIONAL": {
+    expertCategoryCode: "INDUSTRY_PROFESSIONAL",
+    title: "Corporate Technology Expert Registration",
+    sections: [
+      {
+        title: "Corporate Experience & Leadership",
+        fields: [
+          { fieldKey: "companyName", label: "Current Employer / Organization", fieldType: "TEXT", required: true, placeholder: "e.g. Siemens Corporate Technology" },
+          { fieldKey: "designation", label: "Job Title / Role", fieldType: "TEXT", required: true, placeholder: "e.g. Lead Systems Architect" },
+          { fieldKey: "totalExperienceYears", label: "Total Professional Experience (Years)", fieldType: "NUMBER", required: true, placeholder: "10" },
+          { fieldKey: "industrySector", label: "Primary Industry Vertical", fieldType: "SELECT", required: true, options: ["AUTOMOTIVE", "AEROSPACE", "SEMICONDUCTOR", "ENERGY", "FINTECH", "BIOTECH", "SOFTWARE"] },
+          { fieldKey: "linkedinUrl", label: "LinkedIn Professional Profile URL", fieldType: "TEXT", required: true, placeholder: "https://linkedin.com/in/username" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "cvResume", label: "Professional Resume / CV", required: true },
+      { docKey: "employmentProof", label: "Employment Proof / ID Card", required: false }
     ]
   },
   "AI_ML_EXPERT": {
@@ -78,6 +141,61 @@ const DYNAMIC_EXPERT_TEMPLATES: Record<string, any> = {
       { docKey: "cvResume", label: "Cyber Security Resume", required: true },
       { docKey: "certCopy", label: "OSCP / CISSP Certification Copy", required: true }
     ]
+  },
+  "FULLSTACK_DEV": {
+    expertCategoryCode: "FULLSTACK_DEV",
+    title: "Full Stack & Cloud Application Architect Registration",
+    sections: [
+      {
+        title: "Technology Stack & Architecture",
+        fields: [
+          { fieldKey: "frontendStack", label: "Frontend Technologies", fieldType: "TEXT", required: true, placeholder: "React, Next.js, TypeScript, TailwindCSS" },
+          { fieldKey: "backendStack", label: "Backend & Database Stack", fieldType: "TEXT", required: true, placeholder: "Node.js, NestJS, Python, PostgreSQL, Prisma, Redis" },
+          { fieldKey: "githubUrl", label: "GitHub Profile URL", fieldType: "TEXT", required: true, placeholder: "https://github.com/dev" },
+          { fieldKey: "yearsExperience", label: "Years of Full Stack Engineering", fieldType: "NUMBER", required: true, placeholder: "6" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "cvResume", label: "Software Architecture CV", required: true }
+    ]
+  },
+  "CHARTERED_ACCOUNTANT": {
+    expertCategoryCode: "CHARTERED_ACCOUNTANT",
+    title: "Chartered Accountant (CA) & Financial Auditor Registration",
+    sections: [
+      {
+        title: "ICAI Accreditation & Audit Experience",
+        fields: [
+          { fieldKey: "icaiMembershipNumber", label: "ICAI Membership Number", fieldType: "TEXT", required: true, placeholder: "CA-123456" },
+          { fieldKey: "firmName", label: "CA Firm Name", fieldType: "TEXT", required: true, placeholder: "Raman & Associates Chartered Accountants" },
+          { fieldKey: "yearsInPractice", label: "Years of Practice", fieldType: "NUMBER", required: true, placeholder: "10" },
+          { fieldKey: "rdAuditExperience", label: "R&D Tax Credit & Grant Audit Experience", fieldType: "SELECT", required: true, options: ["EXPERT", "MODERATE", "BASIC"] }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "icaiCertificate", label: "ICAI Certificate of Practice", required: true },
+      { docKey: "cvResume", label: "Professional Profile / Bio", required: true }
+    ]
+  },
+  "LEGAL_ADVISOR": {
+    expertCategoryCode: "LEGAL_ADVISOR",
+    title: "Legal Advisor & IP Licensing Attorney Registration",
+    sections: [
+      {
+        title: "Bar Council Registration & Practice",
+        fields: [
+          { fieldKey: "barEnrollmentNumber", label: "Bar Council Enrollment Number", fieldType: "TEXT", required: true, placeholder: "MAH/1234/2015" },
+          { fieldKey: "legalSpecialization", label: "Legal Practice Area", fieldType: "SELECT", required: true, options: ["IP_AND_PATENTS", "CORPORATE_CONTRACTS", "R_AND_D_AGREEMENTS", "NDA_COMPLIANCE"] },
+          { fieldKey: "yearsInPractice", label: "Years of Legal Practice", fieldType: "NUMBER", required: true, placeholder: "8" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "barIdCard", label: "Bar Council Identity Card", required: true },
+      { docKey: "cvResume", label: "Legal Profile / CV", required: true }
+    ]
   }
 };
 
@@ -90,21 +208,21 @@ export async function GET(
 
   const template = DYNAMIC_EXPERT_TEMPLATES[categoryCode] || {
     expertCategoryCode: categoryCode,
-    title: `${categoryCode} Expert Registration`,
+    title: `${categoryCode.replace(/_/g, " ")} Expert Registration`,
     sections: [
       {
         title: "Professional & Technical Background",
         fields: [
           { fieldKey: "currentOrganization", label: "Current Employer / Affiliation", fieldType: "TEXT", required: true, placeholder: "e.g. Technology Solutions Ltd" },
-          { fieldKey: "designation", label: "Current Designation", fieldType: "TEXT", required: true, placeholder: "e.g. Principal Consultant" },
-          { fieldKey: "coreSkills", label: "Core Technical Skills", fieldType: "TEXT", required: true, placeholder: "e.g. Embedded C++, ROS2, System Design" },
-          { fieldKey: "yearsExperience", label: "Total Years of Professional Experience", fieldType: "NUMBER", required: true, placeholder: "10" }
+          { fieldKey: "designation", label: "Current Designation / Title", fieldType: "TEXT", required: true, placeholder: "e.g. Principal Consultant" },
+          { fieldKey: "coreSkills", label: "Core Technical Skills & Expertise", fieldType: "TEXT", required: true, placeholder: "e.g. Embedded C++, ROS2, System Design" },
+          { fieldKey: "yearsExperience", label: "Total Years of Experience", fieldType: "NUMBER", required: true, placeholder: "5" },
+          { fieldKey: "linkedinUrl", label: "LinkedIn / Professional Profile URL", fieldType: "TEXT", required: false, placeholder: "https://linkedin.com/in/username" }
         ]
       }
     ],
     requiredDocuments: [
-      { docKey: "cvResume", label: "Professional Curriculum Vitae (CV)", required: true },
-      { docKey: "identityProof", label: "Government Issued Identity Proof", required: true }
+      { docKey: "cvResume", label: "Curriculum Vitae (CV) / Profile Resume", required: true }
     ]
   };
 

@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// ─────────────────────────────────────────────────────────────────
-// DYNAMIC INDUSTRY REGISTRATION TEMPLATE API
-// ─────────────────────────────────────────────────────────────────
-
 const DYNAMIC_TEMPLATES: Record<string, any> = {
   "STARTUP": {
     industryTypeCode: "STARTUP",
@@ -62,6 +58,34 @@ const DYNAMIC_TEMPLATES: Record<string, any> = {
       { docKey: "panCard", label: "Company PAN Card", required: true }
     ]
   },
+  "ENTERPRISE": {
+    industryTypeCode: "ENTERPRISE",
+    title: "Corporate & Private Limited Enterprise Registration",
+    sections: [
+      {
+        title: "Corporate Identification & Statutory Registration",
+        fields: [
+          { fieldKey: "cinNumber", label: "Corporate Identification Number (CIN)", fieldType: "TEXT", required: true, placeholder: "U72900KA2020PTC134567" },
+          { fieldKey: "gstNumber", label: "GSTIN Number", fieldType: "TEXT", required: true, placeholder: "29AAAAA0000A1Z5" },
+          { fieldKey: "panNumber", label: "Company PAN Card Number", fieldType: "TEXT", required: true, placeholder: "AAAAA0000A" },
+          { fieldKey: "incorporationYear", label: "Year of Incorporation", fieldType: "NUMBER", required: true, placeholder: "2015" }
+        ]
+      },
+      {
+        title: "Global Operations & R&D Budget",
+        fields: [
+          { fieldKey: "annualTurnover", label: "Annual Revenue / Turnover", fieldType: "SELECT", required: true, options: ["₹10 Cr - ₹50 Cr", "₹50 Cr - ₹250 Cr", "₹250 Cr - ₹1000 Cr", "₹1000 Cr+"] },
+          { fieldKey: "rdBudget", label: "Annual Allocated R&D Budget", fieldType: "SELECT", required: true, options: ["Under ₹25 Lakhs", "₹25 Lakhs - ₹1 Crore", "₹1 Crore - ₹5 Crores", "₹5 Crores+"] },
+          { fieldKey: "headquartersCity", label: "Global Headquarters City", fieldType: "TEXT", required: true, placeholder: "e.g. Bangalore / Mumbai / Singapore" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "incorporationCertificate", label: "Certificate of Incorporation", required: true },
+      { docKey: "gstCertificate", label: "GSTIN Registration Certificate", required: true },
+      { docKey: "panCard", label: "Company PAN Card", required: true }
+    ]
+  },
   "INSTITUTION": {
     industryTypeCode: "INSTITUTION",
     title: "Academic & Research Institution Registration",
@@ -80,8 +104,7 @@ const DYNAMIC_TEMPLATES: Record<string, any> = {
         fields: [
           { fieldKey: "principalDetails", label: "Principal / Director Name", fieldType: "TEXT", required: true, placeholder: "Dr. Ramesh Sharma" },
           { fieldKey: "placementOfficer", label: "Head of Training & Placement", fieldType: "TEXT", required: true, placeholder: "Prof. Anitha Nair" },
-          { fieldKey: "studentCount", label: "Total Enrolled Engineering Students", fieldType: "NUMBER", required: true, placeholder: "3500" },
-          { fieldKey: "researchCenters", label: "Active Research Centers of Excellence", fieldType: "TEXTAREA", required: false, placeholder: "e.g. EV Battery Testbed Lab, AI Robotics COE" }
+          { fieldKey: "studentCount", label: "Total Enrolled Engineering Students", fieldType: "NUMBER", required: true, placeholder: "3500" }
         ]
       }
     ],
@@ -89,6 +112,24 @@ const DYNAMIC_TEMPLATES: Record<string, any> = {
       { docKey: "aicteCertificate", label: "AICTE Approval Order", required: true },
       { docKey: "naacCertificate", label: "NAAC Accreditation Certificate", required: true },
       { docKey: "nocLetter", label: "Institution No Objection Letter", required: true }
+    ]
+  },
+  "RESEARCH_ORGANIZATION": {
+    industryTypeCode: "RESEARCH_ORGANIZATION",
+    title: "National & Private Research Lab Registration",
+    sections: [
+      {
+        title: "Laboratory Accreditation & Domain",
+        fields: [
+          { fieldKey: "labType", label: "Research Organization Category", fieldType: "SELECT", required: true, options: ["GOVT_NATIONAL_LAB", "DEFENCE_LAB", "AUTONOMOUS_RESEARCH_INSTITUTE", "PRIVATE_R_AND_D_CENTER"] },
+          { fieldKey: "dsirRecognition", label: "DSIR Recognition Number (SIRO)", fieldType: "TEXT", required: true, placeholder: "TU/IV-RD/1234/2022" },
+          { fieldKey: "researchDirector", label: "Director / Scientist-in-Charge Name", fieldType: "TEXT", required: true, placeholder: "Dr. Subhash Chandra" }
+        ]
+      }
+    ],
+    requiredDocuments: [
+      { docKey: "dsirCertificate", label: "DSIR SIRO Recognition Certificate", required: true },
+      { docKey: "labBrochure", label: "Laboratory Facilities Overview", required: false }
     ]
   }
 };
@@ -102,7 +143,7 @@ export async function GET(
 
   const template = DYNAMIC_TEMPLATES[typeCode] || {
     industryTypeCode: typeCode,
-    title: `${typeCode} Enterprise Registration`,
+    title: `${typeCode.replace(/_/g, " ")} Enterprise Registration`,
     sections: [
       {
         title: "General Enterprise Statutory Metadata",
@@ -110,7 +151,8 @@ export async function GET(
           { fieldKey: "registrationNumber", label: "Statutory Registration / CIN Number", fieldType: "TEXT", required: true, placeholder: "L12345MH2020PLC123456" },
           { fieldKey: "gstNumber", label: "GSTIN Number", fieldType: "TEXT", required: true, placeholder: "27AAAAA0000A1Z5" },
           { fieldKey: "panNumber", label: "Company PAN Card Number", fieldType: "TEXT", required: true, placeholder: "ABCDE1234F" },
-          { fieldKey: "businessSector", label: "Primary Business Sector", fieldType: "TEXT", required: true, placeholder: "e.g. Industrial Automation, Defence Technology" }
+          { fieldKey: "businessSector", label: "Primary Business Sector", fieldType: "TEXT", required: true, placeholder: "e.g. Industrial Automation, Defence Technology" },
+          { fieldKey: "employeeCount", label: "Total Employee Count", fieldType: "NUMBER", required: true, placeholder: "50" }
         ]
       }
     ],
