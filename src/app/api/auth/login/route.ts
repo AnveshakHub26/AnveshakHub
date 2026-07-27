@@ -13,10 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    let authUser: { id: string; email?: string; user_metadata?: any; email_confirmed_at?: string } | null = null;
-    let authAccessToken: string | undefined = undefined;
-    let authRefreshToken: string | undefined = undefined;
-    let authExpiresAt: number | undefined = undefined;
+    let authUser: { id: string; email?: string; user_metadata?: any } | null = null;
 
     // 1. Attempt Supabase Auth login
     try {
@@ -28,36 +25,27 @@ export async function POST(request: Request) {
 
       if (authData?.user) {
         authUser = authData.user;
-        authAccessToken = authData.session?.access_token;
-        authRefreshToken = authData.session?.refresh_token;
-        authExpiresAt = authData.session?.expires_at;
       }
     } catch (e) {
       console.warn("Supabase Auth sign-in warning:", e);
     }
 
-    // 2. Query Prisma Database using safe explicit selects
+    // 2. Query Prisma Database with relations
     let dbUser: any = null;
     try {
       dbUser = await prisma.user.findFirst({
         where: { email },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          fullName: true,
-          role: true,
-          organizationId: true,
-          emailVerified: true,
-          avatarUrl: true,
+        include: {
           organization: true,
+          expertProfile: true,
+          studentProfile: true,
         }
       });
     } catch (e: any) {
       console.warn("Prisma User query warning:", e.message);
     }
 
-    // 3. Fallback provision for demo accounts / local dev
+    // 3. Fallback provision for dev
     if (!dbUser) {
       let devRole: "SUPER_ADMIN" | "INDUSTRY_MANAGER" | "STAKEHOLDER" = "STAKEHOLDER";
       let orgName: string | undefined = undefined;
@@ -109,16 +97,10 @@ export async function POST(request: Request) {
             emailVerified: true,
             organizationId: organizationId,
           },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            fullName: true,
-            role: true,
-            organizationId: true,
-            emailVerified: true,
-            avatarUrl: true,
+          include: {
             organization: true,
+            expertProfile: true,
+            studentProfile: true,
           }
         });
       } catch (e) {
@@ -136,16 +118,26 @@ export async function POST(request: Request) {
       }
     }
 
-    // Determine redirect route based on role
+    // Determine user role label and redirect route
+    let userRoleName = "STUDENT";
     let redirectUrl = "/student/dashboard";
+
     if (dbUser.role === "SUPER_ADMIN" || dbUser.role === "ADMIN" || dbUser.role === "CRM_SPECIALIST" || dbUser.role === "COMPLIANCE_OFFICER") {
+      userRoleName = "SUPER_ADMIN";
       redirectUrl = "/admin/dashboard";
     } else if (dbUser.role === "INDUSTRY_MANAGER" || dbUser.role === "INDUSTRY" || dbUser.organizationId) {
+      userRoleName = "INDUSTRY_MANAGER";
       redirectUrl = "/industry/dashboard";
-    } else if (dbUser.role === "EXPERT") {
+    } else if (dbUser.expertProfile || dbUser.role === "EXPERT" || authUser?.user_metadata?.role === "EXPERT") {
+      userRoleName = "EXPERT";
       redirectUrl = "/expert/dashboard";
-    } else if (dbUser.role === "STUDENT") {
+    } else if (dbUser.studentProfile || dbUser.role === "STUDENT" || authUser?.user_metadata?.role === "STUDENT") {
+      userRoleName = "STUDENT";
       redirectUrl = "/student/dashboard";
+    } else {
+      // Default based on metadata or fallback
+      userRoleName = authUser?.user_metadata?.role || "STUDENT";
+      redirectUrl = userRoleName === "EXPERT" ? "/expert/dashboard" : "/student/dashboard";
     }
 
     const response = NextResponse.json({
@@ -155,35 +147,31 @@ export async function POST(request: Request) {
         supabaseId: authUser?.id || `dev-${dbUser.id}`,
         email: dbUser.email,
         fullName: dbUser.fullName || dbUser.name,
-        role: dbUser.role,
+        role: userRoleName,
         avatarUrl: dbUser.avatarUrl,
         emailVerified: dbUser.emailVerified,
+        organization: dbUser.organization,
       },
       redirectUrl,
-      session: {
-        accessToken: authAccessToken || "demo-access-token",
-        refreshToken: authRefreshToken || "demo-refresh-token",
-        expiresAt: authExpiresAt || Math.floor(Date.now() / 1000) + 3600,
-      }
     });
 
     response.cookies.set("anveshakhub-auth", JSON.stringify({
       userId: dbUser.id,
       email: dbUser.email,
-      role: dbUser.role,
+      role: userRoleName,
     }), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 365, // 365 days persistent session
+      maxAge: 60 * 60 * 24 * 365,
       path: "/",
     });
 
     return response;
   } catch (error: any) {
-    console.error("Login API Error:", error);
+    console.error("Login POST Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error: " + (error.message || "Failed to authenticate") },
+      { error: error.message || "Failed to sign in" },
       { status: 500 }
     );
   }

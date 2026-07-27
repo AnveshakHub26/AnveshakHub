@@ -6,7 +6,7 @@ import { logAudit } from "@/lib/audit";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, fullName, role, phone, organizationName } = body;
+    const { email, password, fullName, role, phone, organizationName, designation, department, course } = body;
 
     if (!email || !password || !fullName) {
       return NextResponse.json(
@@ -44,111 +44,133 @@ export async function POST(request: Request) {
       }
     }
 
-    // Map role enum
-    let dbRole = "STUDENT";
+    // Map Prisma role enum and user role label
+    let dbRole: "SUPER_ADMIN" | "INDUSTRY_MANAGER" | "STAKEHOLDER" = "STAKEHOLDER";
+    let userRoleName = "STUDENT";
     let redirectUrl = "/student/dashboard";
 
     if (role === "industry") {
       dbRole = "INDUSTRY_MANAGER";
+      userRoleName = "INDUSTRY_MANAGER";
       redirectUrl = "/industry/dashboard";
     } else if (role === "expert") {
-      dbRole = "EXPERT";
+      dbRole = "STAKEHOLDER";
+      userRoleName = "EXPERT";
       redirectUrl = "/expert/dashboard";
+    } else if (role === "student") {
+      dbRole = "STAKEHOLDER";
+      userRoleName = "STUDENT";
+      redirectUrl = "/student/dashboard";
     } else if (role === "admin") {
       dbRole = "SUPER_ADMIN";
+      userRoleName = "SUPER_ADMIN";
       redirectUrl = "/admin/dashboard";
     }
 
-    // 3. Register User in Supabase Auth via Service Role with fallback for local dev
+    // 3. Register User in Supabase Auth
     let authUser: { id: string; email?: string } | null = null;
-
     try {
       const adminSupabase = createAdminClient();
       const { data: authData } = await adminSupabase.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
-        user_metadata: {
-          full_name: fullName,
-          role: dbRole,
-          phone,
-        }
+        user_metadata: { fullName, role: userRoleName }
       });
-      if (authData?.user) authUser = authData.user;
-    } catch (e) {
-      console.warn("Supabase Auth admin createUser warning:", e);
+      if (authData?.user) {
+        authUser = authData.user;
+      }
+    } catch (supabaseErr) {
+      console.warn("Supabase Admin Auth bypass for local dev:", supabaseErr);
     }
 
-    const supabaseId = authUser?.id || `dev-user-${Date.now()}`;
+    const supabaseId = authUser?.id || `usr-sp-${Date.now()}`;
 
-    // 4. Create User, Organization, VerificationRequest, and AuditLog in Supabase PostgreSQL via Prisma
+    // 4. Provision Industry Organization if industry user
     let organizationId: string | undefined = undefined;
     let createdOrg: any = null;
 
-    if (role === "industry" || organizationName) {
-      createdOrg = await prisma.organization.create({
-        data: {
-          orgName: organizationName || `${fullName}'s Organization`,
-          orgType: "PRIVATE_LIMITED",
-          email: email,
-          phone: phone || "+91 9876543210",
-          industryDomain: "Technology",
-          businessCategory: "COMMERCIAL",
-          state: "Maharashtra",
-          district: "Mumbai",
-          city: "Mumbai",
-          pin: "400001",
-          addressLine: "Enterprise Park",
-          verificationStatus: "PENDING",
-        }
-      });
-      organizationId = createdOrg.id;
+    if (role === "industry") {
+      const orgName = organizationName || `${fullName}'s Enterprise`;
+      try {
+        createdOrg = await prisma.organization.create({
+          data: {
+            orgName,
+            orgType: "PRIVATE_LIMITED",
+            email: email,
+            phone: phone || "+91 9876543210",
+            industryDomain: "Technology",
+            businessCategory: "COMMERCIAL",
+            state: "Karnataka",
+            district: "Bangalore",
+            city: "Bangalore",
+            pin: "560001",
+            addressLine: "Tech Park",
+            verificationStatus: "PENDING",
+          }
+        });
+        organizationId = createdOrg.id;
+      } catch (orgErr) {
+        console.warn("Organization creation warning:", orgErr);
+      }
     }
 
+    // 5. Create Prisma User Record
     const dbUser = await prisma.user.create({
       data: {
-        email: email,
-        fullName: fullName,
-        name: fullName,
-        role: dbRole as any,
+        email,
+        fullName,
+        name: fullName.split(" ")[0],
+        role: dbRole,
         phone: phone || null,
+        organizationId,
+        department: department || null,
         emailVerified: true,
-        organizationId: organizationId,
       },
-      select: {
-        id: true,
-        email: true,
-        fullName: true,
-        name: true,
-        role: true,
-        organizationId: true,
-        organization: true,
+      include: {
+        organization: true
       }
     });
 
-    // Create VerificationRequest for Admin Verification Center Queue
-    if (createdOrg) {
-      await prisma.verificationRequest.create({
-        data: {
-          orgId: createdOrg.id,
-          type: "INDUSTRY",
-          stage: "SUBMITTED",
-          priority: "STANDARD",
-          submittedAt: new Date().toISOString(),
-          riskScore: 12,
-          fraudFlag: false,
-          duplicateFlag: false,
-        }
-      });
+    // 6. Create Profile Relation
+    if (role === "expert") {
+      try {
+        await prisma.expertProfile.create({
+          data: {
+            userId: dbUser.id,
+            institution: organizationName || "Partner University",
+            designation: designation || "Subject Matter Expert",
+            department: department || "Research & Advisory",
+            yearsOfExp: 5,
+          }
+        });
+      } catch (e) {
+        console.warn("ExpertProfile creation notice:", e);
+      }
+    } else if (role === "student") {
+      try {
+        await prisma.studentProfile.create({
+          data: {
+            userId: dbUser.id,
+            institution: organizationName || "Partner Institution",
+            degree: course || "Undergraduate Degree",
+            branch: department || "General",
+            semester: 6,
+            cgpa: 9.0,
+          }
+        });
+      } catch (e) {
+        console.warn("StudentProfile creation notice:", e);
+      }
     }
 
-    // Write AuditLog
+    // 7. Write AuditLog
     await logAudit({
       userId: dbUser.id,
       action: "USER_REGISTERED",
       entityType: "User",
       entityId: dbUser.id,
-      details: JSON.stringify({ role: dbRole, email, organizationId }),
+      details: JSON.stringify({ role: userRoleName, email, organizationId }),
     });
 
     const response = NextResponse.json({
@@ -159,29 +181,30 @@ export async function POST(request: Request) {
         supabaseId: supabaseId,
         email: dbUser.email,
         fullName: dbUser.fullName || dbUser.name,
-        role: dbUser.role,
+        role: userRoleName,
         organization: dbUser.organization,
       },
       redirectUrl,
     });
 
+    // Store persistent cookie with userRoleName ("EXPERT", "INDUSTRY_MANAGER", "STUDENT")
     response.cookies.set("anveshakhub-auth", JSON.stringify({
       userId: dbUser.id,
       email: dbUser.email,
-      role: dbUser.role,
+      role: userRoleName,
     }), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 365, // 365 days persistent session
+      maxAge: 60 * 60 * 24 * 365,
       path: "/",
     });
 
     return response;
   } catch (error: any) {
-    console.error("Registration API Error:", error);
+    console.error("Registration POST Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error: " + (error.message || "Failed to create account") },
+      { error: error.message || "Failed to create account" },
       { status: 500 }
     );
   }
