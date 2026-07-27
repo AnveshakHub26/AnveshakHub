@@ -141,8 +141,9 @@ export default function StudentProfilePage() {
 
   if (!profile) return null;
 
-  const initials   = profile.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
-  const verMeta    = VERIFICATION_META[profile.verificationStatus] || VERIFICATION_META["UNVERIFIED"];
+  const profileName = profile?.name || "Student Researcher";
+  const initials   = profileName.split(" ").filter(Boolean).map(n => n[0]).join("").slice(0, 2).toUpperCase() || "SR";
+  const verMeta    = VERIFICATION_META[profile?.verificationStatus || "UNVERIFIED"] || VERIFICATION_META["UNVERIFIED"];
 
   return (
     <div className="p-6 lg:p-8 space-y-6">

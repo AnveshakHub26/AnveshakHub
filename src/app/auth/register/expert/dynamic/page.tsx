@@ -95,11 +95,13 @@ export default function DynamicExpertRegistrationPage() {
   const [submitting, setSubmitting] = useState(false);
   const [registeredSuccess, setRegisteredSuccess] = useState<any>(null);
 
-  // Fetch Expert Categories
   useEffect(() => {
     fetch("/api/expert-categories")
       .then(res => res.json())
-      .then(data => setCategories(data.categories || []))
+      .then(data => {
+        const cats = data.expertCategories || data.categories || [];
+        setCategories(cats);
+      })
       .catch(err => console.error(err));
   }, []);
 

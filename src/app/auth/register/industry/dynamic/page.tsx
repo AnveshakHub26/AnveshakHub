@@ -97,11 +97,13 @@ export default function DynamicIndustryRegistrationPage() {
   const [submitting, setSubmitting] = useState(false);
   const [registeredSuccess, setRegisteredSuccess] = useState<any>(null);
 
-  // Fetch Industry Types
   useEffect(() => {
     fetch("/api/industry-types")
       .then(res => res.json())
-      .then(data => setIndustryTypes(data.industryTypes || []))
+      .then(data => {
+        const types = data.industryTypes || data.types || [];
+        setIndustryTypes(types);
+      })
       .catch(err => console.error(err));
   }, []);
 

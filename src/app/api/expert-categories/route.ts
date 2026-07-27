@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     expertCategories: filtered,
+    categories: filtered,
     totalCount: filtered.length
   });
 }
