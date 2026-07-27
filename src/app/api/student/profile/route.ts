@@ -15,82 +15,114 @@ export async function GET(req: NextRequest) {
       } catch {}
     }
 
-    let userRecord: any = null;
-    if (userId) {
-      userRecord = await prisma.user.findUnique({
-        where: { id: userId },
-        include: { studentProfile: true }
-      });
+    if (!userId) {
+      return NextResponse.json(
+        { authenticated: false, message: "Authentication required" },
+        { status: 401 }
+      );
     }
+
+    const userRecord = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { studentProfile: true }
+    });
 
     if (!userRecord) {
-      userRecord = await prisma.user.findFirst({
-        where: { role: "STAKEHOLDER" },
-        include: { studentProfile: true }
-      });
+      return NextResponse.json(
+        { authenticated: false, message: "User account not found" },
+        { status: 404 }
+      );
     }
 
-    if (!userRecord) {
-      return NextResponse.json({
-        id: "empty-student",
-        userId: "empty-id",
-        name: "New Student",
-        email: "student@example.com",
-        usn: "N/A",
-        institution: "Not specified",
-        degree: "Undergraduate",
-        branch: "Engineering",
-        semester: 1,
-        cgpa: 0.0,
-        bio: "Profile info not submitted yet.",
-        skills: [],
-        resumeUrl: "",
-        portfolioUrl: "",
-        linkedinUrl: "",
-        githubUrl: "",
-        verificationStatus: "PENDING",
-        careerInterests: [],
-        certifications: [],
-        achievements: [],
-        projectsList: []
-      });
-    }
-
-    const profile = userRecord.studentProfile;
+    const sp = userRecord.studentProfile;
+    const isProfileComplete = !!(sp?.institution && sp?.degree && sp?.usn);
 
     return NextResponse.json({
-      id: userRecord.id,
+      id: sp?.id || `sp-${userRecord.id}`,
       userId: userRecord.id,
-      name: userRecord.fullName || userRecord.name || userRecord.email,
+      name: userRecord.name || userRecord.fullName || userRecord.email.split("@")[0],
       email: userRecord.email,
-      usn: profile?.usn || "N/A",
-      institution: profile?.institution || "Partner Institution",
-      degree: profile?.degree || "Undergraduate Degree",
-      branch: profile?.branch || "General",
-      semester: 1,
-      cgpa: 0.0,
-      bio: "Registered Student Researcher.",
-      skills: [],
-      resumeUrl: profile?.resumeUrl || "",
-      portfolioUrl: "",
-      linkedinUrl: "",
-      githubUrl: "",
-      verificationStatus: "VERIFIED",
-      careerInterests: [],
-      certifications: [],
-      achievements: [],
-      projectsList: []
+      usn: sp?.usn || null,
+      institution: sp?.institution || null,
+      degree: sp?.degree || null,
+      branch: sp?.branch || null,
+      semester: sp?.semester || null,
+      cgpa: sp?.cgpa || null,
+      bio: sp?.bio || null,
+      skills: sp?.skills || [],
+      resumeUrl: sp?.resumeUrl || null,
+      portfolioUrl: sp?.portfolioUrl || null,
+      linkedinUrl: sp?.linkedinUrl || null,
+      githubUrl: sp?.githubUrl || null,
+      verificationStatus: sp?.verificationStatus || "PENDING",
+      isProfileComplete
     });
   } catch (error: any) {
-    console.error("GET Student Profile Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to load student profile" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to fetch student profile" }, { status: 500 });
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
+    const cookieStore = await cookies();
+    const authCookie = cookieStore.get("anveshakhub-auth")?.value;
+    let userId: string | undefined = undefined;
+
+    if (authCookie) {
+      try {
+        const parsed = JSON.parse(authCookie);
+        userId = parsed.userId;
+      } catch {}
+    }
+
+    if (!userId) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
     const body = await req.json();
-    return NextResponse.json({ success: true, updated: body });
+    const { name, usn, institution, degree, branch, semester, cgpa, bio, skills, resumeUrl } = body;
+
+    // Update User Name
+    if (name) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { name, fullName: name }
+      });
+    }
+
+    // Upsert StudentProfile
+    const updatedProfile = await prisma.studentProfile.upsert({
+      where: { userId },
+      update: {
+        usn: usn || undefined,
+        institution: institution || undefined,
+        degree: degree || undefined,
+        branch: branch || undefined,
+        semester: semester ? Number(semester) : undefined,
+        cgpa: cgpa ? Number(cgpa) : undefined,
+        bio: bio || undefined,
+        skills: skills || undefined,
+        resumeUrl: resumeUrl || undefined,
+      },
+      create: {
+        userId,
+        institution: institution || "Partner Institution",
+        degree: degree || "Undergraduate Degree",
+        branch: branch || "Engineering",
+        semester: semester ? Number(semester) : 6,
+        cgpa: cgpa ? Number(cgpa) : 9.0,
+        usn: usn || null,
+        bio: bio || null,
+        skills: skills || [],
+        resumeUrl: resumeUrl || null,
+      }
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Profile updated successfully",
+      profile: updatedProfile
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to update profile" }, { status: 500 });
   }

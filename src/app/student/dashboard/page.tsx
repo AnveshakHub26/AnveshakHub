@@ -100,12 +100,12 @@ export default function StudentDashboardPage() {
 
   const student = data?.student || {
     name: "Student Scholar",
-    usn: "N/A",
-    institution: "Partner University",
-    degree: "Undergraduate Degree",
-    semester: 1,
-    cgpa: 0.0,
-    verificationStatus: "VERIFIED",
+    usn: null,
+    institution: null,
+    degree: null,
+    semester: null,
+    cgpa: null,
+    verificationStatus: "PENDING",
   };
 
   const kpis = data?.kpis || {
@@ -140,7 +140,11 @@ export default function StudentDashboardPage() {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-[#57534E] mt-1 font-semibold">
-                {student.degree} • {student.institution} (Semester {student.semester} • USN: {student.usn})
+                {student.degree && student.institution ? (
+                  `${student.degree} • ${student.institution}${student.semester ? ` (Semester ${student.semester})` : ""}${student.usn ? ` • USN: ${student.usn}` : ""}`
+                ) : (
+                  <span className="text-[#FF5A36] font-bold">Profile Incomplete — Click 'Finish Profile' to set your institution, degree & USN details.</span>
+                )}
               </p>
             </div>
             

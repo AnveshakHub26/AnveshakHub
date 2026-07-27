@@ -15,19 +15,23 @@ export async function GET(req: NextRequest) {
       } catch {}
     }
 
-    let userRecord: any = null;
-    if (userId) {
-      userRecord = await prisma.user.findUnique({
-        where: { id: userId },
-        include: { studentProfile: true }
-      });
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, authenticated: false, message: "Authentication required" },
+        { status: 401 }
+      );
     }
 
+    const userRecord = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { studentProfile: true }
+    });
+
     if (!userRecord) {
-      userRecord = await prisma.user.findFirst({
-        where: { role: "STAKEHOLDER" },
-        include: { studentProfile: true }
-      });
+      return NextResponse.json(
+        { success: false, authenticated: false, message: "User account not found" },
+        { status: 404 }
+      );
     }
 
     const projects = userId ? await prisma.project.findMany({
@@ -45,18 +49,24 @@ export async function GET(req: NextRequest) {
       sprintMilestone: "Milestone Phase 1"
     } : null;
 
+    const studentProfile = userRecord.studentProfile;
+    const isProfileComplete = !!(studentProfile?.institution && studentProfile?.degree && studentProfile?.usn);
+
     const data = {
       success: true,
       status: "success",
       student: {
-        id: userRecord?.id || "std-user",
-        name: userRecord?.fullName || userRecord?.name || "Student Researcher",
-        usn: userRecord?.studentProfile?.usn || "N/A",
-        institution: userRecord?.studentProfile?.institution || "Partner Institution",
-        degree: userRecord?.studentProfile?.degree || "Undergraduate Degree",
-        semester: userRecord?.studentProfile?.semester || 1,
-        cgpa: userRecord?.studentProfile?.cgpa || 0.0,
-        verificationStatus: "VERIFIED"
+        id: userRecord.id,
+        name: userRecord.name || userRecord.fullName || userRecord.email.split("@")[0],
+        email: userRecord.email,
+        usn: studentProfile?.usn || null,
+        institution: studentProfile?.institution || null,
+        degree: studentProfile?.degree || null,
+        branch: studentProfile?.branch || null,
+        semester: studentProfile?.semester || null,
+        cgpa: studentProfile?.cgpa || null,
+        verificationStatus: studentProfile?.verificationStatus || "PENDING",
+        isProfileComplete
       },
       kpis: {
         activeProjectsCount: activeProject ? 1 : 0,
