@@ -507,15 +507,34 @@ export default function RegisterRolePage() {
                         className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                       />
                     </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Student USN / Roll Number</label>
+                        <input
+                          type="text"
+                          value={domain}
+                          onChange={(e) => setDomain(e.target.value)}
+                          placeholder="e.g. 1RV21CS042"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Contact Number</label>
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="+91 9876543210"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
+                        />
+                      </div>
+                    </div>
                     <div>
-                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Contact Number</label>
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+91 9876543210"
-                        className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
-                      />
+                      <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Academic Resume PDF * (Max 10MB)</label>
+                      <div className="border-2 border-dashed border-[#E2DCD2] rounded-xl p-4 text-center bg-[#FBF7F0] hover:border-[#FF5A36] transition-colors cursor-pointer flex flex-col items-center justify-center">
+                        <UploadCloud className="h-6 w-6 text-[#78716A] mb-1" />
+                        <span className="text-xs font-semibold text-[#211F1D]">Click to select & upload Resume PDF</span>
+                      </div>
                     </div>
                   </div>
                 )}
