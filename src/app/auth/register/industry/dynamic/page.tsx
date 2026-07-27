@@ -79,10 +79,11 @@ export default function DynamicIndustryRegistrationPage() {
   const [loadingTemplate, setLoadingTemplate] = useState(false);
 
   // Common Form State
-  const [commonForm, setCommonForm] = useState({
+  const [commonForm, setCommonForm] = useState<Record<string, any>>({
     organizationName: "",
     officialEmail: "",
     contactNumber: "",
+    industrySector: "",
     website: "",
     country: "India",
     state: "Maharashtra",
@@ -411,19 +412,28 @@ export default function DynamicIndustryRegistrationPage() {
 
             {/* Common Organization Fields */}
             <div className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
-              <h3 className="text-xs font-extrabold text-[#211F1D]">Core Organization Information</h3>
+              <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide border-b border-[#E2DCD2] pb-2">Core Organization & Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Organization Name *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Organization / Company Name *</label>
                   <input
                     value={commonForm.organizationName}
                     onChange={e => setCommonForm({ ...commonForm, organizationName: e.target.value })}
-                    placeholder="e.g. Aether Robotics Pvt Ltd"
+                    placeholder="e.g. Apex Robotics & Automation Pvt Ltd"
                     className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Official Email *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Authorized Contact Person Name *</label>
+                  <input
+                    value={accountFullName}
+                    onChange={e => setAccountFullName(e.target.value)}
+                    placeholder="e.g. Rajesh Sharma (Managing Director)"
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Official Corporate Email *</label>
                   <input
                     disabled
                     value={commonForm.officialEmail}
@@ -431,7 +441,7 @@ export default function DynamicIndustryRegistrationPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Contact Phone *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Contact Phone Number *</label>
                   <input
                     value={commonForm.contactNumber}
                     onChange={e => setCommonForm({ ...commonForm, contactNumber: e.target.value })}
@@ -440,14 +450,76 @@ export default function DynamicIndustryRegistrationPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Website URL</label>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Industry Sector / Domain *</label>
                   <input
-                    value={commonForm.website}
-                    onChange={e => setCommonForm({ ...commonForm, website: e.target.value })}
-                    placeholder="https://company.com"
+                    value={commonForm.industrySector || ""}
+                    onChange={e => setCommonForm({ ...commonForm, industrySector: e.target.value })}
+                    placeholder="e.g. Robotics, AI, Power Electronics, Clean Energy"
                     className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
                   />
                 </div>
+                <div>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Corporate Website URL</label>
+                  <input
+                    value={commonForm.website}
+                    onChange={e => setCommonForm({ ...commonForm, website: e.target.value })}
+                    placeholder="https://apexrobotics.in"
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                  />
+                </div>
+              </div>
+
+              {/* Registered Address Information */}
+              <div className="pt-2 border-t border-[#E2DCD2]">
+                <h4 className="text-[11px] font-bold text-[#211F1D] mb-2">Registered Corporate Address</h4>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Country</label>
+                    <input
+                      value={commonForm.country}
+                      onChange={e => setCommonForm({ ...commonForm, country: e.target.value })}
+                      className="w-full text-xs p-2 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">State *</label>
+                    <input
+                      value={commonForm.state}
+                      onChange={e => setCommonForm({ ...commonForm, state: e.target.value })}
+                      placeholder="Karnataka"
+                      className="w-full text-xs p-2 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">City *</label>
+                    <input
+                      value={commonForm.city}
+                      onChange={e => setCommonForm({ ...commonForm, city: e.target.value })}
+                      placeholder="Bangalore"
+                      className="w-full text-xs p-2 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">PIN Code *</label>
+                    <input
+                      value={commonForm.pinCode}
+                      onChange={e => setCommonForm({ ...commonForm, pinCode: e.target.value })}
+                      placeholder="560001"
+                      className="w-full text-xs p-2 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-[#78716A] block mb-1">Company Description & R&D Mandate</label>
+                <textarea
+                  rows={3}
+                  value={commonForm.organizationDescription}
+                  onChange={e => setCommonForm({ ...commonForm, organizationDescription: e.target.value })}
+                  placeholder="Provide an overview of your corporate mission, primary hardware/software R&D requirements, and university collaboration goals..."
+                  className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                />
               </div>
             </div>
 

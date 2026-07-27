@@ -509,9 +509,10 @@ export default function RegisterRolePage() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Student USN / Roll Number</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Student USN / Roll Number *</label>
                         <input
                           type="text"
+                          required
                           value={domain}
                           onChange={(e) => setDomain(e.target.value)}
                           placeholder="e.g. 1RV21CS042"
@@ -519,12 +520,34 @@ export default function RegisterRolePage() {
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Contact Number</label>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Current CGPA / Percentage *</label>
+                        <input
+                          type="text"
+                          required
+                          value={website}
+                          onChange={(e) => setWebsite(e.target.value)}
+                          placeholder="e.g. 9.2 / 10.0"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">Contact Phone Number *</label>
                         <input
                           type="tel"
+                          required
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="+91 9876543210"
+                          className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-bold text-[#211F1D] block mb-1.5">GitHub / Portfolio URL</label>
+                        <input
+                          type="url"
+                          placeholder="https://github.com/username"
                           className="w-full bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 text-xs text-[#211F1D] focus:border-[#FF5A36] focus:outline-none min-h-[44px]"
                         />
                       </div>

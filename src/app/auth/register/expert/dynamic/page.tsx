@@ -78,13 +78,19 @@ export default function DynamicExpertRegistrationPage() {
   const [loadingTemplate, setLoadingTemplate] = useState(false);
 
   // Common Form State
-  const [commonForm, setCommonForm] = useState({
+  const [commonForm, setCommonForm] = useState<Record<string, any>>({
     fullName: "",
     email: "",
     phone: "",
     currentInstitution: "",
     designation: "",
+    department: "",
+    highestQualification: "Ph.D.",
     orcidId: "",
+    googleScholarUrl: "",
+    publicationsCount: 0,
+    patentsCount: 0,
+    bio: "",
     experienceYears: 5,
     primaryDomain: ""
   });
@@ -395,32 +401,186 @@ export default function DynamicExpertRegistrationPage() {
               <button onClick={() => setStep(1)} className="text-xs font-bold text-[#FF5A36] hover:underline">Change Field</button>
             </div>
 
-            <div className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Institution / University *</label>
-                  <input
-                    value={commonForm.currentInstitution}
-                    onChange={e => setCommonForm({ ...commonForm, currentInstitution: e.target.value })}
-                    placeholder="e.g. IISc Bangalore / IIT Bombay"
-                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
-                  />
+            <div className="space-y-6">
+              {/* Primary Academic & Professional Info */}
+              <div className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide border-b border-[#E2DCD2] pb-2">Academic & Professional Background</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Institution / University *</label>
+                    <input
+                      value={commonForm.currentInstitution}
+                      onChange={e => setCommonForm({ ...commonForm, currentInstitution: e.target.value })}
+                      placeholder="e.g. IISc Bangalore / IIT Bombay"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Designation / Title *</label>
+                    <input
+                      value={commonForm.designation}
+                      onChange={e => setCommonForm({ ...commonForm, designation: e.target.value })}
+                      placeholder="e.g. Professor / Senior Scientist"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Academic Department / Division *</label>
+                    <input
+                      value={commonForm.department || ""}
+                      onChange={e => setCommonForm({ ...commonForm, department: e.target.value })}
+                      placeholder="e.g. Computer Science & Engineering"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Highest Qualification / Degree *</label>
+                    <select
+                      value={commonForm.highestQualification || "Ph.D."}
+                      onChange={e => setCommonForm({ ...commonForm, highestQualification: e.target.value })}
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36] font-semibold"
+                    >
+                      <option value="Ph.D.">Ph.D. / Doctorate</option>
+                      <option value="Postdoctoral">Postdoctoral Fellowship</option>
+                      <option value="D.Sc.">D.Sc. / Doctor of Science</option>
+                      <option value="M.Tech">Master of Technology / MS</option>
+                      <option value="B.Tech">Bachelor of Engineering / B.Tech</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Research & Professional Experience (Years) *</label>
+                    <input
+                      type="number"
+                      value={commonForm.experienceYears}
+                      onChange={e => setCommonForm({ ...commonForm, experienceYears: parseInt(e.target.value) || 0 })}
+                      placeholder="10"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Contact Phone Number *</label>
+                    <input
+                      type="tel"
+                      value={commonForm.phone}
+                      onChange={e => setCommonForm({ ...commonForm, phone: e.target.value })}
+                      placeholder="+91 9876543210"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
                 </div>
+
                 <div>
-                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Designation / Title *</label>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Core Research Specialization & Skill Tags *</label>
                   <input
-                    value={commonForm.designation}
-                    onChange={e => setCommonForm({ ...commonForm, designation: e.target.value })}
-                    placeholder="e.g. Professor / Senior Scientist"
+                    value={commonForm.primaryDomain}
+                    onChange={e => setCommonForm({ ...commonForm, primaryDomain: e.target.value })}
+                    placeholder="e.g. Artificial Intelligence, Embedded Systems, Quantum Computing, Micro-Grids"
                     className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
                   />
                 </div>
               </div>
+
+              {/* Research Publications & Metrics */}
+              <div className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
+                <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide border-b border-[#E2DCD2] pb-2">Research Indexing & Impact Metrics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">ORCID iD Number</label>
+                    <input
+                      value={commonForm.orcidId}
+                      onChange={e => setCommonForm({ ...commonForm, orcidId: e.target.value })}
+                      placeholder="0000-0002-1825-0097"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Google Scholar Profile URL</label>
+                    <input
+                      value={commonForm.googleScholarUrl || ""}
+                      onChange={e => setCommonForm({ ...commonForm, googleScholarUrl: e.target.value })}
+                      placeholder="https://scholar.google.com/citations?user=..."
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Peer-Reviewed Journal Publications</label>
+                    <input
+                      type="number"
+                      value={commonForm.publicationsCount || 0}
+                      onChange={e => setCommonForm({ ...commonForm, publicationsCount: parseInt(e.target.value) || 0 })}
+                      placeholder="25"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-[#78716A] block mb-1">Patents Granted / Filed</label>
+                    <input
+                      type="number"
+                      value={commonForm.patentsCount || 0}
+                      onChange={e => setCommonForm({ ...commonForm, patentsCount: parseInt(e.target.value) || 0 })}
+                      placeholder="3"
+                      className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-bold text-[#78716A] block mb-1">Research Bio & Executive Summary</label>
+                  <textarea
+                    rows={3}
+                    value={commonForm.bio || ""}
+                    onChange={e => setCommonForm({ ...commonForm, bio: e.target.value })}
+                    placeholder="Provide a concise summary of your research background, industrial consultations, and advisory capabilities..."
+                    className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                  />
+                </div>
+              </div>
+
+              {/* Dynamic Category Specific Sections */}
+              {template?.sections?.map((sec, secIdx) => (
+                <div key={secIdx} className="space-y-4 bg-[#FBF7F0] p-4 rounded-xl border border-[#E2DCD2]">
+                  <h3 className="text-xs font-bold text-[#211F1D] uppercase tracking-wide border-b border-[#E2DCD2] pb-2">{sec.title}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {sec.fields.map(f => (
+                      <div key={f.fieldKey} className={f.fieldType === "TEXTAREA" ? "md:col-span-2" : ""}>
+                        <label className="text-[10px] font-bold text-[#78716A] block mb-1">
+                          {f.label} {f.required && "*"}
+                        </label>
+                        {f.fieldType === "SELECT" ? (
+                          <select
+                            onChange={e => setDynamicValues({ ...dynamicValues, [f.fieldKey]: e.target.value })}
+                            className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                          >
+                            <option value="">Select {f.label}</option>
+                            {f.options?.map((opt: string) => (
+                              <option key={opt} value={opt}>{opt.replace(/_/g, " ")}</option>
+                            ))}
+                          </select>
+                        ) : f.fieldType === "TEXTAREA" ? (
+                          <textarea
+                            rows={3}
+                            placeholder={f.placeholder}
+                            onChange={e => setDynamicValues({ ...dynamicValues, [f.fieldKey]: e.target.value })}
+                            className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                          />
+                        ) : (
+                          <input
+                            type={f.fieldType === "NUMBER" ? "number" : "text"}
+                            placeholder={f.placeholder}
+                            onChange={e => setDynamicValues({ ...dynamicValues, [f.fieldKey]: e.target.value })}
+                            className="w-full text-xs p-2.5 border border-[#E2DCD2] rounded-lg bg-white focus:outline-none focus:border-[#FF5A36]"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div className="flex justify-between pt-4 border-t border-[#D8D2C7]">
               <button onClick={() => setStep(1)} className="px-4 py-2 text-xs font-bold border border-[#E2DCD2] rounded-xl hover:bg-[#FBF7F0]">Back</button>
-              <button onClick={() => setStep(3)} className="px-6 py-2 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826]">Continue to Documents</button>
+              <button onClick={() => setStep(3)} className="px-6 py-2 bg-[#FF5A36] text-white text-xs font-bold rounded-xl hover:bg-[#E04826] cursor-pointer">Continue to Documents</button>
             </div>
           </div>
         )}
