@@ -30,7 +30,7 @@ interface StudentDashboardData {
     learningGoalsCompleted: number;
     totalLearningGoals: number;
   };
-  assignedProject: {
+  assignedProject?: {
     id: string;
     name: string;
     industryPartner: string;
@@ -38,23 +38,23 @@ interface StudentDashboardData {
     leadExpert: string;
     progress: number;
     sprintMilestone: string;
-  };
-  assignedTasks: Array<{
+  } | null;
+  assignedTasks?: Array<{
     id: string;
     title: string;
     status: string;
     priority: string;
     dueDate: string;
   }>;
-  leadMentor: {
+  leadMentor?: {
     id: string;
     name: string;
     designation: string;
     institution: string;
     lastFeedback: string;
     lastFeedbackDate: string;
-  };
-  upcomingCalls: Array<{
+  } | null;
+  upcomingCalls?: Array<{
     id: string;
     title: string;
     orgName: string;
@@ -99,12 +99,12 @@ export default function StudentDashboardPage() {
   }
 
   const student = data?.student || {
-    name: "Student Researcher",
+    name: "Student Scholar",
     usn: "N/A",
     institution: "Partner University",
     degree: "Undergraduate Degree",
     semester: 1,
-    cgpa: 0,
+    cgpa: 0.0,
     verificationStatus: "VERIFIED",
   };
 
@@ -118,35 +118,9 @@ export default function StudentDashboardPage() {
     totalLearningGoals: 0,
   };
 
-  const assignedProject = data?.assignedProject || {
-    id: "proj-101",
-    name: "Autonomous Drone Flight Trajectory Optimization",
-    industryPartner: "Siemens Corporate R&D",
-    role: "Research Intern - Flight Control Algorithms",
-    leadExpert: "Dr. S. Ramanathan (IISc Bangalore)",
-    progress: 68,
-    sprintMilestone: "Sprint 3: Real-time obstacle avoidance simulation testing",
-  };
-
-  const leadMentor = data?.leadMentor || {
-    id: "exp-201",
-    name: "Dr. S. Ramanathan",
-    designation: "Professor & Department Head",
-    institution: "IISc Bangalore",
-    lastFeedback: "Excellent progress on the ROS2 sensor fusion node. Make sure to document edge cases before Tuesday's call.",
-    lastFeedbackDate: "Yesterday at 4:30 PM",
-  };
-
-  const upcomingCalls = data?.upcomingCalls || [
-    {
-      id: "call-1",
-      title: "Sprint 3 Technical Review & Code Demonstration",
-      orgName: "Siemens R&D & IISc Lab",
-      startTime: "Today, 3:00 PM",
-      endTime: "4:00 PM",
-      videoLink: "https://meet.anveshakhub.com/r/drone-sprint-3",
-    },
-  ];
+  const assignedProject = data?.assignedProject || null;
+  const leadMentor = data?.leadMentor || null;
+  const upcomingCalls = data?.upcomingCalls || [];
 
   return (
     <div className="min-h-screen bg-[#FBF7F0] text-[#57534E] font-sans pb-16 text-left">
@@ -170,11 +144,11 @@ export default function StudentDashboardPage() {
               </p>
             </div>
             
-            {/* Recruiter Activity Card */}
+            {/* Profile Action Container */}
             <div className="bg-[#FFF0ED] border border-[#FFCFC4] p-3.5 rounded-xl flex items-center gap-3">
-              <div className="h-2 w-2 rounded-full bg-[#FF5A36] animate-ping shrink-0" />
+              <div className="h-2 w-2 rounded-full bg-[#FF5A36] shrink-0" />
               <p className="text-xs text-[#211F1D] font-medium">
-                <strong className="text-[#FF5A36]">3 corporate leads</strong> viewed your research profile this week.
+                Keep your academic resume updated to match with corporate R&D leads.
               </p>
               <Link href="/student/profile" className="btn-primary text-xs py-1.5 px-3 min-h-[36px] ml-auto shrink-0">
                 Finish Profile
@@ -210,29 +184,27 @@ export default function StudentDashboardPage() {
           <MetricGauge
             label="Active Research Internships"
             value={kpis.activeProjectsCount}
-            sublabel="Siemens Drone Flight Controls"
+            sublabel={assignedProject ? assignedProject.name : "No active project"}
             icon={Briefcase}
-            badge="In Progress"
+            badge={assignedProject ? "In Progress" : "Pending Match"}
           />
           <MetricGauge
             label="Sprint Tasks Completed"
             value={`${kpis.completedTasksCount}/${kpis.totalTasksCount}`}
-            progress={(kpis.completedTasksCount / kpis.totalTasksCount) * 100}
-            sublabel="66% milestone velocity"
+            progress={kpis.totalTasksCount > 0 ? (kpis.completedTasksCount / kpis.totalTasksCount) * 100 : 0}
+            sublabel="Task velocity"
             icon={CheckCircle2}
           />
           <MetricGauge
             label="Faculty Mentor Rating"
-            value={`${kpis.mentorshipScore}/10`}
-            sublabel="Rated by Dr. S. Ramanathan"
-            trend="up"
-            trendValue="+0.4"
+            value={kpis.mentorshipScore > 0 ? `${kpis.mentorshipScore}/10` : "N/A"}
+            sublabel={leadMentor ? `Rated by ${leadMentor.name}` : "Pending Evaluation"}
             icon={Star}
           />
           <MetricGauge
             label="Learning Goals Completed"
             value={`${kpis.learningGoalsCompleted}/${kpis.totalLearningGoals}`}
-            progress={(kpis.learningGoalsCompleted / kpis.totalLearningGoals) * 100}
+            progress={kpis.totalLearningGoals > 0 ? (kpis.learningGoalsCompleted / kpis.totalLearningGoals) * 100 : 0}
             progressColor="#2F6B4F"
             sublabel="Skill Badges Earned"
             icon={Award}
@@ -245,100 +217,64 @@ export default function StudentDashboardPage() {
           {/* Left Column: Active Project & Sprint Milestone */}
           <div className="lg:col-span-8 space-y-6">
 
-            {/* Active Internship Banner Card */}
-            <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2DCD2] pb-4">
-                <div>
-                  <span className="text-[11px] font-bold text-[#FF5A36] uppercase tracking-wider">
-                    {assignedProject.industryPartner} • {assignedProject.role}
-                  </span>
-                  <h2 className="font-heading text-xl font-extrabold text-[#211F1D] mt-0.5">
-                    {assignedProject.name}
-                  </h2>
-                </div>
-                <Link
-                  href={`/student/projects/${assignedProject.id}`}
-                  className="btn-secondary text-xs shrink-0 inline-flex items-center gap-1.5"
-                >
-                  Workspace <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-
-              {/* Progress bar */}
-              <div>
-                <div className="flex justify-between text-xs font-bold mb-1.5">
-                  <span className="text-[#211F1D]">Overall Project Progress</span>
-                  <span className="text-[#FF5A36] font-mono">{assignedProject.progress}%</span>
-                </div>
-                <div className="w-full bg-[#EFE9DF] rounded-full h-2.5 overflow-hidden border border-[#E2DCD2]">
-                  <div
-                    className="bg-[#FF5A36] h-full rounded-full transition-all duration-500"
-                    style={{ width: `${assignedProject.progress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Active Milestone Details */}
-              <div className="p-4 rounded-2xl bg-[#EFE9DF] border border-[#E2DCD2] space-y-2">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#FF5A36]">
-                  Current Active Milestone
-                </span>
-                <p className="text-sm font-bold text-[#211F1D]">
-                  {assignedProject.sprintMilestone}
-                </p>
-                <div className="flex items-center justify-between pt-1 text-xs">
-                  <span className="text-[#57534E] font-medium">Supervisor: {assignedProject.leadExpert}</span>
-                  <Link href="/student/documents" className="text-[#FF5A36] font-bold hover:underline flex items-center gap-1">
-                    <FileText className="h-3.5 w-3.5" /> Submit Deliverables
+            {assignedProject ? (
+              <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2DCD2] pb-4">
+                  <div>
+                    <span className="text-[11px] font-bold text-[#FF5A36] uppercase tracking-wider">
+                      {assignedProject.industryPartner} • {assignedProject.role}
+                    </span>
+                    <h2 className="font-heading text-xl font-extrabold text-[#211F1D] mt-0.5">
+                      {assignedProject.name}
+                    </h2>
+                  </div>
+                  <Link
+                    href={`/student/projects/${assignedProject.id}`}
+                    className="btn-secondary text-xs shrink-0 inline-flex items-center gap-1.5"
+                  >
+                    Workspace <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
-              </div>
-            </div>
 
-            {/* Research Milestone Timeline */}
-            <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-4">
-              <h3 className="font-heading text-base font-bold text-[#211F1D]">
-                Project Sprint Timeline
-              </h3>
-              <MilestoneTimeline
-                milestones={[
-                  {
-                    id: "m1",
-                    title: "Sprint 1: Sensor Calibration & ROS2 Workspace Setup",
-                    dueDate: "Completed Jun 15",
-                    status: "COMPLETED",
-                    description: "Configured LiDAR sensor fusion package and passed unit test suites.",
-                    approvedBy: "Dr. S. Ramanathan",
-                    stipendAmount: 15000,
-                  },
-                  {
-                    id: "m2",
-                    title: "Sprint 2: Obstacle Avoidance Algorithm Integration",
-                    dueDate: "Completed Jul 10",
-                    status: "COMPLETED",
-                    description: "Implemented A* pathfinder node with dynamic obstacle costmap generation.",
-                    approvedBy: "Dr. S. Ramanathan",
-                    stipendAmount: 20000,
-                  },
-                  {
-                    id: "m3",
-                    title: "Sprint 3: Simulation Benchmarking in Gazebo Environment",
-                    dueDate: "Jul 30, 2026",
-                    status: "IN_PROGRESS",
-                    description: "Execute 50 simulation runs with wind disturbance parameters and log telemetry metrics.",
-                    stipendAmount: 25000,
-                  },
-                  {
-                    id: "m4",
-                    title: "Sprint 4: Final Hardware Flight Test & Paper Draft",
-                    dueDate: "Aug 20, 2026",
-                    status: "UPCOMING",
-                    description: "Deploy algorithm onto Jetson Orin Nano payload and co-author research report.",
-                    stipendAmount: 30000,
-                  },
-                ]}
+                {/* Progress bar */}
+                <div>
+                  <div className="flex justify-between text-xs font-bold mb-1.5">
+                    <span className="text-[#211F1D]">Overall Project Progress</span>
+                    <span className="text-[#FF5A36] font-mono">{assignedProject.progress}%</span>
+                  </div>
+                  <div className="w-full bg-[#EFE9DF] rounded-full h-2.5 overflow-hidden border border-[#E2DCD2]">
+                    <div
+                      className="bg-[#FF5A36] h-full rounded-full transition-all duration-500"
+                      style={{ width: `${assignedProject.progress}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Active Milestone Details */}
+                <div className="p-4 rounded-2xl bg-[#EFE9DF] border border-[#E2DCD2] space-y-2">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#FF5A36]">
+                    Current Active Milestone
+                  </span>
+                  <p className="text-sm font-bold text-[#211F1D]">
+                    {assignedProject.sprintMilestone}
+                  </p>
+                  <div className="flex items-center justify-between pt-1 text-xs">
+                    <span className="text-[#57534E] font-medium">Supervisor: {assignedProject.leadExpert}</span>
+                    <Link href="/student/documents" className="text-[#FF5A36] font-bold hover:underline flex items-center gap-1">
+                      <FileText className="h-3.5 w-3.5" /> Submit Deliverables
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <HumanEmptyState
+                title="No Active Research Internships Assigned"
+                description="You are currently not enrolled in an active corporate R&D project. Explore opportunities and apply with your profile."
+                actionLabel="Explore Opportunities"
+                actionHref="/student/opportunities"
+                icon={Briefcase}
               />
-            </div>
+            )}
 
           </div>
 
@@ -346,40 +282,49 @@ export default function StudentDashboardPage() {
           <div className="lg:col-span-4 space-y-6">
 
             {/* Faculty Mentor Card */}
-            <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-4">
-              <h3 className="font-heading text-base font-bold text-[#211F1D] border-b border-[#E2DCD2] pb-3">
-                Assigned PhD Supervisor
-              </h3>
-              <div className="flex items-start gap-3">
-                <div className="h-12 w-12 rounded-2xl bg-[#FF5A36] text-white font-extrabold flex items-center justify-center text-lg shrink-0">
-                  SR
+            {leadMentor ? (
+              <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-4">
+                <h3 className="font-heading text-base font-bold text-[#211F1D] border-b border-[#E2DCD2] pb-3">
+                  Assigned PhD Supervisor
+                </h3>
+                <div className="flex items-start gap-3">
+                  <div className="h-12 w-12 rounded-2xl bg-[#FF5A36] text-white font-extrabold flex items-center justify-center text-lg shrink-0">
+                    {leadMentor.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2)}
+                  </div>
+                  <div>
+                    <h4 className="font-heading text-sm font-bold text-[#211F1D]">
+                      {leadMentor.name}
+                    </h4>
+                    <p className="text-xs text-[#57534E] font-medium">{leadMentor.designation}</p>
+                    <p className="text-[11px] text-[#78716A] font-semibold">{leadMentor.institution}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-heading text-sm font-bold text-[#211F1D]">
-                    {leadMentor.name}
-                  </h4>
-                  <p className="text-xs text-[#57534E] font-medium">{leadMentor.designation}</p>
-                  <p className="text-[11px] text-[#78716A] font-semibold">{leadMentor.institution}</p>
-                </div>
-              </div>
 
-              {/* Feedback Quote */}
-              <div className="p-4 rounded-2xl bg-[#EFE9DF] border border-[#E2DCD2] space-y-1.5">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#FF5A36]">
-                  Latest Supervisor Note ({leadMentor.lastFeedbackDate})
-                </span>
-                <p className="text-xs text-[#211F1D] italic font-medium leading-relaxed">
-                  "{leadMentor.lastFeedback}"
-                </p>
-              </div>
+                {leadMentor.lastFeedback && (
+                  <div className="p-4 rounded-2xl bg-[#EFE9DF] border border-[#E2DCD2] space-y-1.5">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#FF5A36]">
+                      Latest Supervisor Note ({leadMentor.lastFeedbackDate})
+                    </span>
+                    <p className="text-xs text-[#211F1D] italic font-medium leading-relaxed">
+                      "{leadMentor.lastFeedback}"
+                    </p>
+                  </div>
+                )}
 
-              <Link
-                href="/student/meetings"
-                className="btn-secondary w-full justify-center text-xs"
-              >
-                Schedule 1-on-1 Mentorship Session
-              </Link>
-            </div>
+                <Link
+                  href="/student/meetings"
+                  className="btn-secondary w-full justify-center text-xs"
+                >
+                  Schedule 1-on-1 Mentorship Session
+                </Link>
+              </div>
+            ) : (
+              <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-3 text-center">
+                <User className="h-8 w-8 text-[#78716A] mx-auto" />
+                <h3 className="font-heading text-sm font-bold text-[#211F1D]">No Assigned Supervisor</h3>
+                <p className="text-xs text-[#57534E]">Faculty supervisor assignment occurs upon project enrollment.</p>
+              </div>
+            )}
 
             {/* Upcoming Video Meetings */}
             <div className="card-flat p-6 rounded-3xl bg-[#FBF7F0] space-y-4">
@@ -392,26 +337,30 @@ export default function StudentDashboardPage() {
                 </span>
               </div>
 
-              {upcomingCalls.map((call) => (
-                <div key={call.id} className="p-4 rounded-2xl bg-[#EFE9DF] border border-[#E2DCD2] space-y-3">
-                  <div>
-                    <span className="text-[10px] font-bold text-[#FF5A36] uppercase">{call.orgName}</span>
-                    <h4 className="font-heading text-xs font-bold text-[#211F1D] mt-0.5">{call.title}</h4>
-                    <p className="text-[11px] text-[#78716A] font-semibold flex items-center gap-1 mt-1">
-                      <Clock className="h-3 w-3 text-[#FF5A36]" /> {call.startTime} ({call.endTime})
-                    </p>
-                  </div>
+              {upcomingCalls.length > 0 ? (
+                upcomingCalls.map((call) => (
+                  <div key={call.id} className="p-4 rounded-2xl bg-[#EFE9DF] border border-[#E2DCD2] space-y-3">
+                    <div>
+                      <span className="text-[10px] font-bold text-[#FF5A36] uppercase">{call.orgName}</span>
+                      <h4 className="font-heading text-xs font-bold text-[#211F1D] mt-0.5">{call.title}</h4>
+                      <p className="text-[11px] text-[#78716A] font-semibold flex items-center gap-1 mt-1">
+                        <Clock className="h-3 w-3 text-[#FF5A36]" /> {call.startTime} ({call.endTime})
+                      </p>
+                    </div>
 
-                  <a
-                    href={call.videoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary w-full justify-center text-xs py-2"
-                  >
-                    <Video className="h-3.5 w-3.5" /> Join Video Call
-                  </a>
-                </div>
-              ))}
+                    <a
+                      href={call.videoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary w-full justify-center text-xs py-2"
+                    >
+                      <Video className="h-3.5 w-3.5" /> Join Video Call
+                    </a>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-[#78716A] text-center py-4">No upcoming calls scheduled.</p>
+              )}
             </div>
 
           </div>

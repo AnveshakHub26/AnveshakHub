@@ -30,11 +30,10 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const projects = await prisma.project.findMany({
+    const projects = userId ? await prisma.project.findMany({
       take: 1,
-      orderBy: { updatedAt: "desc" },
-      select: { id: true, name: true, lifecycle: true }
-    });
+      orderBy: { updatedAt: "desc" }
+    }) : [];
 
     const activeProject = projects[0] ? {
       id: projects[0].id,
@@ -42,8 +41,8 @@ export async function GET(req: NextRequest) {
       industryPartner: "Corporate Partner",
       role: "Student Researcher",
       leadExpert: "Assigned Advisor",
-      progress: 50,
-      sprintMilestone: "Active Phase"
+      progress: 0,
+      sprintMilestone: "Milestone Phase 1"
     } : null;
 
     const data = {
@@ -53,17 +52,17 @@ export async function GET(req: NextRequest) {
         id: userRecord?.id || "std-user",
         name: userRecord?.fullName || userRecord?.name || "Student Researcher",
         usn: userRecord?.studentProfile?.usn || "N/A",
-        institution: userRecord?.studentProfile?.university || "Partner University",
-        degree: userRecord?.studentProfile?.department || "Undergraduate Degree",
-        semester: 6,
-        cgpa: 9.0,
+        institution: userRecord?.studentProfile?.institution || "Partner Institution",
+        degree: userRecord?.studentProfile?.degree || "Undergraduate Degree",
+        semester: userRecord?.studentProfile?.semester || 1,
+        cgpa: userRecord?.studentProfile?.cgpa || 0.0,
         verificationStatus: "VERIFIED"
       },
       kpis: {
         activeProjectsCount: activeProject ? 1 : 0,
         completedTasksCount: 0,
         totalTasksCount: 0,
-        mentorshipScore: 5.0,
+        mentorshipScore: 0,
         attendanceRate: 100,
         learningGoalsCompleted: 0,
         totalLearningGoals: 0
@@ -76,7 +75,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error: any) {
-    console.error("GET Student Dashboard Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to load student dashboard" }, { status: 500 });
+    console.error("Student Dashboard GET Error:", error);
+    return NextResponse.json({ error: "Failed to load dashboard data" }, { status: 500 });
   }
 }

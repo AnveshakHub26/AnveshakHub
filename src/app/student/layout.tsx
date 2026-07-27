@@ -40,6 +40,31 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
+  const [userProfile, setUserProfile] = useState({
+    name: "Student Scholar",
+    institution: "Partner University",
+    initials: "ST"
+  });
+
+  useEffect(() => {
+    fetch("/api/student/profile")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.name) {
+          const nameParts = data.name.trim().split(" ");
+          const initials = nameParts.length > 1 
+            ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+            : nameParts[0].substring(0, 2).toUpperCase();
+          setUserProfile({
+            name: data.name,
+            institution: data.institution || "Partner University",
+            initials: initials || "ST"
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const SidebarInner = ({ mobile = false }: { mobile?: boolean }) => (
     <aside
       className="flex flex-col h-full border-r"
@@ -61,13 +86,13 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
         <div className="mx-2 mt-3 mb-1 p-2 rounded-lg" style={{ backgroundColor: "var(--bg-sidebar-hover)", border: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-md flex items-center justify-center text-[10px] font-black shrink-0" style={{ backgroundColor: "var(--brand)", color: "#fff" }}>
-              AK
+              {userProfile.initials}
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-bold truncate" style={{ color: "var(--text-inverse)" }}>Aditya Kumar</p>
+              <p className="text-[11px] font-bold truncate" style={{ color: "var(--text-inverse)" }}>{userProfile.name}</p>
               <p className="text-[10px] flex items-center gap-1" style={{ color: "#6B6560" }}>
                 <CheckCircle2 className="h-2.5 w-2.5" style={{ color: "var(--success)" }} />
-                Student · RV College of Engg
+                {userProfile.institution}
               </p>
             </div>
           </div>
