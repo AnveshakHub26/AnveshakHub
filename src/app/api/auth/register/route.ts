@@ -25,29 +25,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Password must be at least 8 characters long" }, { status: 400 });
     }
 
-    // 2. Duplicate user prevention check (email and fullName)
+    // 2. Duplicate user prevention check (email)
     const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { email },
-          { fullName }
-        ]
-      },
+      where: { email },
       select: {
         id: true,
         email: true,
-        fullName: true,
+        name: true,
         role: true,
       }
     });
 
     if (existingUser) {
-      if (existingUser.email === email) {
-        return NextResponse.json({ error: "An account with this email address already exists. Please sign in instead." }, { status: 400 });
-      }
-      if (existingUser.fullName === fullName) {
-        return NextResponse.json({ error: "An account with this full name already exists. Please use a unique full name." }, { status: 400 });
-      }
+      return NextResponse.json({ error: "An account with this email address already exists. Please sign in instead." }, { status: 400 });
     }
 
     // Map Prisma role enum and user role label
@@ -125,8 +115,7 @@ export async function POST(request: Request) {
     const dbUser = await prisma.user.create({
       data: {
         email,
-        fullName,
-        name: fullName.split(" ")[0],
+        name: fullName,
         role: dbRole,
         phone: phone || null,
         organizationId,
@@ -137,7 +126,6 @@ export async function POST(request: Request) {
         id: true,
         email: true,
         name: true,
-        fullName: true,
         role: true,
         organizationId: true,
         organization: true,
@@ -192,7 +180,7 @@ export async function POST(request: Request) {
         id: dbUser.id,
         supabaseId: supabaseId,
         email: dbUser.email,
-        fullName: dbUser.fullName || dbUser.name,
+        fullName: dbUser.name,
         role: userRoleName,
         organization: dbUser.organization,
       },

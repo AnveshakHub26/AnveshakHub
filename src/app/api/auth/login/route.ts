@@ -30,12 +30,19 @@ export async function POST(request: Request) {
       console.warn("Supabase Auth sign-in warning:", e);
     }
 
-    // 2. Query Prisma Database with relations
+    // 2. Query Prisma Database with explicit selects
     let dbUser: any = null;
     try {
       dbUser = await prisma.user.findFirst({
         where: { email },
-        include: {
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          organizationId: true,
+          emailVerified: true,
+          avatarUrl: true,
           organization: true,
           expertProfile: true,
           studentProfile: true,
@@ -91,13 +98,19 @@ export async function POST(request: Request) {
         dbUser = await prisma.user.create({
           data: {
             email: email,
-            fullName: email.split("@")[0].replace(/[^a-zA-Z]/g, " ").toUpperCase(),
-            name: email.split("@")[0],
+            name: email.split("@")[0].toUpperCase(),
             role: devRole as any,
             emailVerified: true,
             organizationId: organizationId,
           },
-          include: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            organizationId: true,
+            emailVerified: true,
+            avatarUrl: true,
             organization: true,
             expertProfile: true,
             studentProfile: true,
@@ -108,8 +121,7 @@ export async function POST(request: Request) {
         dbUser = {
           id: `dev-id-${Date.now()}`,
           email: email,
-          fullName: email.split("@")[0].toUpperCase(),
-          name: email.split("@")[0],
+          name: email.split("@")[0].toUpperCase(),
           role: devRole,
           organizationId: organizationId,
           emailVerified: true,
@@ -146,7 +158,7 @@ export async function POST(request: Request) {
         id: dbUser.id,
         supabaseId: authUser?.id || `dev-${dbUser.id}`,
         email: dbUser.email,
-        fullName: dbUser.fullName || dbUser.name,
+        fullName: dbUser.name,
         role: userRoleName,
         avatarUrl: dbUser.avatarUrl,
         emailVerified: dbUser.emailVerified,
