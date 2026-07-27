@@ -98,17 +98,23 @@ export default function StudentProfilePage() {
     }
   };
 
+  const skills = Array.isArray(profile?.skills) ? profile.skills : [];
+  const projectsList = Array.isArray(profile?.projectsList) ? profile.projectsList : [];
+  const certifications = Array.isArray(profile?.certifications) ? profile.certifications : [];
+  const achievements = Array.isArray(profile?.achievements) ? profile.achievements : [];
+  const careerInterests = Array.isArray(profile?.careerInterests) ? profile.careerInterests : [];
+
   const handleAddSkill = () => {
     if (!newSkill.trim() || !profile) return;
-    if (!profile.skills.includes(newSkill.trim())) {
-      setProfile({ ...profile, skills: [...profile.skills, newSkill.trim()] });
+    if (!skills.includes(newSkill.trim())) {
+      setProfile({ ...profile, skills: [...skills, newSkill.trim()] });
     }
     setNewSkill("");
   };
 
   const handleRemoveSkill = (skill: string) => {
     if (!profile) return;
-    setProfile({ ...profile, skills: profile.skills.filter(s => s !== skill) });
+    setProfile({ ...profile, skills: skills.filter(s => s !== skill) });
   };
 
   const handleAddProject = async () => {
@@ -168,9 +174,11 @@ export default function StudentProfilePage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl font-extrabold text-white">{profile.name}</h1>
-              <span className="text-[10px] font-mono font-extrabold bg-[#3a3733] text-[#A8A196] px-2 py-0.5 rounded">
-                {profile.usn}
-              </span>
+              {profile.usn && (
+                <span className="text-[10px] font-mono font-extrabold bg-[#3a3733] text-[#A8A196] px-2 py-0.5 rounded">
+                  {profile.usn}
+                </span>
+              )}
               <span
                 className="text-[9px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1"
                 style={{ background: verMeta.bg, color: verMeta.color }}
@@ -179,10 +187,10 @@ export default function StudentProfilePage() {
               </span>
             </div>
             <p className="text-[#A8A196] text-sm font-semibold mt-1">
-              {profile.institution} · {profile.degree} in {profile.branch}
+              {profile.institution || "Institution Not Set"} {profile.degree ? `· ${profile.degree}` : ""} {profile.branch ? `in ${profile.branch}` : ""}
             </p>
             <p className="text-[#78716A] text-xs font-semibold mt-0.5">
-              CGPA {profile.cgpa} · Semester {profile.semester} · {profile.email}
+              {profile.cgpa ? `CGPA ${profile.cgpa} · ` : ""}{profile.semester ? `Semester ${profile.semester} · ` : ""}{profile.email}
             </p>
 
             {/* Social Links */}
@@ -226,10 +234,10 @@ export default function StudentProfilePage() {
       {/* Stats Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Skills",         value: profile.skills.length,         color: "#FF5A36", bg: "#FFF0ED",  icon: Award },
-          { label: "Projects",       value: profile.projectsList.length,   color: "#4338CA", bg: "#EEF2FF",  icon: Briefcase },
-          { label: "Certifications", value: profile.certifications.length, color: "#2F6B4F", bg: "#E8F2EC",  icon: FileText },
-          { label: "Achievements",   value: profile.achievements.length,   color: "#92400E", bg: "#FEF3C7",  icon: Star },
+          { label: "Skills",         value: skills.length,         color: "#FF5A36", bg: "#FFF0ED",  icon: Award },
+          { label: "Projects",       value: projectsList.length,   color: "#4338CA", bg: "#EEF2FF",  icon: Briefcase },
+          { label: "Certifications", value: certifications.length, color: "#2F6B4F", bg: "#E8F2EC",  icon: FileText },
+          { label: "Achievements",   value: achievements.length,   color: "#92400E", bg: "#FEF3C7",  icon: Star },
         ].map((s) => (
           <div key={s.label} className="bg-[#EFE9DF] rounded-2xl p-4 flex items-center gap-3">
             <div className="h-9 w-9 rounded-xl flex items-center justify-center" style={{ background: s.bg }}>

@@ -49,7 +49,11 @@ export async function GET(req: NextRequest) {
       semester: sp?.semester || null,
       cgpa: sp?.cgpa || null,
       bio: sp?.bio || null,
-      skills: sp?.skills || [],
+      skills: Array.isArray(sp?.skills) ? sp.skills : [],
+      projectsList: Array.isArray(sp?.projectsList) ? (sp.projectsList as any) : [],
+      certifications: Array.isArray(sp?.certifications) ? (sp.certifications as any) : [],
+      achievements: Array.isArray(sp?.achievements) ? (sp.achievements as any) : [],
+      careerInterests: Array.isArray(sp?.careerInterests) ? sp.careerInterests : [],
       resumeUrl: sp?.resumeUrl || null,
       portfolioUrl: sp?.portfolioUrl || null,
       linkedinUrl: sp?.linkedinUrl || null,
@@ -82,7 +86,6 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const { name, usn, institution, degree, branch, semester, cgpa, bio, skills, resumeUrl } = body;
 
-    // Update User Name
     if (name) {
       await prisma.user.update({
         where: { id: userId },
@@ -90,7 +93,6 @@ export async function PUT(req: NextRequest) {
       });
     }
 
-    // Upsert StudentProfile
     const updatedProfile = await prisma.studentProfile.upsert({
       where: { userId },
       update: {
