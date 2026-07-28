@@ -192,9 +192,9 @@ export default function ExpertDetailPage({ params }: { params: Promise<{ id: str
       <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "profile", label: "Profile & Credentials", icon: User },
-          { key: "discussions", label: `Collaboration Thread (${expert.discussions.length})`, icon: MessageSquare },
-          { key: "projects", label: `Assigned Projects (${expert.assignedProjects.length})`, icon: Briefcase },
-          { key: "reviews", label: `Reviews (${expert.reviews.length})`, icon: Star }
+          { key: "discussions", label: `Collaboration Thread (${expert?.discussions?.length || 0})`, icon: MessageSquare },
+          { key: "projects", label: `Assigned Projects (${expert?.assignedProjects?.length || 0})`, icon: Briefcase },
+          { key: "reviews", label: `Reviews (${expert?.reviews?.length || 0})`, icon: Star }
         ].map(t => {
           const Icon = t.icon;
           return (

@@ -55,7 +55,7 @@ export default function StudentDocumentsPage() {
       const params = new URLSearchParams({ category: categoryFilter });
       const res = await fetch(`/api/student/documents?${params}`);
       const data = await res.json();
-      setDocuments(data.documents || []);
+      setDocuments(Array.isArray(data) ? data : (data.documents || []));
     } catch (e) {
       console.error(e);
     } finally {
@@ -84,8 +84,9 @@ export default function StudentDocumentsPage() {
     }
   };
 
-  const verifiedCount = documents.filter(d => d.status === "VERIFIED").length;
-  const pendingCount  = documents.filter(d => d.status === "PENDING").length;
+  const docsList = Array.isArray(documents) ? documents : [];
+  const verifiedCount = docsList.filter(d => d.status === "VERIFIED").length;
+  const pendingCount  = docsList.filter(d => d.status === "PENDING").length;
 
   return (
     <div className="p-6 lg:p-8 space-y-8">

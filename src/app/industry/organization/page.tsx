@@ -166,9 +166,9 @@ export default function OrganizationManagement() {
         <div className="flex items-center gap-0 mt-5">
           {[
             { key: "profile",   label: "Organization Profile",   count: null },
-            { key: "branches",  label: "Branches & Departments", count: branches.length + departments.length },
-            { key: "reps",      label: "Representatives",        count: representatives.length },
-            { key: "team",      label: "Team Members",           count: orgUsers.length },
+            { key: "branches",  label: "Branches & Departments", count: (branches?.length || 0) + (departments?.length || 0) },
+            { key: "reps",      label: "Representatives",        count: representatives?.length || 0 },
+            { key: "team",      label: "Team Members",           count: orgUsers?.length || 0 },
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-1.5 px-4 py-3.5 text-xs font-semibold border-b-2 transition-all -mb-0 ${

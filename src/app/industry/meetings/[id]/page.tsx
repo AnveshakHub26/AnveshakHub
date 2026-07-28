@@ -193,8 +193,12 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
 
   if (!meeting) return null;
 
-  const completedCount = meeting.actionItems.filter(a => a.isCompleted).length;
-  const totalCount = meeting.actionItems.length;
+  const actionItemsList = Array.isArray(meeting.actionItems) ? meeting.actionItems : [];
+  const participantsList = Array.isArray(meeting.participants) ? meeting.participants : [];
+  const docsList = Array.isArray(meeting.documents) ? meeting.documents : [];
+
+  const completedCount = actionItemsList.filter((a: any) => a.isCompleted).length;
+  const totalCount = actionItemsList.length;
 
   return (
     <div className="p-8 space-y-6">
@@ -261,8 +265,8 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
         </div>
         <div>
           <span className="text-[9px] font-bold text-[#A8A196] uppercase block">Participants</span>
-          <span className="font-bold text-[#211F1D]">{meeting.participants.length} Invited</span>
-          <span className="text-[9px] text-[#A8A196] block font-semibold">{meeting.participants.filter(p => p.status === "ACCEPTED").length} Accepted</span>
+          <span className="font-bold text-[#211F1D]">{participantsList.length} Invited</span>
+          <span className="text-[9px] text-[#A8A196] block font-semibold">{participantsList.filter((p: any) => p.status === "ACCEPTED").length} Accepted</span>
         </div>
       </div>
 
@@ -271,8 +275,8 @@ export default function MeetingWorkspacePage({ params }: { params: Promise<{ id:
         {[
           { key: "overview", label: "Overview & Agenda", icon: Clock },
           { key: "mom", label: "Minutes of Meeting", icon: FileText },
-          { key: "actions", label: `Action Items (${meeting.actionItems.length})`, icon: CheckSquare },
-          { key: "docs", label: `Documents (${meeting.documents.length})`, icon: Upload },
+          { key: "actions", label: `Action Items (${totalCount})`, icon: CheckSquare },
+          { key: "docs", label: `Documents (${docsList.length})`, icon: Upload },
           { key: "timeline", label: "Event Timeline", icon: Clock }
         ].map(t => {
           const Icon = t.icon;

@@ -239,7 +239,7 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ id:
           { key: "overview", label: "Overview & Milestones", icon: Briefcase },
           { key: "tasks", label: `Tasks Board`, icon: CheckSquare },
           { key: "financials", label: "Financials & Scope Changes", icon: Wallet },
-          { key: "risks", label: `Risks & Issues (${project.risks.length})`, icon: ShieldAlert },
+          { key: "risks", label: `Risks & Issues (${project?.risks?.length || 0})`, icon: ShieldAlert },
           { key: "docs", label: "Documents Vault", icon: FileText },
         ].map(t => {
           const Icon = t.icon;

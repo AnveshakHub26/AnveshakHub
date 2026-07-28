@@ -157,8 +157,8 @@ export default function MenteeWorkspacePage({ params }: { params: Promise<{ id: 
       <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "skills", label: "Skill Assessment & Performance", icon: Star },
-          { key: "goals", label: `Learning Plan (${student.learningPlan.length})`, icon: BookOpen },
-          { key: "attendance", label: `Attendance Log (${student.attendanceRate}%)`, icon: CheckCircle2 },
+          { key: "goals", label: `Learning Plan (${student?.learningPlan?.length || 0})`, icon: BookOpen },
+          { key: "attendance", label: `Attendance Log (${student?.attendanceRate || 0}%)`, icon: CheckCircle2 },
           { key: "recommendation", label: "Recommendation Letter", icon: FileCheck }
         ].map(t => {
           const Icon = t.icon;

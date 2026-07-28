@@ -224,8 +224,8 @@ export default function ProblemDetailPage({ params }: { params: Promise<{ id: st
       <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "overview", label: "Overview & AI Insights", icon: Sparkles },
-          { key: "documents", label: `Supporting Files (${problem.documents.length})`, icon: FileText },
-          { key: "comments", label: `Discussion (${problem.comments.length})`, icon: MessageSquare },
+          { key: "documents", label: `Supporting Files (${problem?.documents?.length || 0})`, icon: FileText },
+          { key: "comments", label: `Discussion (${problem?.comments?.length || 0})`, icon: MessageSquare },
           { key: "timeline", label: "Audit Timeline", icon: Clock },
         ].map(t => {
           const Icon = t.icon;

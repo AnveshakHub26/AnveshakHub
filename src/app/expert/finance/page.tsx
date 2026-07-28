@@ -163,7 +163,7 @@ export default function ExpertFinancePage() {
       <div className="flex items-center gap-0 border-b border-[#E2DCD2] -mb-2.5">
         {[
           { key: "earnings", label: "Consultancy & Milestone Earnings", icon: DollarSign },
-          { key: "reimbursements", label: `Reimbursements & Claims (${data.reimbursements.length})`, icon: Clock }
+          { key: "reimbursements", label: `Reimbursements & Claims (${data?.reimbursements?.length || 0})`, icon: Clock }
         ].map(t => {
           const Icon = t.icon;
           return (
