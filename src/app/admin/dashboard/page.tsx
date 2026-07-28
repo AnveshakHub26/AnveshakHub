@@ -63,7 +63,9 @@ export default function AdminDashboardPage() {
     try {
       const res  = await fetch("/api/admin/verification-center");
       const data = await res.json();
-      if (res.ok) setQueue(data.queue);
+      if (res.ok) {
+        setQueue(Array.isArray(data.queue) ? data.queue : (Array.isArray(data.data) ? data.data : []));
+      }
     } catch (e) {
       console.error(e);
     }
@@ -129,11 +131,15 @@ export default function AdminDashboardPage() {
     );
   }
 
+  const queueList = Array.isArray(queue) ? queue : [];
+  const servicesList = Array.isArray(services) ? services : [];
+  const recentActivitiesList = Array.isArray(recentActivities) ? recentActivities : [];
+
   const kpiCards = [
     { label: "Verified Industries", value: kpis.industries?.count || "48", sub: "+12% this quarter", icon: Building2,   color: "#FF5A36", bg: "#FFF0ED" },
     { label: "Subject Experts",     value: kpis.experts?.count    || "142",sub: "+8% active advisors", icon: UsersRound, color: "#4338CA", bg: "#EEF2FF" },
     { label: "Active Projects",     value: kpis.projects?.count   || "86", sub: "₹4.2 Cr total funding",icon: Briefcase,  color: "#2F6B4F", bg: "#E8F2EC" },
-    { label: "Compliance Queue",    value: queue.length,                   sub: "Awaiting review",     icon: ShieldAlert, color: "#DC2626", bg: "#FEE2E2" },
+    { label: "Compliance Queue",    value: queueList.length,               sub: "Awaiting review",     icon: ShieldAlert, color: "#DC2626", bg: "#FEE2E2" },
   ];
 
   return (
@@ -214,9 +220,9 @@ export default function AdminDashboardPage() {
                   <h2 className="text-base font-extrabold text-[#211F1D]">Compliance Verification Queue</h2>
                   <p className="text-xs text-[#78716A] mt-0.5">Approve or reject registered organization credentials</p>
                 </div>
-                {queue.length > 0 && (
+                {queueList.length > 0 && (
                   <span className="text-xs font-extrabold text-[#DC2626] bg-[#FEE2E2] px-3 py-1 rounded-full border border-red-200">
-                    {queue.length} Pending
+                    {queueList.length} Pending
                   </span>
                 )}
               </div>
@@ -233,7 +239,7 @@ export default function AdminDashboardPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#D8D2C7]">
-                    {queue.length === 0 ? (
+                    {queueList.length === 0 ? (
                       <tr>
                         <td colSpan={5} className="py-12 text-center">
                           <ShieldCheck className="h-8 w-8 text-[#2F6B4F] mx-auto mb-2" />
@@ -241,7 +247,7 @@ export default function AdminDashboardPage() {
                           <p className="text-xs text-[#78716A] mt-1">No organizations awaiting verification</p>
                         </td>
                       </tr>
-                    ) : queue.map((item, idx) => (
+                    ) : queueList.map((item, idx) => (
                       <motion.tr
                         key={item.id}
                         initial={{ opacity: 0 }}
@@ -299,13 +305,13 @@ export default function AdminDashboardPage() {
           <div className="lg:col-span-4 space-y-6">
 
             {/* System Health */}
-            {services.length > 0 && (
+            {servicesList.length > 0 && (
               <div className="bg-[#EFE9DF] rounded-2xl p-5 space-y-4">
                 <h3 className="text-sm font-extrabold text-[#211F1D] flex items-center gap-2">
                   <Activity className="h-4 w-4 text-[#FF5A36]" /> System Health
                 </h3>
                 <div className="space-y-2">
-                  {services.map((svc: any, idx: number) => (
+                  {servicesList.map((svc: any, idx: number) => (
                     <div key={idx} className="bg-[#FBF7F0] border border-[#E2DCD2] rounded-xl px-3 py-2.5 flex items-center justify-between">
                       <span className="text-xs font-semibold text-[#211F1D]">{svc.name || svc.service}</span>
                       <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 ${
@@ -350,13 +356,13 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Recent Activity Feed */}
-        {recentActivities.length > 0 && (
+        {recentActivitiesList.length > 0 && (
           <div className="bg-[#EFE9DF] rounded-2xl p-6 space-y-4">
             <h3 className="text-sm font-extrabold text-[#211F1D] flex items-center gap-2">
               <Zap className="h-4 w-4 text-[#FF5A36]" /> Platform Activity Feed
             </h3>
             <div className="space-y-2">
-              {recentActivities.slice(0, 6).map((act: any, idx: number) => (
+              {recentActivitiesList.slice(0, 6).map((act: any, idx: number) => (
                 <motion.div
                   key={idx}
                   initial={{ opacity: 0, x: -8 }}

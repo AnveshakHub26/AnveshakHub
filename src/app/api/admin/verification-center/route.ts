@@ -47,6 +47,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       data: formatted,
+      queue: formatted,
     });
   } catch (error: any) {
     console.error("GET Verification Center Error:", error);
